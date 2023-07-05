@@ -1,65 +1,99 @@
 ﻿<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Neuron.Nexus.MainPage">
+             x:Class="Neuron.Nexus.MainPage"
+             xmlns:viewmodel="clr-namespace:Neuron.Nexus.ViewModels"
+             x:DataType="viewmodel:MainPageViewModel">
 
-    <ScrollView VerticalOptions="FillAndExpand" Orientation="Vertical" Margin="0,0,0,0">
-        
+    <!-- The ScrollView allows content to be scrollable if it exceeds the screen size. 
+     Orientation set to "Vertical" means the content can be scrolled vertically. 
+     VerticalOptions="FillAndExpand" makes the ScrollView fill the available vertical space. -->
+    <ScrollView Orientation="Vertical" VerticalOptions="FillAndExpand">
+
+        <!-- StackLayout stacks its children in the direction specified by Orientation. 
+         Here it's set to "Vertical", so children are stacked from top to bottom. -->
         <StackLayout Orientation="Vertical">
-            
-            <!-- Row 1 -->
-            <FlexLayout Direction="Row" 
-                    JustifyContent="SpaceAround"
-                    Padding="20,0">
-                <Button Text="STS1"
+
+            <!-- FlexLayout is a layout that provides flexibility by aligning its children in multiple directions, 
+             wrapping and shrinking/expanding them to fill the available space.
+             Wrap="Wrap" allows items to be wrapped to a new line if there isn't enough space.
+             AlignItems="Center" aligns items along the vertical direction to the center.
+             JustifyContent="SpaceEvenly" evenly distributes the free horizontal space between the items, including the start and end.
+             Direction="Row" arranges items horizontally. -->
+            <FlexLayout Wrap="Wrap"
+                    AlignItems="Center"
+                    JustifyContent="SpaceEvenly"
+                    Direction="Row">
+
+                <!-- The Button represents a clickable area, configured with a text, 
+                 a corner radius for rounded corners, a background color, and an event handler for click events.
+                 WidthRequest and HeightRequest specify the preferred size.
+                 Margin property is used to add space around the button. -->
+                <Button Text="Speak"
                     CornerRadius="10"
                     BackgroundColor="LightBlue"
-                    Clicked="OnNavigateToSTS"
+                    Command="{Binding NavigateToSpeakCommand}"
                     WidthRequest="100"
-                    HeightRequest="100"
-                    Margin="5" />
-                <Button Text="STS2"
+                    HeightRequest="100" 
+                    Margin="5" >
+                    <Button.Shadow>
+                        <Shadow Brush="Pink"
+                                Radius="40"
+                                Offset="10,10"
+                                Opacity="0.80"
+                                />
+                    </Button.Shadow>
+                </Button>
+                
+                <Button Text="summarize"
                     CornerRadius="10"
                     BackgroundColor="LightBlue"
-                    Clicked="OnNavigateToSTS"
+                    Command="{Binding NavigateToSummarizeDocumentsCommand}"
                     WidthRequest="100"
-                    HeightRequest="100"
-                    Margin="5" />
-                <Button Text="STS2"
+                    HeightRequest="100" 
+                    Margin="5" >
+                    <Button.Shadow>
+                        <Shadow Brush="Pink"
+                                Radius="40"
+                                Offset="10,10"
+                                Opacity="0.80"
+                                />
+                    </Button.Shadow>
+                </Button>
+                
+                <Button Text="Speech"
                     CornerRadius="10"
                     BackgroundColor="LightBlue"
-                    Clicked="OnNavigateToSTS"
+                    Command="{Binding NavigateToSpeechCommand}"
                     WidthRequest="100"
-                    HeightRequest="100"
-                    Margin="5" />
+                    HeightRequest="100" 
+                    Margin="5" >
+                    <Button.Shadow>
+                        <Shadow Brush="Pink"
+                                Radius="40"
+                                Offset="10,10"
+                                Opacity="0.80"
+                                />
+                    </Button.Shadow>
+                </Button>
+
+                <!-- More buttons can be added to the layout, following the same structure. -->
+                <Button Text="Soon to come..."
+                    CornerRadius="10"
+                    BackgroundColor="LightBlue"
+                    WidthRequest="100"
+                    HeightRequest="100" 
+                    Margin="5" >
+                    <Button.Shadow>
+                        <Shadow Brush="Pink"
+                                Radius="40"
+                                Offset="10,10"
+                                Opacity="0.80"
+                                />
+                    </Button.Shadow>
+                    </Button>
+
             </FlexLayout>
-            <!-- Row 2 -->
-            <FlexLayout Direction="Row" 
-                    JustifyContent="SpaceAround"
-                    Padding="20,0">
-                <Button Text="STS3"
-                    CornerRadius="10"
-                    BackgroundColor="LightBlue"
-                    Clicked="OnNavigateToSTS"
-                    WidthRequest="100"
-                    HeightRequest="100"
-                    Margin="5" />
-                <Button Text="STS4"
-                    CornerRadius="10"
-                    BackgroundColor="LightBlue"
-                    Clicked="OnNavigateToSTS"
-                    WidthRequest="100"
-                    HeightRequest="100"
-                    Margin="5" />
-                <Button Text="STS4"
-                    CornerRadius="10"
-                    BackgroundColor="LightBlue"
-                    Clicked="OnNavigateToSTS"
-                    WidthRequest="100"
-                    HeightRequest="100"
-                    Margin="5" />
-            </FlexLayout>
-            <!-- Add more rows as needed -->
         </StackLayout>
     </ScrollView>
 </ContentPage>

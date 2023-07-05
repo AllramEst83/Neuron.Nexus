@@ -63,17 +63,29 @@
 	</ItemGroup>
 
 	<ItemGroup>
+		<PackageReference Include="CommunityToolkit.Maui" Version="5.2.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="Pages\SpeechToSpeechPage.xaml">
+	  <MauiXaml Update="Pages\SpeakPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\SpeechPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
+	  <MauiXaml Update="Pages\SummarizeDocumentsPage.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Folder Include="Services\" />
+	  <Compile Update="Pages\SpeakPage.xaml.cs">
+	    <DependentUpon>SpeakPage.xaml</DependentUpon>
+	  </Compile>
+	  <Compile Update="Pages\SummarizeDocumentsPage.xaml.cs">
+	    <DependentUpon>SummarizeDocumentsPage.xaml</DependentUpon>
+	  </Compile>
 	</ItemGroup>
 
 </Project>

@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace Neuron.Nexus.Pages;
 
-public partial class SpeechToSpeechPage : ContentPage
+public partial class SpeakPage : ContentPage
 {
-    public SpeechToSpeechPage()
+    public SpeakPage()
     {
         InitializeComponent();
     }
