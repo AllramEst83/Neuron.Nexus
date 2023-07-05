@@ -1,0 +1,65 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Neuron.Nexus.MainPage">
+
+    <ScrollView VerticalOptions="FillAndExpand" Orientation="Vertical" Margin="0,0,0,0">
+        
+        <StackLayout Orientation="Vertical">
+            
+            <!-- Row 1 -->
+            <FlexLayout Direction="Row" 
+                    JustifyContent="SpaceAround"
+                    Padding="20,0">
+                <Button Text="STS1"
+                    CornerRadius="10"
+                    BackgroundColor="LightBlue"
+                    Clicked="OnNavigateToSTS"
+                    WidthRequest="100"
+                    HeightRequest="100"
+                    Margin="5" />
+                <Button Text="STS2"
+                    CornerRadius="10"
+                    BackgroundColor="LightBlue"
+                    Clicked="OnNavigateToSTS"
+                    WidthRequest="100"
+                    HeightRequest="100"
+                    Margin="5" />
+                <Button Text="STS2"
+                    CornerRadius="10"
+                    BackgroundColor="LightBlue"
+                    Clicked="OnNavigateToSTS"
+                    WidthRequest="100"
+                    HeightRequest="100"
+                    Margin="5" />
+            </FlexLayout>
+            <!-- Row 2 -->
+            <FlexLayout Direction="Row" 
+                    JustifyContent="SpaceAround"
+                    Padding="20,0">
+                <Button Text="STS3"
+                    CornerRadius="10"
+                    BackgroundColor="LightBlue"
+                    Clicked="OnNavigateToSTS"
+                    WidthRequest="100"
+                    HeightRequest="100"
+                    Margin="5" />
+                <Button Text="STS4"
+                    CornerRadius="10"
+                    BackgroundColor="LightBlue"
+                    Clicked="OnNavigateToSTS"
+                    WidthRequest="100"
+                    HeightRequest="100"
+                    Margin="5" />
+                <Button Text="STS4"
+                    CornerRadius="10"
+                    BackgroundColor="LightBlue"
+                    Clicked="OnNavigateToSTS"
+                    WidthRequest="100"
+                    HeightRequest="100"
+                    Margin="5" />
+            </FlexLayout>
+            <!-- Add more rows as needed -->
+        </StackLayout>
+    </ScrollView>
+</ContentPage>
