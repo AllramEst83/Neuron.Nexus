@@ -1,4 +1,5 @@
-﻿using Neuron.Nexus.Services;
+﻿using Neuron.Nexus.Pages;
+using Neuron.Nexus.Services;
 using System.Windows.Input;
 
 namespace Neuron.Nexus.ViewModels;
@@ -26,9 +27,9 @@ public partial class MainPageViewModel : BaseViewModel
         // Initialize the ICommand properties with new Commands, 
         // binding them to the respective methods in the navigation service.
         // These Commands are executed when the corresponding Command in the View (XAML) is triggered.
-        NavigateToSummarizeDocumentsCommand = new Command(async () => await _navigationService.NavigateToSummarizeDocumentsPageAsync());
-        NavigateToSpeakCommand = new Command(async () => await _navigationService.NavigateToSpeakPageAsync());
-        NavigateToSpeechCommand = new Command(async () => await _navigationService.NavigateToSpeechPageAsync());
+        NavigateToSummarizeDocumentsCommand = new Command(async () => await _navigationService.NavigateToPageAsync<SummarizeDocumentsPage>());
+        NavigateToSpeakCommand = new Command(async () => await _navigationService.NavigateToPageAsync<SpeakPage>());
+        NavigateToSpeechCommand = new Command(async () => await _navigationService.NavigateToPageAsync<SpeechPage>());
     }
 }
 

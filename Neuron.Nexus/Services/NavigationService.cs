@@ -1,47 +1,40 @@
-﻿// Using directives for necessary namespaces
-using Neuron.Nexus.Pages;
+﻿namespace Neuron.Nexus.Services;
 
-// Namespace where the navigation services are defined
-namespace Neuron.Nexus.Services;
-// Interface that defines a contract for a navigation service
-// It declares three methods for navigating to specific pages, asynchronously
+// The INavigationService interface defines the contract for a service that provides navigation functionality
 public interface INavigationService
 {
-    // Method that when implemented, navigates to the Speak page
-    Task NavigateToSpeakPageAsync();
-    // Method that when implemented, navigates to the Speech page
-    Task NavigateToSpeechPageAsync();
-    // Method that when implemented, navigates to the Summarize Documents page
-    Task NavigateToSummarizeDocumentsPageAsync();
+    // The NavigateToPageAsync method is a generic method that asynchronously navigates to a page of a specified type
+    // The type parameter T represents the type of the page to navigate to
+    // The constraint where T : Page, new() ensures that T is a subclass of Page and has a parameterless constructor
+    // This method returns a Task that represents the asynchronous operation
+    Task NavigateToPageAsync<T>() where T : Page, new();
 }
 
-// Class that implements the INavigationService interface
+
+// The NavigationService class that implements the INavigationService interface
 public class NavigationService : INavigationService
 {
-    // Private readonly field for storing the injected INavigation object
+    // A private readonly field that stores the INavigation object injected via the constructor
     private readonly INavigation _navigation;
 
-    // Constructor that takes an INavigation object and assigns it to the private field
+    // The constructor of the NavigationService class that accepts an INavigation object
+    // This constructor is used to inject the INavigation object at runtime
     public NavigationService(INavigation navigation)
     {
+        // Assign the provided INavigation object to the private readonly field
         _navigation = navigation;
     }
 
-    // Method that navigates to the Speak page by pushing it to the navigation stack
-    public async Task NavigateToSpeakPageAsync()
+    // A generic method for navigating to a specified page
+    // The method takes a type parameter T, where T is a subclass of Page and has a parameterless constructor
+    // This is specified by the where T : Page, new() constraint
+    public async Task NavigateToPageAsync<T>() where T : Page, new()
     {
-        await _navigation.PushAsync(new SpeakPage());
-    }
+        // Create a new instance of the page of type T
+        var page = new T();
 
-    // Method that navigates to the Speech page by pushing it to the navigation stack
-    public async Task NavigateToSpeechPageAsync()
-    {
-        await _navigation.PushAsync(new SpeechPage());
-    }
-
-    // Method that navigates to the Summarize Documents page by pushing it to the navigation stack
-    public async Task NavigateToSummarizeDocumentsPageAsync()
-    {
-        await _navigation.PushAsync(new SummarizeDocumentsPage());
+        // Use the INavigation object to push the new page onto the navigation stack, navigating to it
+        await _navigation.PushAsync(page);
     }
 }
+
