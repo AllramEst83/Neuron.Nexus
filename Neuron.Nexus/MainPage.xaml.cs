@@ -23,10 +23,9 @@ public partial class MainPage : ContentPage
         // of the NavigationService and making the ViewModel easier to test.
         var viewModel = new MainPageViewModel(navigationService);
 
-        // BindingContext is not set in your provided code. Typically, it is set in the next step like this:
-        // BindingContext = viewModel; 
         // This assigns the ViewModel instance to the BindingContext of the MainPage,
         // and is necessary for the data bindings defined in the XAML to work correctly.
+        BindingContext = viewModel;
     }
 
 }

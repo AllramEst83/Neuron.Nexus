@@ -1,4 +1,5 @@
-﻿namespace Neuron.Nexus.Services;
+﻿
+namespace Neuron.Nexus.Services;
 
 // The INavigationService interface defines the contract for a service that provides navigation functionality
 public interface INavigationService

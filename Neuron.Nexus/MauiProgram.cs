@@ -21,14 +21,14 @@ public static class MauiProgram
             });
 
         builder.Services
-            //MainPage
+           .AddSingleton<INavigationService, NavigationService>()
+           //MainPage
            .AddTransient<MainPage>()
            .AddTransient<MainPageViewModel>()
-           //SpeakkPage
+           //SpeakPage
            .AddTransient<SpeakPage>()
            //SpeechPage
-           .AddTransient<SpeechPage>()
-           .AddSingleton<INavigationService, NavigationService>();
+           .AddTransient<SpeechPage>();
 
 #if DEBUG
         builder.Logging.AddDebug();

@@ -9,43 +9,22 @@
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
-        <ScrollView Grid.Row="0">
+        <ScrollView 
+            Grid.Row="0"
+            Style="{StaticResource scrollViewBackground}">
             <!-- Chat area -->
             <StackLayout x:Name="ChatArea" Orientation="Vertical">
                 <!-- Chat messages go here -->
             </StackLayout>
         </ScrollView>
-
+      
         <!-- Static bar at the bottom -->
-        <StackLayout Grid.Row="1" BackgroundColor="LightGray" Padding="0,10,0,10">
+        <StackLayout Grid.Row="1" Style="{StaticResource stackLayoutBackground}">
             <FlexLayout JustifyContent="SpaceEvenly">
 
-                <ImageButton 
-                Source="microphone.png"
-                CornerRadius="20"
-                HeightRequest="40"
-                WidthRequest="40"
-                Padding="5"
-                HorizontalOptions="CenterAndExpand"
-                VerticalOptions="CenterAndExpand" />
-
-                <ImageButton 
-                Source="stop.png"
-                CornerRadius="20"
-                HeightRequest="40"
-                WidthRequest="40"
-                Padding="5"
-                HorizontalOptions="CenterAndExpand"
-                VerticalOptions="CenterAndExpand" />
-
-                <ImageButton 
-                Source="microphone.png"
-                CornerRadius="20"
-                HeightRequest="40"
-                WidthRequest="40"
-                Padding="5"
-                HorizontalOptions="CenterAndExpand"
-                VerticalOptions="CenterAndExpand" />
+                <ImageButton  Source="microphone.png" />
+                <ImageButton Source="stop.png" />
+                <ImageButton Source="microphone.png"/>
 
             </FlexLayout>
         </StackLayout>

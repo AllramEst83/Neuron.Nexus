@@ -8,11 +8,16 @@
     <!-- The ScrollView allows content to be scrollable if it exceeds the screen size. 
      Orientation set to "Vertical" means the content can be scrolled vertically. 
      VerticalOptions="FillAndExpand" makes the ScrollView fill the available vertical space. -->
-    <ScrollView Orientation="Vertical" VerticalOptions="FillAndExpand">
+    <ScrollView 
+        Orientation="Vertical" 
+        VerticalOptions="FillAndExpand" 
+        Style="{StaticResource scrollViewBackground}">
 
         <!-- StackLayout stacks its children in the direction specified by Orientation. 
          Here it's set to "Vertical", so children are stacked from top to bottom. -->
-        <StackLayout Orientation="Vertical">
+        <StackLayout 
+            Orientation="Vertical"
+            Padding="0,10,0,0">
 
             <!-- FlexLayout is a layout that provides flexibility by aligning its children in multiple directions, 
              wrapping and shrinking/expanding them to fill the available space.
@@ -29,69 +34,33 @@
                  a corner radius for rounded corners, a background color, and an event handler for click events.
                  WidthRequest and HeightRequest specify the preferred size.
                  Margin property is used to add space around the button. -->
-                <Button Text="Speak"
-                    CornerRadius="10"
-                    BackgroundColor="LightBlue"
-                    Command="{Binding NavigateToSpeakCommand}"
-                    WidthRequest="100"
-                    HeightRequest="100" 
-                    Margin="5" >
-                    <Button.Shadow>
-                        <Shadow Brush="Pink"
-                                Radius="40"
-                                Offset="10,10"
-                                Opacity="0.80"
-                                />
-                    </Button.Shadow>
+                <Button 
+                    Text="Speak"
+                    Command="{Binding NavigateToSpeakCommand}"         
+                    Style="{StaticResource Key=buttonStyle}">
                 </Button>
-                
-                <Button Text="summarize"
-                    CornerRadius="10"
-                    BackgroundColor="LightBlue"
+
+                <Button 
+                    Text="summarize"
                     Command="{Binding NavigateToSummarizeDocumentsCommand}"
-                    WidthRequest="100"
-                    HeightRequest="100" 
-                    Margin="5" >
-                    <Button.Shadow>
-                        <Shadow Brush="Pink"
-                                Radius="40"
-                                Offset="10,10"
-                                Opacity="0.80"
-                                />
-                    </Button.Shadow>
+                    Style="{StaticResource Key=buttonStyle}">
                 </Button>
-                
-                <Button Text="Speech"
-                    CornerRadius="10"
-                    BackgroundColor="LightBlue"
-                    Command="{Binding NavigateToSpeechCommand}"
-                    WidthRequest="100"
-                    HeightRequest="100" 
-                    Margin="5" >
-                    <Button.Shadow>
-                        <Shadow Brush="Pink"
-                                Radius="40"
-                                Offset="10,10"
-                                Opacity="0.80"
-                                />
-                    </Button.Shadow>
+
+                <Button 
+                    Text="Speech"
+                    Command="{Binding NavigateToSpeechCommand}"                
+                    Style="{StaticResource Key=buttonStyle}">
                 </Button>
 
                 <!-- More buttons can be added to the layout, following the same structure. -->
-                <Button Text="Soon to come..."
+                <!--<Button Text="Soon to come..."
                     CornerRadius="10"
                     BackgroundColor="LightBlue"
-                    WidthRequest="100"
-                    HeightRequest="100" 
-                    Margin="5" >
-                    <Button.Shadow>
-                        <Shadow Brush="Pink"
-                                Radius="40"
-                                Offset="10,10"
-                                Opacity="0.80"
-                                />
-                    </Button.Shadow>
-                    </Button>
+                    MinimumWidthRequest="65"
+                    MinimumHeightRequest="65" 
+                    Margin="5" 
+                    Style="{StaticResource Key=buttonShadow}">
+                </Button>-->
 
             </FlexLayout>
         </StackLayout>
