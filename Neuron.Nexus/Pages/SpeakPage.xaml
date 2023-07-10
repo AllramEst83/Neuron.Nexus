@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="Neuron.Nexus.Pages.SpeakPage">
+             x:Class="Neuron.Nexus.Pages.SpeakPage" 
+             Title="Speak"
+             xmlns:viewmodel="clr-namespace:Neuron.Nexus.ViewModels"
+             x:DataType="viewmodel:SpeakPageViewModel">
 
     <Grid>
         <Grid.RowDefinitions>
@@ -12,19 +15,62 @@
         <ScrollView 
             Grid.Row="0"
             Style="{StaticResource scrollViewBackground}">
-            <!-- Chat area -->
-            <StackLayout x:Name="ChatArea" Orientation="Vertical">
-                <!-- Chat messages go here -->
+
+            <!-- Language Selection -->
+            <StackLayout x:Name="ChatArea"  
+                         VerticalOptions="CenterAndExpand"
+                         Orientation="Vertical"
+                         Padding="10"
+                         IsVisible="{Binding IsLanguageSelectionVisible }">
+                <!-- Language Picker One -->
+                <!--<Label Text="Select Language" HorizontalOptions="Center" />-->
+                
+                <Label 
+                    Text="Translation between languages"     
+                    HorizontalOptions="CenterAndExpand" />
+                
+                <Picker 
+                    x:Name="LanguagePickerOne" 
+                    Title="Select Language" 
+                    HorizontalOptions="FillAndExpand" 
+                    ItemsSource="{Binding Languages}"/>
+                <!-- Language Picker Two -->
+                <!--<Label Text="Select Language" HorizontalOptions="Center" />-->
+                <Picker 
+                    x:Name="LanguagePickerTwo" 
+                    Title="Select Language" 
+                    HorizontalOptions="FillAndExpand"
+                    ItemsSource="{Binding Languages}"/>
+
+                <!--StartButton-->
+                <Button 
+                    Text="Start"
+                    Style="{StaticResource Key=buttonStyle}"
+                    Command="{Binding StartCommand}">
+                </Button>
             </StackLayout>
+
         </ScrollView>
-      
+
         <!-- Static bar at the bottom -->
         <StackLayout Grid.Row="1" Style="{StaticResource stackLayoutBackground}">
             <FlexLayout JustifyContent="SpaceEvenly">
 
-                <ImageButton  Source="microphone.png" />
-                <ImageButton Source="stop.png" />
-                <ImageButton Source="microphone.png"/>
+
+                <ImageButton  
+                    Source="microphone.png" 
+                    Command="{Binding SpeakLanguageOneCommand}"
+                    IsEnabled="{Binding IsSpeakButtonsEnabled}"/>
+
+                <ImageButton 
+                    Source="stop.png" 
+                    Command="{Binding StopCommand}"
+                    IsEnabled="{Binding IsSpeakButtonsEnabled}"/>
+
+                <ImageButton 
+                    Source="microphone.png"
+                    Command="{Binding SpeakLanguageTwoCommand}"
+                    IsEnabled="{Binding IsSpeakButtonsEnabled}"/>
 
             </FlexLayout>
         </StackLayout>

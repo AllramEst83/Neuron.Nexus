@@ -3,8 +3,15 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Neuron.Nexus.MainPage"
              xmlns:viewmodel="clr-namespace:Neuron.Nexus.ViewModels"
-             x:DataType="viewmodel:MainPageViewModel">
-
+             x:DataType="viewmodel:MainPageViewModel"
+             xmlns:mct="http://schemas.microsoft.com/dotnet/2022/maui/toolkit">
+             
+    <!--StatusBarColor-->
+    <ContentPage.Behaviors>
+        <mct:StatusBarBehavior StatusBarColor="{StaticResource Primary}"/>
+    </ContentPage.Behaviors>
+    <!--StatusBarColor-->
+    
     <!-- The ScrollView allows content to be scrollable if it exceeds the screen size. 
      Orientation set to "Vertical" means the content can be scrolled vertically. 
      VerticalOptions="FillAndExpand" makes the ScrollView fill the available vertical space. -->

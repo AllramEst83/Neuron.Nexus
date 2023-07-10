@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Neuron.Nexus.ViewModels;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -11,6 +12,9 @@ public partial class SpeakPage : ContentPage
     public SpeakPage()
     {
         InitializeComponent();
+
+        var viewModel = new SpeakPageViewModel();
+        BindingContext = viewModel;
     }
 }
 

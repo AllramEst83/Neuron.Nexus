@@ -7,7 +7,7 @@
     Shell.FlyoutBehavior="Disabled">
 
     <ShellContent
-        Title="Neuron nexus"
+        Title="Neuron"
         ContentTemplate="{DataTemplate local:MainPage}"
         Route="MainPage" />
 
