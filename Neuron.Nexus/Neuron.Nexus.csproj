@@ -15,7 +15,7 @@
 		<ApplicationTitle>Neuron.Nexus</ApplicationTitle>
 
 		<!-- App Identifier -->
-		<ApplicationId>com.companyname.neuron.nexus</ApplicationId>
+		<ApplicationId>com.codedbykay.neuron.nexus</ApplicationId>
 		<ApplicationIdGuid>ad327468-1f4a-4d3e-9e8c-f85559775092</ApplicationIdGuid>
 
 		<!-- Versions -->
@@ -32,10 +32,7 @@
 
 	<ItemGroup>
 		<!-- App Icon -->
-		<MauiSplashScreen Include="Resources\AppIcon\appicon.svg">
-		  <Color>#f78fb3</Color>
-		  <BaseSize>128,128</BaseSize>
-		</MauiSplashScreen>
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" ForegroundFile="Resources\AppIcon\appiconfg.svg" Color="#f78fb3" />
 
 		<!-- Splash Screen -->
 		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#f78fb3" BaseSize="128,128" />
@@ -57,6 +54,7 @@
 
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui" Version="5.2.0" />
+		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
 	</ItemGroup>
 
