@@ -64,7 +64,8 @@
                 <Button 
                     Text="Start"
                     Style="{StaticResource Key=buttonStyle}"
-                    Command="{Binding StartCommand}">
+                    Command="{Binding StartCommand}"
+                    IsEnabled="{Binding IsStartButtonEnabled}">
                 </Button>
             </StackLayout>
 

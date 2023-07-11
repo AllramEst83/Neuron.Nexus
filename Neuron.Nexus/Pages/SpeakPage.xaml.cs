@@ -1,9 +1,4 @@
 ﻿using Neuron.Nexus.ViewModels;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using CommunityToolkit.Mvvm.Messaging;
 using Neuron.Nexus.Models;
 
@@ -19,8 +14,8 @@ public partial class SpeakPage : ContentPage
         //Initialize the components (defined in XAML) of the page.
         InitializeComponent();
 
-        // Create a new instance of SpeakPageViewModel.
-        var viewModel = new SpeakPageViewModel();
+        // Create a new instance of SpeakPageViewModel with dependency injetced services.
+        var viewModel = Application.Current.Handler.MauiContext.Services.GetService<SpeakPageViewModel>();
 
         // Set the BindingContext of the page to this ViewModel instance.
         // The BindingContext is used for data binding in the XAML.

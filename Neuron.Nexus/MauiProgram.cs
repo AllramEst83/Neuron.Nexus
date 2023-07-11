@@ -23,8 +23,8 @@ public static class MauiProgram
         builder.Services
             //NavigationService
            .AddSingleton<INavigationService, NavigationService>()
-           //SpeakService
-           .AddTransient<ISpeakService, SpeakService>()
+        //SpeakService
+           .AddTransient<ILanguageService, LanguageService>()
            //MainPage
            .AddTransient<MainPage>()
            .AddTransient<MainPageViewModel>()
