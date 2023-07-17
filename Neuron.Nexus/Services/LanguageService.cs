@@ -1,4 +1,5 @@
-﻿using Neuron.Nexus.Services;
+﻿using Neuron.Nexus.Models;
+using Neuron.Nexus.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,18 +10,17 @@ namespace Neuron.Nexus.Services
 {
     public interface ILanguageService
     {
-        List<string> GetLanguages();
+        List<Language> GetLanguages();
     }
-    public class LanguageService: ILanguageService
-{
-
-        public List<string> GetLanguages()
+    public class LanguageService : ILanguageService
+    {
+        public List<Language> GetLanguages()
         {
-            return new List<string>()        {
-                "English",
-                "Spanish",
-                "French"
+            return new List<Language>()
+            {
+                new Language() { Id = 1 , LanguageName = "Swedish" , FullLanguageCode = "sv-SE"},
+                new Language() { Id = 2 , LanguageName = "English" , FullLanguageCode = "en-US"}
             };
         }
-    } 
+    }
 }

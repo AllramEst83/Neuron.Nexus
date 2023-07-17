@@ -4,8 +4,14 @@
              x:Class="Neuron.Nexus.Pages.SpeakPage" 
              Title="Speak"
              xmlns:viewmodel="clr-namespace:Neuron.Nexus.ViewModels"
+             xmlns:converter="clr-namespace:Neuron.Nexus.Converters"
+             xmlns:models="clr-namespace:Neuron.Nexus.Models"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:DataType="viewmodel:SpeakPageViewModel">
+    <ContentPage.Resources>
+        <converter:PickerLocaleDisplayConverter x:Key="PickerLocaleDisplayConverter" />
+    </ContentPage.Resources>
+    
 
     <Grid>
         <Grid.RowDefinitions>
@@ -24,40 +30,52 @@
                          Padding="10"
                          
                          IsVisible="{Binding IsLanguageSelectionVisible }">
-                
+
                 <!-- Language Picker One -->
                 <!--<Label Text="Select Language" HorizontalOptions="Center" />-->
-                
+
+                <ActivityIndicator 
+                    IsRunning="{Binding StartCommand.IsRunning}" 
+                    IsVisible="{Binding StartCommand.IsRunning}"
+                    Color="Orange" 
+                    VerticalOptions="CenterAndExpand" 
+                    Scale="1"/>
+
                 <Label 
                     Text="Translation between languages"     
                     HorizontalOptions="CenterAndExpand" />
 
-                <Picker 
-                    x:Name="LanguagePickerOne" 
-                    Title="Select Language" 
+                <Picker
+                    x:Name="LanguagePickerOne"
+                    Title="Select Language"
                     HorizontalOptions="FillAndExpand"
-                    ItemsSource="{Binding Languages}">
+                    ItemsSource="{Binding Languages}"
+                    SelectedItem="{Binding LanguageOne}"
+                    ItemDisplayBinding="{Binding ., Converter={StaticResource PickerLocaleDisplayConverter}}">
 
                     <Picker.Behaviors>
-                        <toolkit:EventToCommandBehavior EventName="SelectedIndexChanged"
-                                                  Command="{Binding SelectedIndexChangedCommandOne}"
-                                                  CommandParameter="{Binding Source={x:Reference Name=LanguagePickerOne}}"/>
+                        <toolkit:EventToCommandBehavior
+                            EventName="SelectedIndexChanged"
+                            Command="{Binding HandlePickerSelectionChangedCommand}"
+                            CommandParameter="{Binding Source={x:Reference Name=LanguagePickerOne}}" />
                     </Picker.Behaviors>
                 </Picker>
-                
+
                 <!-- Language Picker Two -->
                 <!--<Label Text="Select Language" HorizontalOptions="Center" />-->
                 <Picker 
                     x:Name="LanguagePickerTwo" 
                     Title="Select Language" 
                     HorizontalOptions="FillAndExpand"
-                    ItemsSource="{Binding Languages}">
+                    ItemsSource="{Binding Languages}"
+                    SelectedItem="{Binding LanguageTwo}"
+                    ItemDisplayBinding="{Binding ., Converter={StaticResource PickerLocaleDisplayConverter}}">
 
                     <Picker.Behaviors>
                         <toolkit:EventToCommandBehavior EventName="SelectedIndexChanged"
-                                                  Command="{Binding SelectedIndexChangedCommandTwo}"
+                                                  Command="{Binding HandlePickerSelectionChangedCommand}"
                                                   CommandParameter="{Binding Source={x:Reference Name=LanguagePickerTwo}}"/>
-                    </Picker.Behaviors>                    
+                    </Picker.Behaviors>
                 </Picker>
 
                 <!--StartButton-->

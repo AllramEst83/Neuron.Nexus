@@ -1,6 +1,8 @@
 ﻿using Neuron.Nexus.ViewModels;
 using CommunityToolkit.Mvvm.Messaging;
 using Neuron.Nexus.Models;
+using CommunityToolkit.Maui.Converters;
+using System.Globalization;
 
 namespace Neuron.Nexus.Pages;
 
@@ -80,5 +82,7 @@ public partial class SpeakPage : ContentPage
     {
 
     }
+
+
 }
 
