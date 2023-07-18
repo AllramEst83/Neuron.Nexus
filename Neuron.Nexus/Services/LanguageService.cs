@@ -1,4 +1,5 @@
 ﻿using Neuron.Nexus.Models;
+using Neuron.Nexus.Repositories;
 using Neuron.Nexus.Services;
 using System;
 using System.Collections.Generic;
@@ -10,17 +11,20 @@ namespace Neuron.Nexus.Services
 {
     public interface ILanguageService
     {
-        List<Language> GetLanguages();
+        List<LanguageOption> GetLanguages();
     }
     public class LanguageService : ILanguageService
     {
-        public List<Language> GetLanguages()
+        public LanguageService(ILanguageRepository languageRepository)
         {
-            return new List<Language>()
-            {
-                new Language() { Id = 1 , LanguageName = "Swedish" , FullLanguageCode = "sv-SE"},
-                new Language() { Id = 2 , LanguageName = "English" , FullLanguageCode = "en-US"}
-            };
+           _languageRepository = languageRepository;
+        }
+
+        public ILanguageRepository _languageRepository { get; }
+
+        public List<LanguageOption> GetLanguages()
+        {
+            return _languageRepository.GetLanguages();
         }
     }
 }

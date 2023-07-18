@@ -6,6 +6,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Neuron.Nexus.Models;
 using System.Collections.ObjectModel;
+using System.Threading;
 
 namespace Neuron.Nexus.ViewModels;
 [QueryProperty(nameof(LanguageOneToBeSent), "languageOneToBeSent")]
@@ -16,7 +17,7 @@ public partial class SpeakPageViewModel : BaseViewModel
     {
         set
         {
-            LanguageOne= Newtonsoft.Json.JsonConvert.DeserializeObject<Language>(Uri.UnescapeDataString(value));
+            LanguageOne = Newtonsoft.Json.JsonConvert.DeserializeObject<LanguageOption>(Uri.UnescapeDataString(value));
             // Now you can use yourObject
         }
     }
@@ -24,15 +25,15 @@ public partial class SpeakPageViewModel : BaseViewModel
     {
         set
         {
-            LanguageTwo = Newtonsoft.Json.JsonConvert.DeserializeObject<Language>(Uri.UnescapeDataString(value));
+            LanguageTwo = Newtonsoft.Json.JsonConvert.DeserializeObject<LanguageOption>(Uri.UnescapeDataString(value));
             // Now you can use yourObject
         }
     }
 
     [ObservableProperty]
-    private Language languageOne = null;
+    private LanguageOption languageOne = null;
     [ObservableProperty]
-    private Language languageTwo = null;
+    private LanguageOption languageTwo = null;
     [ObservableProperty]
     private bool isSpeakButtonsEnabled = false;
     [ObservableProperty]
@@ -40,56 +41,19 @@ public partial class SpeakPageViewModel : BaseViewModel
     [ObservableProperty]
     string recognitionTextTwo = "";
 
-
     private ObservableCollection<UserMessage> _userMessages;
     public ObservableCollection<UserMessage> UserMessages
     {
         get => _userMessages;
         set => SetProperty(ref _userMessages, value);
-    }  
+    }
 
- 
     private readonly ISpeechToText _speechToText;
 
     public SpeakPageViewModel(ISpeechToText speechToText)
     {
         _speechToText = speechToText;
-       
-
-       
-        UserMessages = new ObservableCollection<UserMessage>
-        {
-            new UserMessage { User = 1, ChatMessage = "Hello" },
-            new UserMessage { User = 2, ChatMessage = "Hello back" },
-             new UserMessage { User = 1, ChatMessage = "Hello" },
-              new UserMessage { User = 1, ChatMessage = "Hello" },
-               new UserMessage { User = 2, ChatMessage = "Hello" },
-                new UserMessage { User = 1, ChatMessage = "Hello" },
-                 new UserMessage { User = 1, ChatMessage = "Hello" },
-
-                  new UserMessage { User = 1, ChatMessage = "Hello" },
-                  new UserMessage { User = 1, ChatMessage = "Hello" },
-                 new UserMessage { User = 1, ChatMessage = "Hello" },
-
-                 new UserMessage { User = 1, ChatMessage = "Hello" },
-                 new UserMessage { User = 2, ChatMessage = "Hello" },
-                 new UserMessage { User = 2, ChatMessage = "Hello" },
-                   new UserMessage { User = 1, ChatMessage = "Hello" },
-            new UserMessage { User = 2, ChatMessage = "Hello back" },
-             new UserMessage { User = 1, ChatMessage = "Hello" },
-              new UserMessage { User = 1, ChatMessage = "Hello" },
-               new UserMessage { User = 2, ChatMessage = "Hello" },
-                new UserMessage { User = 1, ChatMessage = "Hello" },
-                 new UserMessage { User = 1, ChatMessage = "Hello" },
-
-                  new UserMessage { User = 1, ChatMessage = "Hello" },
-                  new UserMessage { User = 1, ChatMessage = "Hello" },
-                 new UserMessage { User = 1, ChatMessage = "Hello" },
-
-                 new UserMessage { User = 1, ChatMessage = "Hello" },
-                 new UserMessage { User = 2, ChatMessage = "Hello" },
-                 new UserMessage { User = 2, ChatMessage = "Hello" }
-        };
+        UserMessages = new ObservableCollection<UserMessage>();
 
         IsSpeakButtonsEnabled = !IsSpeakButtonsEnabled;
 
@@ -102,10 +66,30 @@ public partial class SpeakPageViewModel : BaseViewModel
 
     }
 
-    [RelayCommand]
-    static void SpeakLanguageTwo()
+    [RelayCommand(IncludeCancelCommand = true)]
+    async Task SpeakLanguageTwo(CancellationToken cancellationToken)
     {
         WeakReferenceMessenger.Default.Send(new AnimateButtonMessage(AnimationButtonsEnum.LanguageTwoBtn));
+
+        System.Globalization.CultureInfo culture = System.Globalization.CultureInfo.GetCultureInfo(LanguageTwo.FullLanguageCode.ToLower() ?? "en-US");
+        var progressSettings = new Progress<string>();
+
+        var recognitionResult = await _speechToText.ListenAsync(culture, progressSettings, cancellationToken);
+
+        if (recognitionResult.IsSuccessful)
+        {
+            RecognitionTextOne = recognitionResult.Text;
+
+            UserMessages.Add(new UserMessage()
+            {
+                User = 2,
+                ChatMessage = RecognitionTextOne
+            });
+        }
+        else
+        {
+            await Toast.Make(recognitionResult.Exception?.Message ?? "Unable to recognize speech", ToastDuration.Long).Show(CancellationToken.None);
+        }
     }
 
     [RelayCommand(IncludeCancelCommand = true)]
@@ -114,22 +98,34 @@ public partial class SpeakPageViewModel : BaseViewModel
         WeakReferenceMessenger.Default.Send(new AnimateButtonMessage(AnimationButtonsEnum.LanguageOneBtn));
 
         System.Globalization.CultureInfo culture = System.Globalization.CultureInfo.GetCultureInfo(LanguageOne.FullLanguageCode.ToLower() ?? "en-US");
-        var progressSettings = new Progress<string>(partialText =>
-        {
-            RecognitionTextOne += partialText;
-        });
+        var progressSettings = new Progress<string>();
 
         var recognitionResult = await _speechToText.ListenAsync(culture, progressSettings, cancellationToken);
 
         if (recognitionResult.IsSuccessful)
         {
             RecognitionTextOne = recognitionResult.Text;
+
+            UserMessages.Add(new UserMessage()
+            {
+                User = 1,
+                ChatMessage = RecognitionTextOne
+            });
+
+            System.Diagnostics.Debug.WriteLine("Sending NewMessageAdded message");
+            WeakReferenceMessenger.Default.Send("NewMessageAdded");
         }
         else
         {
             await Toast.Make(recognitionResult.Exception?.Message ?? "Unable to recognize speech", ToastDuration.Long).Show(CancellationToken.None);
         }
     }
+
+    public async Task Initialize()
+    {
+        //...
+    }
+
 }
 
 

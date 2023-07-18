@@ -16,7 +16,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Frame Grid.Column="0" WidthRequest="180" Padding="10" BackgroundColor="{StaticResource Tertiary}">
+                <Frame Grid.Column="0" WidthRequest="180" Padding="10" BackgroundColor="{StaticResource TertiaryAccent}">
                     <Label Text="{Binding ChatMessage}" />
                 </Frame>
             </Grid>
@@ -28,7 +28,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Frame Grid.Column="1" WidthRequest="180" Padding="10" BackgroundColor="{StaticResource Primary}">
+                <Frame Grid.Column="1" WidthRequest="180" Padding="10" BackgroundColor="{StaticResource PrimaryAccent}">
                     <Label Text="{Binding ChatMessage}" />
                 </Frame>
             </Grid>
@@ -48,21 +48,26 @@
         </Grid.RowDefinitions>
 
         <ScrollView 
+         x:Name="ChatScrollView"
         Grid.Row="0"
         Style="{StaticResource scrollViewBackground}">
 
             <!-- Language Selection -->
-            <StackLayout x:Name="ChatArea"  
+            <StackLayout x:Name="ChatStackLayout"  
                      VerticalOptions="EndAndExpand"
                      Orientation="Vertical"
                      Padding="10">
 
                 <!-- Chat Messages -->
                 <CollectionView 
-                x:Name="ChatCollectionView"
-                ItemsSource="{Binding UserMessages}"
-                ItemTemplate="{StaticResource ChatTemplateSelector}"
-                ItemsUpdatingScrollMode="KeepLastItemInView">
+                    x:Name="ChatCollectionView"
+                    VerticalOptions="FillAndExpand"
+                     IsVisible="True"
+                    ItemsSource="{Binding UserMessages}"
+                    ItemTemplate="{StaticResource ChatTemplateSelector}"
+                    ItemsUpdatingScrollMode="KeepLastItemInView">
+                    
+
                 </CollectionView>
 
             </StackLayout>

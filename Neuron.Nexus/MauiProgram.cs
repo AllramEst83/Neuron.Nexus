@@ -3,6 +3,7 @@ using CommunityToolkit.Maui.Media;
 using Microsoft.Extensions.Logging;
 using Neuron.Nexus.Models;
 using Neuron.Nexus.Pages;
+using Neuron.Nexus.Repositories;
 using Neuron.Nexus.Services;
 using Neuron.Nexus.ViewModels;
 
@@ -24,7 +25,9 @@ public static class MauiProgram
 
         builder.Services
             .AddSingleton<ISpeechToText>(SpeechToText.Default)
-        //SpeakService
+        //LanguageRepository
+        .AddTransient<ILanguageRepository, LanguageRepository>()
+               //SpeakService
            .AddTransient<ILanguageService, LanguageService>()
            //MainPage
            .AddTransient<MainPage>()

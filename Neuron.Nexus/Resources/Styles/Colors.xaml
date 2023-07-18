@@ -31,6 +31,11 @@
     <Color x:Key="Primary">#f78fb3</Color>
     <Color x:Key="Secondary">#f7d794</Color>
     <Color x:Key="Tertiary">#778beb</Color>
+<!--Divider-->
+    <Color x:Key="PrimaryAccent">#c75d6a</Color>
+    <Color x:Key="SecondaryAccent">#c7a500</Color>
+    <Color x:Key="TertiaryAccent">#0057c7</Color>
+
     <!--Main app colors-->
     
     <Color x:Key="White">White</Color>

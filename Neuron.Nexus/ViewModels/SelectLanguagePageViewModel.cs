@@ -2,6 +2,7 @@
 using CommunityToolkit.Maui.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
+using Microsoft.Maui.Media;
 using Neuron.Nexus.Models;
 using Neuron.Nexus.Pages;
 using Neuron.Nexus.Services;
@@ -14,12 +15,18 @@ namespace Neuron.Nexus.ViewModels
     public partial class SelectLanguagePageViewModel : BaseViewModel
     {
         [ObservableProperty]
-        private Language selectedLanguageOne = null;
+        private LanguageOption selectedLanguageOne = null;
         [ObservableProperty]
-        private Language selectedLanguageTwo = null;
+        private LanguageOption selectedLanguageTwo = null;
         [ObservableProperty]
         private bool isStartButtonEnabled = false;
-        public ObservableCollection<Language> Languages { get; set; }
+        private ObservableCollection<LanguageOption> _languages;
+        public ObservableCollection<LanguageOption> Languages
+        {
+            get => _languages;
+            set => SetProperty(ref _languages, value);
+        }
+
         private readonly ISpeechToText _speechToText;
         private readonly ILanguageService _languageService;
 
@@ -29,8 +36,6 @@ namespace Neuron.Nexus.ViewModels
         {
             _speechToText = speecheTotext;
             _languageService = languageService;
-
-            Languages = new ObservableCollection<Language>(_languageService.GetLanguages());
 
             NavigateToSpeakCommand = new Command<CancellationToken>(async (ct) => await NavigateToSpeakAsync(ct));
         }
@@ -63,6 +68,11 @@ namespace Neuron.Nexus.ViewModels
             string languageTwoToBeSent = JsonConvert.SerializeObject(SelectedLanguageOne);
 
             await Shell.Current.GoToAsync($"//{nameof(SpeakPage)}?languageOneToBeSent={Uri.EscapeDataString(languageOneToBeSent)}&languageTwoToBeSent={Uri.EscapeDataString(languageTwoToBeSent)}");
+        }
+
+        public async Task Initialize()
+        {
+            Languages = new ObservableCollection<LanguageOption>(_languageService.GetLanguages());
         }
     }
 }

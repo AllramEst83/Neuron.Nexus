@@ -14,4 +14,12 @@ public partial class SelectLanguagePage : ContentPage
 
         BindingContext = viewModel;
     }
+
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+
+        // Initialize the ViewModel
+        await ((SelectLanguagePageViewModel)BindingContext).Initialize();
+    }
 }

@@ -27,6 +27,27 @@ public partial class SpeakPage : ContentPage
         SetupAnimationMessaging();
     }
 
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+
+        // Initialize the ViewModel
+        await ((SpeakPageViewModel)BindingContext).Initialize();
+
+    }
+
+    protected override void OnSizeAllocated(double width, double height)
+    {
+        base.OnSizeAllocated(width, height);
+
+        if (width != -1 && height != -1)
+        {
+            double scrollViewHeight = ChatScrollView.Height;
+
+            ChatCollectionView.HeightRequest = scrollViewHeight;
+        }
+    }
+
     /// <summary>
     /// Sets up the animation messaging for this page.
     /// </summary>

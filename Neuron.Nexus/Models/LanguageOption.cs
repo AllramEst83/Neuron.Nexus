@@ -1,6 +1,6 @@
 ﻿namespace Neuron.Nexus.Models
 {
-    public class Language
+    public class LanguageOption
     {
         public int Id { get; set; }
         public string LanguageName { get; set; }
