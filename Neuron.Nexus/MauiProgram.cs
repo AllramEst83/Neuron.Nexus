@@ -1,5 +1,7 @@
 ﻿using CommunityToolkit.Maui;
+using CommunityToolkit.Maui.Media;
 using Microsoft.Extensions.Logging;
+using Neuron.Nexus.Models;
 using Neuron.Nexus.Pages;
 using Neuron.Nexus.Services;
 using Neuron.Nexus.ViewModels;
@@ -21,8 +23,7 @@ public static class MauiProgram
             });
 
         builder.Services
-            //NavigationService
-           .AddSingleton<INavigationService, NavigationService>()
+            .AddSingleton<ISpeechToText>(SpeechToText.Default)
         //SpeakService
            .AddTransient<ILanguageService, LanguageService>()
            //MainPage
@@ -32,7 +33,10 @@ public static class MauiProgram
            .AddTransient<SpeakPage>()
            .AddTransient<SpeakPageViewModel>()
            //SpeechPage
-           .AddTransient<SpeechPage>();
+           .AddTransient<SpeechPage>()
+           //SelectLanguagePage
+           .AddTransient<SelectLanguagePage>()
+           .AddTransient<SelectLanguagePageViewModel>();
 
 #if DEBUG
         builder.Logging.AddDebug();

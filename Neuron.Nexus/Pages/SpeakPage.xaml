@@ -9,9 +9,37 @@
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:DataType="viewmodel:SpeakPageViewModel">
     <ContentPage.Resources>
-        <converter:PickerLocaleDisplayConverter x:Key="PickerLocaleDisplayConverter" />
+        <!-- Chat Message Templates -->
+        <DataTemplate x:Key="User1Template" x:DataType="models:UserMessage">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Frame Grid.Column="0" WidthRequest="180" Padding="10" BackgroundColor="{StaticResource Tertiary}">
+                    <Label Text="{Binding ChatMessage}" />
+                </Frame>
+            </Grid>
+        </DataTemplate>
+
+        <DataTemplate x:Key="User2Template" x:DataType="models:UserMessage">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Frame Grid.Column="1" WidthRequest="180" Padding="10" BackgroundColor="{StaticResource Primary}">
+                    <Label Text="{Binding ChatMessage}" />
+                </Frame>
+            </Grid>
+        </DataTemplate>
+
+        <viewmodel:ChatTemplateSelector x:Key="ChatTemplateSelector"
+                                    User1Template="{StaticResource User1Template}"
+                                    User2Template="{StaticResource User2Template}" />
     </ContentPage.Resources>
-    
+
+
 
     <Grid>
         <Grid.RowDefinitions>
@@ -20,71 +48,23 @@
         </Grid.RowDefinitions>
 
         <ScrollView 
-            Grid.Row="0"
-            Style="{StaticResource scrollViewBackground}">
+        Grid.Row="0"
+        Style="{StaticResource scrollViewBackground}">
 
             <!-- Language Selection -->
             <StackLayout x:Name="ChatArea"  
-                         VerticalOptions="CenterAndExpand"
-                         Orientation="Vertical"
-                         Padding="10"
-                         
-                         IsVisible="{Binding IsLanguageSelectionVisible }">
+                     VerticalOptions="EndAndExpand"
+                     Orientation="Vertical"
+                     Padding="10">
 
-                <!-- Language Picker One -->
-                <!--<Label Text="Select Language" HorizontalOptions="Center" />-->
+                <!-- Chat Messages -->
+                <CollectionView 
+                x:Name="ChatCollectionView"
+                ItemsSource="{Binding UserMessages}"
+                ItemTemplate="{StaticResource ChatTemplateSelector}"
+                ItemsUpdatingScrollMode="KeepLastItemInView">
+                </CollectionView>
 
-                <ActivityIndicator 
-                    IsRunning="{Binding StartCommand.IsRunning}" 
-                    IsVisible="{Binding StartCommand.IsRunning}"
-                    Color="Orange" 
-                    VerticalOptions="CenterAndExpand" 
-                    Scale="1"/>
-
-                <Label 
-                    Text="Translation between languages"     
-                    HorizontalOptions="CenterAndExpand" />
-
-                <Picker
-                    x:Name="LanguagePickerOne"
-                    Title="Select Language"
-                    HorizontalOptions="FillAndExpand"
-                    ItemsSource="{Binding Languages}"
-                    SelectedItem="{Binding LanguageOne}"
-                    ItemDisplayBinding="{Binding ., Converter={StaticResource PickerLocaleDisplayConverter}}">
-
-                    <Picker.Behaviors>
-                        <toolkit:EventToCommandBehavior
-                            EventName="SelectedIndexChanged"
-                            Command="{Binding HandlePickerSelectionChangedCommand}"
-                            CommandParameter="{Binding Source={x:Reference Name=LanguagePickerOne}}" />
-                    </Picker.Behaviors>
-                </Picker>
-
-                <!-- Language Picker Two -->
-                <!--<Label Text="Select Language" HorizontalOptions="Center" />-->
-                <Picker 
-                    x:Name="LanguagePickerTwo" 
-                    Title="Select Language" 
-                    HorizontalOptions="FillAndExpand"
-                    ItemsSource="{Binding Languages}"
-                    SelectedItem="{Binding LanguageTwo}"
-                    ItemDisplayBinding="{Binding ., Converter={StaticResource PickerLocaleDisplayConverter}}">
-
-                    <Picker.Behaviors>
-                        <toolkit:EventToCommandBehavior EventName="SelectedIndexChanged"
-                                                  Command="{Binding HandlePickerSelectionChangedCommand}"
-                                                  CommandParameter="{Binding Source={x:Reference Name=LanguagePickerTwo}}"/>
-                    </Picker.Behaviors>
-                </Picker>
-
-                <!--StartButton-->
-                <Button 
-                    Text="Start"
-                    Style="{StaticResource Key=buttonStyle}"
-                    Command="{Binding StartCommand}"
-                    IsEnabled="{Binding IsStartButtonEnabled}">
-                </Button>
             </StackLayout>
 
         </ScrollView>
@@ -93,24 +73,23 @@
         <StackLayout Grid.Row="1" Style="{StaticResource stackLayoutBackground}">
             <FlexLayout JustifyContent="SpaceEvenly">
 
-
                 <ImageButton
-                    x:Name="LanguageOneBtn"
-                    Source="microphone.png" 
-                    Command="{Binding SpeakLanguageOneCommand}"
-                    IsEnabled="{Binding IsSpeakButtonsEnabled}"/>
+                x:Name="LanguageOneBtn"
+                Source="microphone.png" 
+                Command="{Binding SpeakLanguageOneCommand}"
+                IsEnabled="{Binding IsSpeakButtonsEnabled}"/>
 
                 <ImageButton 
-                    x:Name="StopBtn"
-                    Source="stop.png" 
-                    Command="{Binding StopCommand}"
-                    IsEnabled="{Binding IsSpeakButtonsEnabled}"/>
+                x:Name="StopBtn"
+                Source="stop.png" 
+                Command="{Binding StopCommand}"
+                IsEnabled="{Binding IsSpeakButtonsEnabled}"/>
 
                 <ImageButton 
-                    x:Name="LanguageTwoBtn"
-                    Source="microphone.png"
-                    Command="{Binding SpeakLanguageTwoCommand}"
-                    IsEnabled="{Binding IsSpeakButtonsEnabled}"/>
+                x:Name="LanguageTwoBtn"
+                Source="microphone.png"
+                Command="{Binding SpeakLanguageTwoCommand}"
+                IsEnabled="{Binding IsSpeakButtonsEnabled}"/>
 
             </FlexLayout>
         </StackLayout>

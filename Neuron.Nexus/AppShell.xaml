@@ -3,6 +3,7 @@
     x:Class="Neuron.Nexus.AppShell"
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="clr-namespace:Neuron.Nexus.Pages"
     xmlns:local="clr-namespace:Neuron.Nexus"
     Shell.FlyoutBehavior="Disabled">
 
@@ -10,5 +11,10 @@
         Title="Neuron"
         ContentTemplate="{DataTemplate local:MainPage}"
         Route="MainPage" />
+
+    <ShellContent Route="SummarizeDocumentsPage" ContentTemplate="{DataTemplate pages:SummarizeDocumentsPage}" />
+    <ShellContent Route="SelectLanguagePage" ContentTemplate="{DataTemplate pages:SelectLanguagePage}" />
+    <ShellContent Route="SpeechPage" ContentTemplate="{DataTemplate pages:SpeechPage}" />
+    <ShellContent Route="SpeakPage" ContentTemplate="{DataTemplate pages:SpeakPage}" />
 
 </Shell>

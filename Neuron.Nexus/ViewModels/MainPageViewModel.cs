@@ -11,25 +11,16 @@ public partial class MainPageViewModel : BaseViewModel
     // Declare ICommand properties that will be bound to the button commands in the View.
     // ICommand enables data binding command logic, thus simplifying the View (XAML).
     public ICommand NavigateToSummarizeDocumentsCommand { get; private set; }
-    public ICommand NavigateToSpeakCommand { get; private set; }
+    public ICommand NavigateToSelectLanguagekCommand { get; private set; }
     public ICommand NavigateToSpeechCommand { get; private set; }
-
-    // Declare a readonly field for the navigation service, which will be injected via the constructor.
-    private readonly INavigationService _navigationService;
 
     // Define a constructor that takes an INavigationService parameter. 
     // This is Dependency Injection (DI) in action - it allows for loose coupling and easy unit testing.
-    public MainPageViewModel(INavigationService navigationService)
+    public MainPageViewModel()
     {
-        // Assign the injected INavigationService object to the private readonly field.
-        _navigationService = navigationService;
-
-        // Initialize the ICommand properties with new Commands, 
-        // binding them to the respective methods in the navigation service.
-        // These Commands are executed when the corresponding Command in the View (XAML) is triggered.
-        NavigateToSummarizeDocumentsCommand = new Command(async () => await _navigationService.NavigateToPageAsync<SummarizeDocumentsPage>());
-        NavigateToSpeakCommand = new Command(async () => await _navigationService.NavigateToPageAsync<SpeakPage>());
-        NavigateToSpeechCommand = new Command(async () => await _navigationService.NavigateToPageAsync<SpeechPage>());
+        NavigateToSummarizeDocumentsCommand = new Command(async () => await Shell.Current.GoToAsync($"//{nameof(SummarizeDocumentsPage)}"));
+        NavigateToSelectLanguagekCommand = new Command(async () => await Shell.Current.GoToAsync($"//{nameof(SelectLanguagePage)}"));
+        NavigateToSpeechCommand = new Command(async () => await Shell.Current.GoToAsync($"//{nameof(SpeechPage)}"));
     }
 }
 
