@@ -19,6 +19,8 @@ namespace Neuron.Nexus.ViewModels
         [ObservableProperty]
         private LanguageOption selectedLanguageTwo = null;
         [ObservableProperty]
+        private bool isButtonsAndPickerVisble = true;
+        [ObservableProperty]
         private bool isStartButtonEnabled = false;
         private ObservableCollection<LanguageOption> _languages;
         public ObservableCollection<LanguageOption> Languages
@@ -43,6 +45,8 @@ namespace Neuron.Nexus.ViewModels
         [RelayCommand(IncludeCancelCommand = true)]
         public async Task Start(CancellationToken cancellationToken)
         {
+            IsButtonsAndPickerVisble = !IsButtonsAndPickerVisble;
+
             var isGranted = await _speechToText.RequestPermissions(cancellationToken);
             if (!isGranted)
             {
@@ -65,7 +69,7 @@ namespace Neuron.Nexus.ViewModels
         private async Task NavigateToSpeakAsync(CancellationToken cancellationToken)
         {
             string languageOneToBeSent = JsonConvert.SerializeObject(SelectedLanguageOne);
-            string languageTwoToBeSent = JsonConvert.SerializeObject(SelectedLanguageOne);
+            string languageTwoToBeSent = JsonConvert.SerializeObject(SelectedLanguageTwo);
 
             await Shell.Current.GoToAsync($"//{nameof(SpeakPage)}?languageOneToBeSent={Uri.EscapeDataString(languageOneToBeSent)}&languageTwoToBeSent={Uri.EscapeDataString(languageTwoToBeSent)}");
         }

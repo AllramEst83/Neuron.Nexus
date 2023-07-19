@@ -71,15 +71,15 @@ public partial class SpeakPage : ContentPage
             switch (m.ButtonName)
             {
                 case AnimationButtonsEnum.StopBtn:
-                    await AnimateButton(StopBtn);
+                    //await AnimateButton(StopBtn);
                     break;
 
                 case AnimationButtonsEnum.LanguageOneBtn:
-                    await AnimateButton(LanguageOneBtn);
+                    await AnimateButton(LanguageOneBtn, LanguageOneName);
                     break;
 
                 case AnimationButtonsEnum.LanguageTwoBtn:
-                    await AnimateButton(LanguageTwoBtn);
+                    await AnimateButton(LanguageTwoBtn, LanguageTwoName);
                     break;
             }
         });
@@ -90,18 +90,24 @@ public partial class SpeakPage : ContentPage
     /// </summary>
     /// <param name="imageButton">The ImageButton to animate.</param>
     /// <returns>A task that represents the asynchronous operation.</returns>
-    private static async Task AnimateButton(ImageButton imageButton)
+    private static async Task AnimateButton(ImageButton imageButton, Label label)
     {
         // Scale the button up slightly over a period of 100ms.
-        await imageButton.ScaleTo(1.1, 100);
+        await imageButton.ScaleTo(1.1, 50);
+        await label.ScaleTo(1.1, 50);
 
         // "Wiggle" the button by rotating it slightly to the right and then to the left.
-        await imageButton.RotateTo(15, 50); // Rotate 15 degrees to the right over 50ms
-        await imageButton.RotateTo(-15, 50); // Rotate 15 degrees to the left over 50ms
-        await imageButton.RotateTo(0, 50); // Return to the original position over 50ms
+        await imageButton.RotateTo(15, 20); // Rotate 15 degrees to the right over 50ms
+        await label.RotateTo(15, 20); // Rotate 15 degrees to the right over 50ms
+        await imageButton.RotateTo(-15, 20); // Rotate 15 degrees to the left over 50ms
+        await label.RotateTo(-15, 20); // Rotate 15 degrees to the left over 50ms
+        await imageButton.RotateTo(0, 20); // Return to the original position over 50ms
+        await label.RotateTo(0, 20); // Return to the original position over 50ms
+
 
         // Scale the button back to its original size over a period of 100ms.
-        await imageButton.ScaleTo(1.0, 100);
+        await imageButton.ScaleTo(1.0, 50);
+        await label.ScaleTo(1.0, 50);
     }
 
     protected override void OnDisappearing()

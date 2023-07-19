@@ -8,6 +8,7 @@
              xmlns:models="clr-namespace:Neuron.Nexus.Models"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:DataType="viewmodel:SpeakPageViewModel">
+    
     <ContentPage.Resources>
         <!-- Chat Message Templates -->
         <DataTemplate x:Key="User1Template" x:DataType="models:UserMessage">
@@ -75,26 +76,36 @@
         <StackLayout Grid.Row="1" Style="{StaticResource stackLayoutBackground}">
             <FlexLayout JustifyContent="SpaceEvenly">
 
-                <ImageButton
+                <!-- LanguageOneBtn and its Label -->
+                <StackLayout Orientation="Vertical" HorizontalOptions="Center">
+                    <ImageButton
                 x:Name="LanguageOneBtn"
                 Source="microphone.png" 
                 Command="{Binding SpeakLanguageOneCommand}"
                 IsEnabled="{Binding IsSpeakButtonsEnabled}"/>
+                    <Label x:Name="LanguageOneName" Text="{Binding LanguageOne.LanguageName}" HorizontalOptions="Center" VerticalOptions="Start"/>
+                </StackLayout>
 
+                <!-- StopBtn -->
                 <ImageButton 
-                x:Name="StopBtn"
-                Source="stop.png" 
-                Command="{Binding StopCommand}"
-                IsEnabled="{Binding IsSpeakButtonsEnabled}"/>
+            x:Name="StopBtn"
+            Source="stop.png" 
+            Command="{Binding StopCommand}"
+            IsEnabled="{Binding IsSpeakButtonsEnabled}"/>
 
-                <ImageButton 
+                <!-- LanguageTwoBtn and its Label -->
+                <StackLayout Orientation="Vertical" HorizontalOptions="Center">
+                    <ImageButton 
                 x:Name="LanguageTwoBtn"
                 Source="microphone.png"
                 Command="{Binding SpeakLanguageTwoCommand}"
                 IsEnabled="{Binding IsSpeakButtonsEnabled}"/>
+                    <Label x:Name="LanguageTwoName" Text="{Binding LanguageTwo.LanguageName}" HorizontalOptions="Center" VerticalOptions="Start"/>
+                </StackLayout>
 
             </FlexLayout>
         </StackLayout>
+
     </Grid>
 
 </ContentPage>

@@ -21,7 +21,7 @@ namespace Neuron.Nexus.Repositories
         {
             return new List<LanguageOption>
             {
-                new LanguageOption() {Id = 1, FullLanguageCode = "sv-SE", LanguageName = "Sweden" },
+                new LanguageOption() {Id = 1, FullLanguageCode = "sv-SE", LanguageName = "Swedish" },
                 new LanguageOption() {Id = 2,FullLanguageCode = "en-US", LanguageName = "English"}
             };
         }
