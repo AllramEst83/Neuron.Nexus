@@ -25,6 +25,7 @@ public partial class SpeakPage : ContentPage
 
         // Set up the messaging for animation. This will allow the ViewModel to trigger animations in the View.
         SetupAnimationMessaging();
+        SetupScrollToLastItem();
     }
 
     protected override async void OnAppearing()
@@ -46,6 +47,18 @@ public partial class SpeakPage : ContentPage
 
             ChatCollectionView.HeightRequest = scrollViewHeight;
         }
+    }
+
+    private void SetupScrollToLastItem()
+    {
+        WeakReferenceMessenger.Default.Register<string>(this, (r, m) =>
+        {
+            if (m == "NewMessageAdded")
+            {
+                var lastItem = ChatCollectionView.ItemsSource.Cast<UserMessage>().Last();
+                ChatCollectionView.ScrollTo(lastItem, position: ScrollToPosition.End, animate: true);
+            }
+        });
     }
 
     /// <summary>
@@ -97,6 +110,7 @@ public partial class SpeakPage : ContentPage
 
         // Unregister the message when the page disappears
         WeakReferenceMessenger.Default.Unregister<AnimateButtonMessage>(this);
+        WeakReferenceMessenger.Default.Unregister<string>(this);
     }
 
     private void LanguagePickerOne_SelectedIndexChanged(object sender, EventArgs e)

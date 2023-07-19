@@ -61,11 +61,8 @@
                 <!-- Chat Messages -->
                 <CollectionView 
                     x:Name="ChatCollectionView"
-                    VerticalOptions="FillAndExpand"
-                     IsVisible="True"
                     ItemsSource="{Binding UserMessages}"
-                    ItemTemplate="{StaticResource ChatTemplateSelector}"
-                    ItemsUpdatingScrollMode="KeepLastItemInView">
+                    ItemTemplate="{StaticResource ChatTemplateSelector}">
                     
 
                 </CollectionView>

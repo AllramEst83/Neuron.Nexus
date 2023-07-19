@@ -63,7 +63,6 @@ public partial class SpeakPageViewModel : BaseViewModel
     static void Stop()
     {
         WeakReferenceMessenger.Default.Send(new AnimateButtonMessage(AnimationButtonsEnum.StopBtn));
-
     }
 
     [RelayCommand(IncludeCancelCommand = true)]
@@ -85,6 +84,8 @@ public partial class SpeakPageViewModel : BaseViewModel
                 User = 2,
                 ChatMessage = RecognitionTextOne
             });
+
+            WeakReferenceMessenger.Default.Send("NewMessageAdded");
         }
         else
         {
@@ -112,7 +113,6 @@ public partial class SpeakPageViewModel : BaseViewModel
                 ChatMessage = RecognitionTextOne
             });
 
-            System.Diagnostics.Debug.WriteLine("Sending NewMessageAdded message");
             WeakReferenceMessenger.Default.Send("NewMessageAdded");
         }
         else
