@@ -58,11 +58,26 @@ namespace Neuron.Nexus.ViewModels
         }
 
         [RelayCommand]
-        private void HandlePickerSelectionChanged(Picker picker)
+        void HandlePickerSelectionChangedOne(Picker picker)
         {
             if (SelectedLanguageOne is not null && SelectedLanguageTwo is not null)
             {
-                IsStartButtonEnabled = !IsStartButtonEnabled;
+                if (!IsStartButtonEnabled)
+                {
+                    IsStartButtonEnabled = !IsStartButtonEnabled;
+                }
+            }
+        }
+
+        [RelayCommand]        
+        void HandlePickerSelectionChangedTwo(Picker picker)
+        {
+            if (SelectedLanguageOne is not null && SelectedLanguageTwo is not null)
+            {
+                if (!IsStartButtonEnabled)
+                {
+                    IsStartButtonEnabled = !IsStartButtonEnabled;
+                }
             }
         }
 
@@ -74,7 +89,7 @@ namespace Neuron.Nexus.ViewModels
             await Shell.Current.GoToAsync($"//{nameof(SpeakPage)}?languageOneToBeSent={Uri.EscapeDataString(languageOneToBeSent)}&languageTwoToBeSent={Uri.EscapeDataString(languageTwoToBeSent)}");
         }
 
-        public async Task Initialize()
+        public void Initialize()
         {
             Languages = new ObservableCollection<LanguageOption>(_languageService.GetLanguages());
         }

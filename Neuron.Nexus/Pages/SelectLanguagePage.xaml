@@ -57,7 +57,7 @@
                     <Picker.Behaviors>
                         <toolkit:EventToCommandBehavior
                             EventName="SelectedIndexChanged"
-                            Command="{Binding HandlePickerSelectionChangedCommand}"
+                            Command="{Binding HandlePickerSelectionChangedOneCommand}"
                             CommandParameter="{Binding Source={x:Reference Name=LanguagePickerOne}}" />
                     </Picker.Behaviors>
                 </Picker>
@@ -75,7 +75,7 @@
 
                     <Picker.Behaviors>
                         <toolkit:EventToCommandBehavior EventName="SelectedIndexChanged"
-                                                  Command="{Binding HandlePickerSelectionChangedCommand}"
+                                                  Command="{Binding HandlePickerSelectionChangedTwoCommand}"
                                                   CommandParameter="{Binding Source={x:Reference Name=LanguagePickerTwo}}"/>
                     </Picker.Behaviors>
                 </Picker>

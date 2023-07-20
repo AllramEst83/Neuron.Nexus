@@ -1,4 +1,7 @@
-﻿namespace Neuron.Nexus;
+﻿using CommunityToolkit.Mvvm.Messaging;
+using Neuron.Nexus.Models;
+
+namespace Neuron.Nexus;
 
 public partial class App : Application
 {
@@ -8,4 +11,14 @@ public partial class App : Application
 
 		MainPage = new AppShell();
 	}
+
+    protected override void OnSleep()
+    {
+        WeakReferenceMessenger.Default.Send(new OnAppToSpeepMessage());
+    }
+
+    protected override void OnResume()
+    {
+        WeakReferenceMessenger.Default.Send(new OnInitializeMessage());
+    }
 }

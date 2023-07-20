@@ -81,8 +81,7 @@
                     <ImageButton
                 x:Name="LanguageOneBtn"
                 Source="microphone.png" 
-                Command="{Binding SpeakLanguageOneCommand}"
-                IsEnabled="{Binding IsSpeakButtonsEnabled}"/>
+                Command="{Binding SpeakLanguageOneCommand}"/>
                     <Label x:Name="LanguageOneName" Text="{Binding LanguageOne.LanguageName}" HorizontalOptions="Center" VerticalOptions="Start"/>
                 </StackLayout>
 
@@ -90,16 +89,14 @@
                 <ImageButton 
             x:Name="StopBtn"
             Source="stop.png" 
-            Command="{Binding StopCommand}"
-            IsEnabled="{Binding IsSpeakButtonsEnabled}"/>
+            Command="{Binding StopCommand}"/>
 
                 <!-- LanguageTwoBtn and its Label -->
                 <StackLayout Orientation="Vertical" HorizontalOptions="Center">
                     <ImageButton 
                 x:Name="LanguageTwoBtn"
                 Source="microphone.png"
-                Command="{Binding SpeakLanguageTwoCommand}"
-                IsEnabled="{Binding IsSpeakButtonsEnabled}"/>
+                Command="{Binding SpeakLanguageTwoCommand}"/>
                     <Label x:Name="LanguageTwoName" Text="{Binding LanguageTwo.LanguageName}" HorizontalOptions="Center" VerticalOptions="Start"/>
                 </StackLayout>
 

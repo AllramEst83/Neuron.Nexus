@@ -1,7 +1,8 @@
-﻿using Android.Media;
+﻿#if ANDROID
+using Android.Media;
+#endif
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
-using CommunityToolkit.Maui.Media;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -10,7 +11,6 @@ using Microsoft.CognitiveServices.Speech.Audio;
 using Microsoft.CognitiveServices.Speech.Translation;
 using Neuron.Nexus.Models;
 using System.Collections.ObjectModel;
-using System.Threading;
 using OutputFormat = Microsoft.CognitiveServices.Speech.OutputFormat;
 
 namespace Neuron.Nexus.ViewModels;
@@ -41,8 +41,6 @@ public partial class SpeakPageViewModel : BaseViewModel
     [ObservableProperty]
     private LanguageOption languageTwo = null;
     [ObservableProperty]
-    private bool isSpeakButtonsEnabled = false;
-    [ObservableProperty]
     string recognitionTextOne = "";
     [ObservableProperty]
     string recognitionTextTwo = "";
@@ -53,87 +51,128 @@ public partial class SpeakPageViewModel : BaseViewModel
         get => _userMessages;
         set => SetProperty(ref _userMessages, value);
     }
+    private TranslationRecognizer _translationRecognizerOne;
+    private TranslationRecognizer _translationRecognizerTwo;
+#if ANDROID
+    private AudioRecord _audioRecord;
+#endif
+    private PushAudioInputStream _pushStreamOne;
+    private PushAudioInputStream _pushStreamTwo;
 
-    private readonly ISpeechToText _speechToText;
+    private bool _isRecognizerOneActive = false;
+    private bool _isRecognizerTwoActive = false;
+    private bool _continueProcessing = true;
+    private SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
-    public SpeakPageViewModel(ISpeechToText speechToText)
+    public SpeakPageViewModel()
     {
-        _speechToText = speechToText;
         UserMessages = new ObservableCollection<UserMessage>();
-
-        IsSpeakButtonsEnabled = !IsSpeakButtonsEnabled;
-
+        SetupOnDisappearEvent();
+        SetupInitializeEvent();
+        SetupToSleepEvent();
     }
 
     [RelayCommand]
-    static void Stop()
+    async Task Stop()
     {
-        WeakReferenceMessenger.Default.Send(new AnimateButtonMessage(AnimationButtonsEnum.StopBtn));
+        SendAnimateButtonMessage(AnimationButtonsEnum.StopBtn);
+
+        if (_isRecognizerOneActive)
+        {
+            await _translationRecognizerOne.StopContinuousRecognitionAsync();
+            _isRecognizerOneActive = false;
+        }
+
+        if (_isRecognizerTwoActive)
+        {
+            await _translationRecognizerTwo.StopContinuousRecognitionAsync();
+            _isRecognizerTwoActive = false;
+        }
+
+#if ANDROID
+        _audioRecord.Stop();
+#endif
     }
 
     [RelayCommand(IncludeCancelCommand = true)]
     async Task SpeakLanguageTwo(CancellationToken cancellationToken)
     {
-        WeakReferenceMessenger.Default.Send(new AnimateButtonMessage(AnimationButtonsEnum.LanguageTwoBtn));
+        SendAnimateButtonMessage(AnimationButtonsEnum.LanguageTwoBtn);
 
-        System.Globalization.CultureInfo culture = System.Globalization.CultureInfo.GetCultureInfo(LanguageTwo.FullLanguageCode.ToLower() ?? "en-US");
-        var progressSettings = new Progress<string>();
-
-        var recognitionResult = await _speechToText.ListenAsync(culture, progressSettings, cancellationToken);
-
-        if (recognitionResult.IsSuccessful)
+        try
         {
-            RecognitionTextOne = recognitionResult.Text;
-
-            UserMessages.Add(new UserMessage()
+            if (_isRecognizerOneActive)
             {
-                User = 2,
-                ChatMessage = RecognitionTextOne
-            });
+                await _translationRecognizerOne.StopContinuousRecognitionAsync();
+                _isRecognizerOneActive = false;
+            }
 
-            WeakReferenceMessenger.Default.Send("NewMessageAdded");
+            if (!_isRecognizerTwoActive)
+            {
+                await _translationRecognizerTwo.StartContinuousRecognitionAsync();
+                _isRecognizerTwoActive = true;
+            }
         }
-        else
+        catch (Exception ex)
         {
-            await Toast.Make(recognitionResult.Exception?.Message ?? "Unable to recognize speech", ToastDuration.Long).Show(CancellationToken.None);
+
+            throw;
         }
     }
 
     [RelayCommand(IncludeCancelCommand = true)]
     async Task SpeakLanguageOne(CancellationToken cancellationToken)
     {
-        WeakReferenceMessenger.Default.Send(new AnimateButtonMessage(AnimationButtonsEnum.LanguageOneBtn));
+        SendAnimateButtonMessage(AnimationButtonsEnum.LanguageOneBtn);
 
-        System.Globalization.CultureInfo culture = System.Globalization.CultureInfo.GetCultureInfo(LanguageOne.FullLanguageCode.ToLower() ?? "en-US");
-        var progressSettings = new Progress<string>();
-
-        var recognitionResult = await _speechToText.ListenAsync(culture, progressSettings, cancellationToken);
-
-        if (recognitionResult.IsSuccessful)
+        try
         {
-            RecognitionTextOne = recognitionResult.Text;
-
-            UserMessages.Add(new UserMessage()
+            if (_isRecognizerTwoActive)
             {
-                User = 1,
-                ChatMessage = RecognitionTextOne
-            });
+                await _translationRecognizerTwo.StopContinuousRecognitionAsync();
+                _isRecognizerTwoActive = false;
+            }
 
-            WeakReferenceMessenger.Default.Send("NewMessageAdded");
+            if (!_isRecognizerOneActive)
+            {
+                await _translationRecognizerOne.StartContinuousRecognitionAsync();
+                _isRecognizerOneActive = true;
+            }
         }
-        else
+        catch (Exception ex)
         {
-            await Toast.Make(recognitionResult.Exception?.Message ?? "Unable to recognize speech", ToastDuration.Long).Show(CancellationToken.None);
+
+            throw;
         }
     }
 
-    public async Task Initialize()
+    public void Initialize()
     {
-        await CheckForMicPermission();
-        await SetupRecognizerOne();
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            try
+            {
+                await CheckForMicPermission();
+                SetupRecognizerOne();
+                SetupRecognizerTwo();
+
+                if (!_continueProcessing)
+                {
+                    _continueProcessing = !_continueProcessing;
+                }
+
+                await ProcessAudio();
+            }
+            catch (Exception ex)
+            {
+
+                throw;
+            }
+        });
+
     }
 
-    private async Task CheckForMicPermission()
+    private static async Task CheckForMicPermission()
     {
         var status = await Permissions.CheckStatusAsync<Permissions.Microphone>();
 
@@ -148,43 +187,39 @@ public partial class SpeakPageViewModel : BaseViewModel
         }
     }
 
-    private async Task SetupRecognizerTwo()
+    private void SetupRecognizerTwo()
     {
-        var speechConfig = ConfigureSpeechTranslation();
+        var speechConfig = ConfigureSpeechTranslation("sv-SE", "en-US");
 
-        var (audioConfig, pushStream) = ConfigureAudioStream();
+        (var audioConfig, _pushStreamTwo) = ConfigureAudioStream();
 
-        var translationRecognizer = new TranslationRecognizer(speechConfig, audioConfig);
+        _translationRecognizerTwo = new TranslationRecognizer(speechConfig, audioConfig);
 
-        RegisterRecognizers(translationRecognizer);
-
-        await ProcessAudio(translationRecognizer, pushStream);
+        RegisterRecognizers(_translationRecognizerTwo, "en", 2);
     }
 
-    private async Task SetupRecognizerOne()
+    private void SetupRecognizerOne()
     {
-        var speechConfig = ConfigureSpeechTranslation();
+        var speechConfig = ConfigureSpeechTranslation("en-US", "sv-SE");
 
-        var (audioConfig, pushStream) = ConfigureAudioStream();
+        (var audioConfig, _pushStreamOne) = ConfigureAudioStream();
 
-        var translationRecognizer = new TranslationRecognizer(speechConfig, audioConfig);
+        _translationRecognizerOne = new TranslationRecognizer(speechConfig, audioConfig);
 
-        RegisterRecognizers(translationRecognizer);
-
-        await ProcessAudio(translationRecognizer, pushStream);
+        RegisterRecognizers(_translationRecognizerOne, "sv", 1);
     }
 
-    private SpeechTranslationConfig ConfigureSpeechTranslation()
+    private SpeechTranslationConfig ConfigureSpeechTranslation(string fromLanguage, string toLanguage)
     {
         var speechTranslationConfig = SpeechTranslationConfig.FromSubscription("058a34b3c1cf40399a6a951d772ecd94", "swedencentral");
 
-        speechTranslationConfig.SpeechRecognitionLanguage = "en-US";
-        speechTranslationConfig.AddTargetLanguage("sv-SE");
+        speechTranslationConfig.SpeechRecognitionLanguage = fromLanguage;
+        speechTranslationConfig.AddTargetLanguage(toLanguage);
 
         // Adjustments
         //speechTranslationConfig.SetProperty("InitialSilenceTimeout", "7000");
         //speechTranslationConfig.SetProperty("EndSilenceTimeout", "1500");
-        speechTranslationConfig.OutputFormat = OutputFormat.Simple;
+        speechTranslationConfig.OutputFormat = OutputFormat.Detailed;
 
         return speechTranslationConfig;
     }
@@ -195,75 +230,192 @@ public partial class SpeakPageViewModel : BaseViewModel
         return (audioConfig, pushStream);
     }
 
-    private void RegisterRecognizers(TranslationRecognizer translationRecognizer)
+    private void RegisterRecognizers(TranslationRecognizer translationRecognizer, string translatedLanguageKey, int user)
     {
-        translationRecognizer.Recognizing += (sender, args) =>
+        translationRecognizer.Recognized += async (sender, args) =>
         {
-            Console.WriteLine($"RECOGNIZING: Text={args.Result.Text}");
+            switch (args.Result.Reason)
+            {
+                case ResultReason.TranslatedSpeech:
+
+                    if (args.Result.Translations.Count() > 0)
+                    {
+                        var translatedMessage = args.Result.Translations[translatedLanguageKey];
+                        UserMessages.Add(new UserMessage()
+                        {
+                            User = user,
+                            ChatMessage = translatedMessage
+                        });
+
+                        AddNewMessageAndScrollCollectionView(translatedMessage);
+                    }
+
+                    break;
+
+                case ResultReason.Canceled:
+                    await ShowToast(args.Result.Reason.ToString() ?? "Unable to recognize speech");
+
+                    break;
+
+                default:
+                    Console.WriteLine(args.Result.Reason.ToString());
+                    break;
+            }
         };
 
-        translationRecognizer.Recognized += (sender, args) =>
+        translationRecognizer.Canceled += async (sender, args) =>
         {
-            Console.WriteLine($"RECOGNIZED: Text={args.Result.Translations["sv"]}");
-        };
-
-        translationRecognizer.Canceled += (sender, args) =>
-        {
-            Console.WriteLine($"CANCELED: Reason={args.Reason}");
-            Console.WriteLine($"CANCELED: Reason={args.ErrorCode}");
-            Console.WriteLine($"CANCELED: Reason={args.ErrorDetails}");
-        };
-
-        translationRecognizer.SessionStarted += (sender, args) =>
-        {
-            Console.WriteLine($"SessionStarted: Reason={args.SessionId}");
-        };
-
-        translationRecognizer.SessionStopped += (sender, args) =>
-        {
-            Console.WriteLine($"SessionStopped: Reason={args.SessionId}");
-        };
-
-        translationRecognizer.SpeechStartDetected += (sender, args) =>
-        {
-            Console.WriteLine($"SpeechStartDetected: Reason={args.SessionId}");
+            await ShowToast(args.Result.Text ?? "Unable to recognize speech");
         };
     }
 
-    private async Task ProcessAudio(TranslationRecognizer translationRecognizer, PushAudioInputStream pushStream)
+    private void SendAnimateButtonMessage(AnimationButtonsEnum button)
     {
+
+        if (MainThread.IsMainThread)
+        {
+            WeakReferenceMessenger.Default.Send(new AnimateButtonMessage(button));
+        }
+        else
+        {
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                WeakReferenceMessenger.Default.Send(new AnimateButtonMessage(button));
+            });
+        }
+    }
+
+    private void AddNewMessageAndScrollCollectionView(string message)
+    {
+
+        if (MainThread.IsMainThread)
+        {
+            WeakReferenceMessenger.Default.Send(new NewMessageMessage(message));
+        }
+        else
+        {
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                WeakReferenceMessenger.Default.Send(new NewMessageMessage(message));
+            });
+        }
+    }
+
+    private async Task ShowToast(string message)
+    {
+        if (MainThread.IsMainThread)
+        {
+            await Toast.Make(message ?? "Unable to recognize speech", ToastDuration.Long).Show(CancellationToken.None);
+        }
+        else
+        {
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                Toast.Make(message ?? "Unable to recognize speech", ToastDuration.Long).Show(CancellationToken.None);
+            });
+        }
+
+    }
+
+    private async Task ProcessAudio()
+    {
+#if ANDROID
         int sampleRate = 44100;
         var channelConfig = ChannelIn.Mono;
         Encoding audioFormat = Encoding.Pcm16bit;
 
         int bufferSize = 1024;
         byte[] audioBuffer = new byte[bufferSize];
-        AudioRecord audioRecord = new(AudioSource.Mic, sampleRate, channelConfig, audioFormat, bufferSize);
+        _audioRecord = new(AudioSource.Mic, sampleRate, channelConfig, audioFormat, bufferSize);
+        _audioRecord.StartRecording();
 
-
-        bool started = true;
-        while (true)
+        await Task.Run(async () =>
         {
-            if (started)
+            while (_continueProcessing)
             {
-                audioRecord.StartRecording();
-                await translationRecognizer.StartContinuousRecognitionAsync();
-                started = false;
+                await _semaphore.WaitAsync();
+                try
+                {
+                    int bytesRead = await _audioRecord.ReadAsync(audioBuffer, 0, audioBuffer.Length);
+                    if (bytesRead > 0)
+                    {
+                        if (_isRecognizerOneActive)
+                        {
+                            _pushStreamOne.Write(audioBuffer, bytesRead);
+                        }
+                        else
+                        {
+                            _pushStreamTwo.Write(audioBuffer, bytesRead);
+                        }
+                    }
+                }
+                finally
+                {
+                    _semaphore.Release();
+                }
             }
-
-            if (!started)
-            {
-                await translationRecognizer.StopContinuousRecognitionAsync();
-                audioRecord.Stop();
-            }
-
-            int bytesRead = audioRecord.Read(audioBuffer, 0, audioBuffer.Length);
-            if (bytesRead > 0)
-            {
-                pushStream.Write(audioBuffer, bytesRead);
-            }
-        }
+        });
+#endif
     }
 
+    /// <summary>
+    /// For when a back button is clicked
+    /// </summary>
+    public void StopProcessing()
+    {
+        _continueProcessing = false;
+#if ANDROID
+        _audioRecord?.Stop();
+#endif
+    }
+
+    private void DisposeOfResources()
+    {
+        StopProcessing();
+
+        try { _translationRecognizerOne.Dispose(); } catch { /* Handle or log error */ }
+        try { _translationRecognizerTwo.Dispose(); } catch { /* Handle or log error */ }
+        try { _pushStreamOne.Dispose(); } catch { /* Handle or log error */ }
+        try { _pushStreamTwo.Dispose(); } catch { /* Handle or log error */ }
+#if ANDROID
+
+        try { _audioRecord.Dispose(); } catch { /* Handle or log error */ }
+#endif
+    }
+
+    private void SetupOnDisappearEvent()
+    {
+        WeakReferenceMessenger.Default.Register<AppDisappearingMessage>(this, (r, m) =>
+        {
+            DisposeOfResources();
+
+            // Unregister messages
+            UnregisterMessages();
+        });
+    }
+
+    private void SetupToSleepEvent()
+    {
+        WeakReferenceMessenger.Default.Register<OnAppToSpeepMessage>(this, (r, m) =>
+        {
+            DisposeOfResources();
+        });
+    }
+
+    private void SetupInitializeEvent()
+    {
+        WeakReferenceMessenger.Default
+            .Register<OnInitializeMessage>(this, (r, m) =>
+        {
+            Initialize();
+        });
+    }
+
+    private void UnregisterMessages()
+    {
+        WeakReferenceMessenger.Default.Unregister<AppDisappearingMessage>(this);
+        WeakReferenceMessenger.Default.Unregister<OnInitializeMessage>(this);
+        WeakReferenceMessenger.Default.Unregister<OnAppToSpeepMessage>(this);
+    }
 }
 

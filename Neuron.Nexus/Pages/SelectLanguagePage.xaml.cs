@@ -6,7 +6,7 @@ namespace Neuron.Nexus.Pages;
 public partial class SelectLanguagePage : ContentPage
 {
     public SelectLanguagePage()
-	{
+    {
         InitializeComponent();
 
         // Create a new instance of SelectLanguagePage with dependency injetced services.
@@ -15,11 +15,11 @@ public partial class SelectLanguagePage : ContentPage
         BindingContext = viewModel;
     }
 
-    protected override async void OnAppearing()
+    protected override void OnAppearing()
     {
         base.OnAppearing();
 
         // Initialize the ViewModel
-        await ((SelectLanguagePageViewModel)BindingContext).Initialize();
+        ((SelectLanguagePageViewModel)BindingContext).Initialize();
     }
 }

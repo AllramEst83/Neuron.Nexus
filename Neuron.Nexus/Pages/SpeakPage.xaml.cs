@@ -1,10 +1,13 @@
 ﻿using Neuron.Nexus.ViewModels;
 using CommunityToolkit.Mvvm.Messaging;
 using Neuron.Nexus.Models;
-using CommunityToolkit.Maui.Converters;
-using System.Globalization;
 
 namespace Neuron.Nexus.Pages;
+
+//Initiate all when the Langugaes are set
+//Dispose everything when OnDisappera
+//Have a back button
+//After changing app, have the app reset to langugae picker page
 
 public partial class SpeakPage : ContentPage
 {
@@ -25,16 +28,15 @@ public partial class SpeakPage : ContentPage
 
         // Set up the messaging for animation. This will allow the ViewModel to trigger animations in the View.
         SetupAnimationMessaging();
-        SetupScrollToLastItem();
+        SetupScrollToLastItemMessaging();
     }
 
-    protected override async void OnAppearing()
+    protected override void OnAppearing()
     {
         base.OnAppearing();
 
         // Initialize the ViewModel
-        await ((SpeakPageViewModel)BindingContext).Initialize();
-
+        WeakReferenceMessenger.Default.Send(new OnInitializeMessage());
     }
 
     protected override void OnSizeAllocated(double width, double height)
@@ -49,15 +51,12 @@ public partial class SpeakPage : ContentPage
         }
     }
 
-    private void SetupScrollToLastItem()
+    private void SetupScrollToLastItemMessaging()
     {
-        WeakReferenceMessenger.Default.Register<string>(this, (r, m) =>
+        WeakReferenceMessenger.Default.Register<NewMessageMessage>(this, (r, m) =>
         {
-            if (m == "NewMessageAdded")
-            {
-                var lastItem = ChatCollectionView.ItemsSource.Cast<UserMessage>().Last();
-                ChatCollectionView.ScrollTo(lastItem, position: ScrollToPosition.End, animate: true);
-            }
+            var lastItem = ChatCollectionView.ItemsSource.Cast<UserMessage>().Last();
+            ChatCollectionView.ScrollTo(lastItem, position: ScrollToPosition.End, animate: true);
         });
     }
 
@@ -114,9 +113,11 @@ public partial class SpeakPage : ContentPage
     {
         base.OnDisappearing();
 
+        WeakReferenceMessenger.Default.Send(new AppDisappearingMessage("App disappearing"));
+
         // Unregister the message when the page disappears
         WeakReferenceMessenger.Default.Unregister<AnimateButtonMessage>(this);
-        WeakReferenceMessenger.Default.Unregister<string>(this);
+        WeakReferenceMessenger.Default.Unregister<NewMessageMessage>(this);
     }
 
     private void LanguagePickerOne_SelectedIndexChanged(object sender, EventArgs e)
