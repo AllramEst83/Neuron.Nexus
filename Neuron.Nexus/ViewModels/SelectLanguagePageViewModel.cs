@@ -91,7 +91,7 @@ namespace Neuron.Nexus.ViewModels
 
         public void Initialize()
         {
-            Languages = new ObservableCollection<LanguageOption>(_languageService.GetLanguages());
+            Languages = new ObservableCollection<LanguageOption>(_languageService.GetLanguages().OrderBy(x => x.LanguageName));
         }
     }
 }

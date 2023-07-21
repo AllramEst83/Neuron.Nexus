@@ -29,14 +29,12 @@ public partial class SpeakPage : ContentPage
         // Set up the messaging for animation. This will allow the ViewModel to trigger animations in the View.
         SetupAnimationMessaging();
         SetupScrollToLastItemMessaging();
+        UpdateImageButtonsBorderColor();
     }
 
     protected override void OnAppearing()
     {
         base.OnAppearing();
-
-        // Initialize the ViewModel
-        WeakReferenceMessenger.Default.Send(new OnInitializeMessage());
     }
 
     protected override void OnSizeAllocated(double width, double height)
@@ -69,19 +67,65 @@ public partial class SpeakPage : ContentPage
         {
             switch (m.ButtonName)
             {
-                case AnimationButtonsEnum.StopBtn:
-                    //await AnimateButton(StopBtn);
+                case ButtonsEnum.StopBtn:
+                    await AnimateButton(StopBtn, StopName);
                     break;
 
-                case AnimationButtonsEnum.LanguageOneBtn:
+                case ButtonsEnum.LanguageOneBtn:
                     await AnimateButton(LanguageOneBtn, LanguageOneName);
                     break;
 
-                case AnimationButtonsEnum.LanguageTwoBtn:
+                case ButtonsEnum.LanguageTwoBtn:
                     await AnimateButton(LanguageTwoBtn, LanguageTwoName);
                     break;
             }
         });
+    }
+    private void UpdateImageButtonsBorderColor()
+    {
+        WeakReferenceMessenger.Default.Register<BorderColorMessage>(this, (r, m) =>
+        {
+            if (Application.Current.Resources.TryGetValue("Primary", out var objOne) && objOne is Color primaryColorValue &&
+            Application.Current.Resources.TryGetValue("Secondary", out var objTwo) && objTwo is Color secondaryColorValue)
+            {
+                var stopButtonBackgroundColor = StopBtn.BackgroundColor;
+                var LangugaeOneBackgroundColor = LanguageOneBtn.BackgroundColor;
+                var LangugaeTwoBackgroundColor = LanguageTwoBtn.BackgroundColor;
+
+                switch (m.Button)
+                {   
+                    case ButtonsEnum.StopBtn:
+
+                        SetBackgroundColorIfDifferent(StopBtn, stopButtonBackgroundColor, primaryColorValue);
+                        SetBackgroundColorIfDifferent(LanguageOneBtn, LangugaeOneBackgroundColor, secondaryColorValue);
+                        SetBackgroundColorIfDifferent(LanguageTwoBtn, LangugaeTwoBackgroundColor, secondaryColorValue);
+
+                        break;
+
+                    case ButtonsEnum.LanguageOneBtn:
+
+                        SetBackgroundColorIfDifferent(StopBtn, stopButtonBackgroundColor, secondaryColorValue);
+                        SetBackgroundColorIfDifferent(LanguageOneBtn, LangugaeOneBackgroundColor, primaryColorValue);
+                        SetBackgroundColorIfDifferent(LanguageTwoBtn, LangugaeTwoBackgroundColor, secondaryColorValue);
+                        break;
+
+                    case ButtonsEnum.LanguageTwoBtn:
+
+                        SetBackgroundColorIfDifferent(StopBtn, stopButtonBackgroundColor, secondaryColorValue);
+                        SetBackgroundColorIfDifferent(LanguageOneBtn, LangugaeOneBackgroundColor, secondaryColorValue);
+                        SetBackgroundColorIfDifferent(LanguageTwoBtn, LangugaeTwoBackgroundColor, primaryColorValue);
+                        break;
+                }
+            }
+        });
+    }
+
+    private void SetBackgroundColorIfDifferent(ImageButton button, Color currentColor, Color targetColor)
+    {
+        if (currentColor != targetColor)
+        {
+            button.BackgroundColor = targetColor;
+        }
     }
 
     /// <summary>
@@ -118,6 +162,7 @@ public partial class SpeakPage : ContentPage
         // Unregister the message when the page disappears
         WeakReferenceMessenger.Default.Unregister<AnimateButtonMessage>(this);
         WeakReferenceMessenger.Default.Unregister<NewMessageMessage>(this);
+        WeakReferenceMessenger.Default.Unregister<BorderColorMessage>(this);
     }
 
     private void LanguagePickerOne_SelectedIndexChanged(object sender, EventArgs e)

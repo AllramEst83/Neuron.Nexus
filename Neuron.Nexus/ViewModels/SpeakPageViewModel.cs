@@ -13,6 +13,9 @@ using Neuron.Nexus.Models;
 using System.Collections.ObjectModel;
 using OutputFormat = Microsoft.CognitiveServices.Speech.OutputFormat;
 
+
+//Generera talet från texten
+
 namespace Neuron.Nexus.ViewModels;
 [QueryProperty(nameof(LanguageOneToBeSent), "languageOneToBeSent")]
 [QueryProperty(nameof(LanguageTwoToBeSent), "languageTwoToBeSent")]
@@ -23,8 +26,9 @@ public partial class SpeakPageViewModel : BaseViewModel
         set
         {
             LanguageOne = Newtonsoft.Json.JsonConvert.DeserializeObject<LanguageOption>(Uri.UnescapeDataString(value));
+             _isLanguageOneSet = true;
+            CheckAndInitializeRecognizers();
 
-            // Now you can use yourObject
         }
     }
     public string LanguageTwoToBeSent
@@ -32,10 +36,13 @@ public partial class SpeakPageViewModel : BaseViewModel
         set
         {
             LanguageTwo = Newtonsoft.Json.JsonConvert.DeserializeObject<LanguageOption>(Uri.UnescapeDataString(value));
-            // Now you can use yourObject
+            _isLanguageTwoSet = true;
+            CheckAndInitializeRecognizers();
         }
     }
 
+    private bool _isLanguageOneSet = false;
+    private bool _isLanguageTwoSet = false;
     [ObservableProperty]
     private LanguageOption languageOne = null;
     [ObservableProperty]
@@ -44,6 +51,8 @@ public partial class SpeakPageViewModel : BaseViewModel
     string recognitionTextOne = "";
     [ObservableProperty]
     string recognitionTextTwo = "";
+    [ObservableProperty]
+    string backgroundStatus;
 
     private ObservableCollection<UserMessage> _userMessages;
     public ObservableCollection<UserMessage> UserMessages
@@ -68,14 +77,15 @@ public partial class SpeakPageViewModel : BaseViewModel
     {
         UserMessages = new ObservableCollection<UserMessage>();
         SetupOnDisappearEvent();
-        SetupInitializeEvent();
         SetupToSleepEvent();
     }
 
     [RelayCommand]
     async Task Stop()
     {
-        SendAnimateButtonMessage(AnimationButtonsEnum.StopBtn);
+        BackgroundStatus = "Stopped listening";
+
+        SendAnimateButtonMessage(ButtonsEnum.StopBtn);
 
         if (_isRecognizerOneActive)
         {
@@ -92,12 +102,19 @@ public partial class SpeakPageViewModel : BaseViewModel
 #if ANDROID
         _audioRecord.Stop();
 #endif
+
+        SendChangeBorderColorMesssgae(ButtonsEnum.StopBtn);
     }
 
     [RelayCommand(IncludeCancelCommand = true)]
     async Task SpeakLanguageTwo(CancellationToken cancellationToken)
     {
-        SendAnimateButtonMessage(AnimationButtonsEnum.LanguageTwoBtn);
+
+        SendAnimateButtonMessage(ButtonsEnum.LanguageTwoBtn);
+
+#if ANDROID
+        _audioRecord.StartRecording();
+#endif
 
         try
         {
@@ -112,6 +129,9 @@ public partial class SpeakPageViewModel : BaseViewModel
                 await _translationRecognizerTwo.StartContinuousRecognitionAsync();
                 _isRecognizerTwoActive = true;
             }
+
+            SendChangeBorderColorMesssgae(ButtonsEnum.LanguageTwoBtn);
+            BackgroundStatus = $"Speak {LanguageTwo.NativeLanguageName} now.";
         }
         catch (Exception ex)
         {
@@ -123,7 +143,12 @@ public partial class SpeakPageViewModel : BaseViewModel
     [RelayCommand(IncludeCancelCommand = true)]
     async Task SpeakLanguageOne(CancellationToken cancellationToken)
     {
-        SendAnimateButtonMessage(AnimationButtonsEnum.LanguageOneBtn);
+
+        SendAnimateButtonMessage(ButtonsEnum.LanguageOneBtn);
+
+#if ANDROID
+        _audioRecord.StartRecording();
+#endif
 
         try
         {
@@ -138,6 +163,9 @@ public partial class SpeakPageViewModel : BaseViewModel
                 await _translationRecognizerOne.StartContinuousRecognitionAsync();
                 _isRecognizerOneActive = true;
             }
+
+            SendChangeBorderColorMesssgae(ButtonsEnum.LanguageOneBtn);
+            BackgroundStatus = $"Speak {LanguageOne.NativeLanguageName} now.";
         }
         catch (Exception ex)
         {
@@ -189,24 +217,24 @@ public partial class SpeakPageViewModel : BaseViewModel
 
     private void SetupRecognizerTwo()
     {
-        var speechConfig = ConfigureSpeechTranslation("sv-SE", "en-US");
+        var speechConfig = ConfigureSpeechTranslation(LanguageTwo.FullLanguageCode, LanguageOne.FullLanguageCode);
 
         (var audioConfig, _pushStreamTwo) = ConfigureAudioStream();
 
         _translationRecognizerTwo = new TranslationRecognizer(speechConfig, audioConfig);
 
-        RegisterRecognizers(_translationRecognizerTwo, "en", 2);
+        RegisterRecognizers(_translationRecognizerTwo, LanguageOne.ShortLanguageCode, 2);
     }
 
     private void SetupRecognizerOne()
     {
-        var speechConfig = ConfigureSpeechTranslation("en-US", "sv-SE");
+        var speechConfig = ConfigureSpeechTranslation(LanguageOne.FullLanguageCode, LanguageTwo.FullLanguageCode);
 
         (var audioConfig, _pushStreamOne) = ConfigureAudioStream();
 
         _translationRecognizerOne = new TranslationRecognizer(speechConfig, audioConfig);
 
-        RegisterRecognizers(_translationRecognizerOne, "sv", 1);
+        RegisterRecognizers(_translationRecognizerOne, LanguageTwo.ShortLanguageCode, 1);
     }
 
     private SpeechTranslationConfig ConfigureSpeechTranslation(string fromLanguage, string toLanguage)
@@ -232,11 +260,21 @@ public partial class SpeakPageViewModel : BaseViewModel
 
     private void RegisterRecognizers(TranslationRecognizer translationRecognizer, string translatedLanguageKey, int user)
     {
+          translationRecognizer.SpeechStartDetected += async (sender, args) =>
+          {
+              BackgroundStatus = "Speech detected.";
+          };
+
+        translationRecognizer.Synthesizing += async (sender, args) =>
+        {
+            BackgroundStatus = "Thinking...";
+        };
+
         translationRecognizer.Recognized += async (sender, args) =>
         {
             switch (args.Result.Reason)
             {
-                case ResultReason.TranslatedSpeech:
+                case ResultReason.TranslatedSpeech:                    
 
                     if (args.Result.Translations.Count() > 0)
                     {
@@ -248,6 +286,8 @@ public partial class SpeakPageViewModel : BaseViewModel
                         });
 
                         AddNewMessageAndScrollCollectionView(translatedMessage);
+
+                        BackgroundStatus = "Listening...";
                     }
 
                     break;
@@ -269,7 +309,22 @@ public partial class SpeakPageViewModel : BaseViewModel
         };
     }
 
-    private void SendAnimateButtonMessage(AnimationButtonsEnum button)
+    private void SendChangeBorderColorMesssgae(ButtonsEnum button)
+    {
+        if (MainThread.IsMainThread)
+        {
+            WeakReferenceMessenger.Default.Send(new BorderColorMessage(button));
+        }
+        else
+        {
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                WeakReferenceMessenger.Default.Send(new BorderColorMessage(button));
+            });
+        }
+    }
+
+    private void SendAnimateButtonMessage(ButtonsEnum button)
     {
 
         if (MainThread.IsMainThread)
@@ -402,19 +457,17 @@ public partial class SpeakPageViewModel : BaseViewModel
         });
     }
 
-    private void SetupInitializeEvent()
+    private void CheckAndInitializeRecognizers()
     {
-        WeakReferenceMessenger.Default
-            .Register<OnInitializeMessage>(this, (r, m) =>
+        if (_isLanguageOneSet && _isLanguageTwoSet)
         {
             Initialize();
-        });
+        }
     }
 
     private void UnregisterMessages()
     {
         WeakReferenceMessenger.Default.Unregister<AppDisappearingMessage>(this);
-        WeakReferenceMessenger.Default.Unregister<OnInitializeMessage>(this);
         WeakReferenceMessenger.Default.Unregister<OnAppToSpeepMessage>(this);
     }
 }

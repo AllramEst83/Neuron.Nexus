@@ -2,17 +2,17 @@
 
 namespace Neuron.Nexus.Models
 {
-    public enum AnimationButtonsEnum
+    public enum ButtonsEnum
     {
         StopBtn,
         LanguageOneBtn,
         LanguageTwoBtn
     }
 
-    public class AnimateButtonMessage : ValueChangedMessage<AnimationButtonsEnum>
+    public class AnimateButtonMessage : ValueChangedMessage<ButtonsEnum>
     {
-        public AnimationButtonsEnum ButtonName { get; private set; }
-        public AnimateButtonMessage(AnimationButtonsEnum buttonName) : base(buttonName)
+        public ButtonsEnum ButtonName { get; private set; }
+        public AnimateButtonMessage(ButtonsEnum buttonName) : base(buttonName)
         {
             ButtonName = buttonName;
         }

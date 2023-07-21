@@ -4,12 +4,16 @@
              x:Class="Neuron.Nexus.Pages.SpeakPage" 
              Title="Speak"
              xmlns:viewmodel="clr-namespace:Neuron.Nexus.ViewModels"
-             xmlns:converter="clr-namespace:Neuron.Nexus.Converters"
+             xmlns:converters="clr-namespace:Neuron.Nexus.Converters"
              xmlns:models="clr-namespace:Neuron.Nexus.Models"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:DataType="viewmodel:SpeakPageViewModel">
-    
+
     <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:UserTemplateToColorConverter x:Key="UserTemplateToColorConverter"/>
+        </ResourceDictionary>
+
         <!-- Chat Message Templates -->
         <DataTemplate x:Key="User1Template" x:DataType="models:UserMessage">
             <Grid>
@@ -17,7 +21,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Frame Grid.Column="0" WidthRequest="180" Padding="10" BackgroundColor="{StaticResource TertiaryAccent}">
+                <Frame Grid.Column="0" BackgroundColor="{Binding ., Converter={StaticResource UserTemplateToColorConverter}}">
                     <Label Text="{Binding ChatMessage}" />
                 </Frame>
             </Grid>
@@ -29,7 +33,7 @@
                     <ColumnDefinition Width="*"/>
                     <ColumnDefinition Width="*"/>
                 </Grid.ColumnDefinitions>
-                <Frame Grid.Column="1" WidthRequest="180" Padding="10" BackgroundColor="{StaticResource PrimaryAccent}">
+                <Frame Grid.Column="1" BackgroundColor="{Binding ., Converter={StaticResource UserTemplateToColorConverter}}">
                     <Label Text="{Binding ChatMessage}" />
                 </Frame>
             </Grid>
@@ -46,12 +50,13 @@
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
+            <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
         <ScrollView 
          x:Name="ChatScrollView"
-        Grid.Row="0"
-        Style="{StaticResource scrollViewBackground}">
+            Grid.Row="0"
+            Style="{StaticResource scrollViewBackground}">
 
             <!-- Language Selection -->
             <StackLayout x:Name="ChatStackLayout"  
@@ -64,32 +69,45 @@
                     x:Name="ChatCollectionView"
                     ItemsSource="{Binding UserMessages}"
                     ItemTemplate="{StaticResource ChatTemplateSelector}">
-                    
+
 
                 </CollectionView>
 
             </StackLayout>
 
         </ScrollView>
+        
+        <Label 
+            Grid.Row="1" 
+            Text="{Binding BackgroundStatus}" 
+            BackgroundColor="{StaticResource Secondary}"
+            HorizontalOptions="Center" 
+            VerticalOptions="Center" 
+            Padding="10"  />
 
         <!-- Static bar at the bottom -->
-        <StackLayout Grid.Row="1" Style="{StaticResource stackLayoutBackground}">
+        <StackLayout Grid.Row="2" Style="{StaticResource stackLayoutBackground}">
             <FlexLayout JustifyContent="SpaceEvenly">
 
                 <!-- LanguageOneBtn and its Label -->
                 <StackLayout Orientation="Vertical" HorizontalOptions="Center">
                     <ImageButton
                 x:Name="LanguageOneBtn"
-                Source="microphone.png" 
+                Source="microphone.png"
                 Command="{Binding SpeakLanguageOneCommand}"/>
-                    <Label x:Name="LanguageOneName" Text="{Binding LanguageOne.LanguageName}" HorizontalOptions="Center" VerticalOptions="Start"/>
+                    <Label x:Name="LanguageOneName" Text="{Binding LanguageOne.NativeLanguageName}" HorizontalOptions="Center" VerticalOptions="Start"/>
                 </StackLayout>
 
                 <!-- StopBtn -->
-                <ImageButton 
-            x:Name="StopBtn"
-            Source="stop.png" 
-            Command="{Binding StopCommand}"/>
+
+                <StackLayout Orientation="Vertical" HorizontalOptions="Center">
+                    <ImageButton 
+                    x:Name="StopBtn"
+                    Source="stop.png"
+                    Command="{Binding StopCommand}"/>
+                    <Label x:Name="StopName" Text="Stop" HorizontalOptions="Center" VerticalOptions="Start"/>
+                </StackLayout>
+
 
                 <!-- LanguageTwoBtn and its Label -->
                 <StackLayout Orientation="Vertical" HorizontalOptions="Center">
@@ -97,7 +115,8 @@
                 x:Name="LanguageTwoBtn"
                 Source="microphone.png"
                 Command="{Binding SpeakLanguageTwoCommand}"/>
-                    <Label x:Name="LanguageTwoName" Text="{Binding LanguageTwo.LanguageName}" HorizontalOptions="Center" VerticalOptions="Start"/>
+
+                    <Label x:Name="LanguageTwoName" Text="{Binding LanguageTwo.NativeLanguageName}" HorizontalOptions="Center" VerticalOptions="Start"/>
                 </StackLayout>
 
             </FlexLayout>
