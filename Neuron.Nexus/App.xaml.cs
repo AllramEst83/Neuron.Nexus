@@ -19,6 +19,6 @@ public partial class App : Application
 
     protected override void OnResume()
     {
-        WeakReferenceMessenger.Default.Send(new OnInitializeMessage());
+        WeakReferenceMessenger.Default.Send(new OnInitializeAfterResumMessage());
     }
 }

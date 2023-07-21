@@ -93,7 +93,7 @@ public partial class SpeakPage : ContentPage
                 var LangugaeTwoBackgroundColor = LanguageTwoBtn.BackgroundColor;
 
                 switch (m.Button)
-                {   
+                {
                     case ButtonsEnum.StopBtn:
 
                         SetBackgroundColorIfDifferent(StopBtn, stopButtonBackgroundColor, primaryColorValue);

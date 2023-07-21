@@ -78,6 +78,7 @@ public partial class SpeakPageViewModel : BaseViewModel
         UserMessages = new ObservableCollection<UserMessage>();
         SetupOnDisappearEvent();
         SetupToSleepEvent();
+        SetupInitializeAfterResueEvent();
     }
 
     [RelayCommand]
@@ -443,8 +444,6 @@ public partial class SpeakPageViewModel : BaseViewModel
         WeakReferenceMessenger.Default.Register<AppDisappearingMessage>(this, (r, m) =>
         {
             DisposeOfResources();
-
-            // Unregister messages
             UnregisterMessages();
         });
     }
@@ -463,6 +462,15 @@ public partial class SpeakPageViewModel : BaseViewModel
         {
             Initialize();
         }
+    }
+
+    private void SetupInitializeAfterResueEvent()
+    {
+        WeakReferenceMessenger.Default
+            .Register<OnInitializeAfterResumMessage>(this, (r, m) =>
+            {
+                Initialize();
+            });
     }
 
     private void UnregisterMessages()

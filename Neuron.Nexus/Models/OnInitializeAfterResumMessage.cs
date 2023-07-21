@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Neuron.Nexus.Models
 {
-    public class OnInitializeMessage
+    public class OnInitializeAfterResumMessage
     {
         public DateTime TimeStamp { get; }
 
-        public OnInitializeMessage()
+        public OnInitializeAfterResumMessage()
         {
             TimeStamp = DateTime.Now;
         }
