@@ -39,8 +39,14 @@ public static class MauiProgram
             .AddSingleton<ISpeechToText>(SpeechToText.Default)
         //LanguageRepository
         .AddTransient<ILanguageRepository, LanguageRepository>()
-               //SpeakService
+           //SpeakService
            .AddTransient<ILanguageService, LanguageService>()
+#if ANDROID
+           .AddTransient<IAndroidAudioRecordService, AndroidAudioRecordService>()
+#endif
+#if IOS
+           .AddTransient<IOSAudioRecorderService, IOSAudioRecorderService>()
+#endif
            //MainPage
            .AddTransient<MainPage>()
            .AddTransient<MainPageViewModel>()

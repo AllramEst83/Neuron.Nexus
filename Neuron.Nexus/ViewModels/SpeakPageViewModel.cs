@@ -375,6 +375,7 @@ public partial class SpeakPageViewModel : BaseViewModel
 
     private async Task ProcessAudio()
     {
+        //Audio recorder for android, IOS and 
 #if ANDROID
         int sampleRate = 44100;
         var channelConfig = ChannelIn.Mono;
