@@ -13,6 +13,7 @@ using System.Collections.ObjectModel;
 using OutputFormat = Microsoft.CognitiveServices.Speech.OutputFormat;
 
 namespace Neuron.Nexus.ViewModels;
+
 [QueryProperty(nameof(LanguageOneToBeSent), "languageOneToBeSent")]
 [QueryProperty(nameof(LanguageTwoToBeSent), "languageTwoToBeSent")]
 public partial class SpeakPageViewModel : BaseViewModel
@@ -206,7 +207,7 @@ public partial class SpeakPageViewModel : BaseViewModel
     #endregion
     #region Mic permission
     private static async Task CheckForMicPermission()
-    {
+    { 
         var status = await Permissions.CheckStatusAsync<Permissions.Microphone>();
 
         if (status != PermissionStatus.Granted)
@@ -323,13 +324,14 @@ public partial class SpeakPageViewModel : BaseViewModel
 
                         SpeakPageViewModel.AddNewMessageAndScrollCollectionView(translatedMessage);
 
-                        UpdateUIStatustext("Waiting for speeach...");
+                        UpdateUIStatustext("Listening for speeach...");
                     }
 
                     break;
 
                 case ResultReason.Canceled:
-                    await SpeakPageViewModel.ShowToast(args.Result.Reason.ToString() ?? "Unable to recognize speech");
+
+                    await ShowToast(args.Result.Reason.ToString() ?? "Unable to recognize speech");
 
                     break;
 
@@ -361,13 +363,12 @@ public partial class SpeakPageViewModel : BaseViewModel
             while (_continueProcessing)
             {
                 await _semaphore.WaitAsync();
+#if ANDROID
                 try
                 {
-#if ANDROID
                     if (androidAudioRecordService != null && androidAudioRecordService.IsRecording)
                     {
                         var (audioBuffer, bytesRead) = await androidAudioRecordService.GetAudioStream();
-#endif
                         if (bytesRead > 0)
                         {
                             if (_isRecognizerOneActive)
@@ -382,10 +383,15 @@ public partial class SpeakPageViewModel : BaseViewModel
                         }
                     }
                 }
+                catch (Exception ex)
+                {
+                    Console.WriteLine("Error occured while reading from the audio stream.", ex);
+                }
                 finally
                 {
                     _semaphore.Release();
                 }
+#endif
             }
         });
     }
@@ -495,10 +501,41 @@ public partial class SpeakPageViewModel : BaseViewModel
 
         SendChangeBorderColorMesssgae(ButtonsEnum.StopBtn);
 
-        try { _translationRecognizerOne.Dispose(); } catch { /* Handle or log error */ }
-        try { _translationRecognizerTwo.Dispose(); } catch { /* Handle or log error */ }
-        try { _pushStreamOne.Dispose(); } catch { /* Handle or log error */ }
-        try { _pushStreamTwo.Dispose(); } catch { /* Handle or log error */ }
+        try
+        {
+            _translationRecognizerOne.Dispose();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error occured wile trying to dispse of _translationRecognizerOne", ex);
+        }
+
+        try
+        {
+            _translationRecognizerTwo.Dispose();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error occured wile trying to dispse of _translationRecognizerTwo", ex);
+        }
+
+        try
+        {
+            _pushStreamOne.Dispose();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error occured wile trying to dispse of _pushStreamOne", ex);
+        }
+
+        try
+        {
+            _pushStreamTwo.Dispose();
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error occured wile trying to dispse of _pushStreamTwo", ex);
+        }
 
 #if ANDROID
         try
@@ -506,7 +543,10 @@ public partial class SpeakPageViewModel : BaseViewModel
             if (androidAudioRecordService.IsRecording) { androidAudioRecordService.StopRecording(); };
             androidAudioRecordService.Dispose();
         }
-        catch { /* Handle or log error */ }
+        catch (Exception ex)
+        {
+            Console.WriteLine("Error occured wile trying to dispse of androidAudioRecordService", ex);
+        }
 #endif
     }
     #endregion
