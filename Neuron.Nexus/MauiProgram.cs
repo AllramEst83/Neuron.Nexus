@@ -1,6 +1,8 @@
-﻿using CommunityToolkit.Maui;
+﻿
+using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Media;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Neuron.Nexus.Models;
 using Neuron.Nexus.Pages;
@@ -25,39 +27,42 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
 
-        var assembly = Assembly.GetExecutingAssembly();
-        using var stream = assembly.GetManifestResourceStream("Neuron.Nexus.appsettings.json");
+        var assembly = typeof(MauiProgram).Assembly;
 
-        var config = new ConfigurationBuilder()
-                 .AddJsonStream(stream)
-                 .Build();
+        using (Stream stream = assembly.GetManifestResourceStream("Neuron.Nexus.appsettings.json"))
+        {
+            var config = new ConfigurationBuilder()
+                .AddJsonStream(stream)
+                .Build();
 
-        builder.Configuration.AddConfiguration(config);
+            builder.Configuration.AddConfiguration(config);
+        }
 
+        builder.Services.AddOptions<AppSettings>()
+                .Bind(builder.Configuration.GetSection("AzureKeys"));
 
         builder.Services
+
+            //Services
             .AddSingleton<ISpeechToText>(SpeechToText.Default)
-        //LanguageRepository
-        .AddTransient<ILanguageRepository, LanguageRepository>()
-           //SpeakService
-           .AddTransient<ILanguageService, LanguageService>()
+            .AddSingleton<ILanguageRepository, LanguageRepository>()
+            .AddSingleton<ILanguageService, LanguageService>()
 #if ANDROID
-           .AddTransient<IAndroidAudioRecordService, AndroidAudioRecordService>()
+           .AddSingleton<IAndroidAudioRecordService, AndroidAudioRecordService>()
 #endif
 #if IOS
            .AddTransient<IOSAudioRecorderService, IOSAudioRecorderService>()
 #endif
-           //MainPage
-           .AddTransient<MainPage>()
-           .AddTransient<MainPageViewModel>()
-           //SpeakPage
-           .AddTransient<SpeakPage>()
-           .AddTransient<SpeakPageViewModel>()
-           //SpeechPage
-           .AddTransient<SpeechPage>()
-           //SelectLanguagePage
-           .AddTransient<SelectLanguagePage>()
-           .AddTransient<SelectLanguagePageViewModel>();
+           //Pages
+           .AddSingleton<MainPage>()
+           .AddSingleton<SpeakPage>()
+           .AddSingleton<SpeechPage>()
+           .AddSingleton<SelectLanguagePage>()
+
+           //ViewModels
+           .AddSingleton<MainPageViewModel>()
+           .AddSingleton<SpeakPageViewModel>()
+           .AddSingleton<SelectLanguagePageViewModel>();
 
 #if DEBUG
         builder.Logging.AddDebug();

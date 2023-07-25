@@ -9,12 +9,11 @@ using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.CognitiveServices.Speech;
 using Microsoft.CognitiveServices.Speech.Audio;
 using Microsoft.CognitiveServices.Speech.Translation;
+using Microsoft.Extensions.Options;
 using Neuron.Nexus.Models;
+using Neuron.Nexus.Services;
 using System.Collections.ObjectModel;
 using OutputFormat = Microsoft.CognitiveServices.Speech.OutputFormat;
-
-
-//Generera talet från texten
 
 namespace Neuron.Nexus.ViewModels;
 [QueryProperty(nameof(LanguageOneToBeSent), "languageOneToBeSent")]
@@ -26,7 +25,7 @@ public partial class SpeakPageViewModel : BaseViewModel
         set
         {
             LanguageOne = Newtonsoft.Json.JsonConvert.DeserializeObject<LanguageOption>(Uri.UnescapeDataString(value));
-             _isLanguageOneSet = true;
+            _isLanguageOneSet = true;
             CheckAndInitializeRecognizers();
 
         }
@@ -53,18 +52,21 @@ public partial class SpeakPageViewModel : BaseViewModel
     string recognitionTextTwo = "";
     [ObservableProperty]
     string backgroundStatus;
-
+#if ANDROID
+    AudioRecord audioRecord;
+#endif
     private ObservableCollection<UserMessage> _userMessages;
     public ObservableCollection<UserMessage> UserMessages
     {
         get => _userMessages;
         set => SetProperty(ref _userMessages, value);
     }
+#if ANDROID
+    public IAndroidAudioRecordService androidAudioRecordService { get; }
+    public IOptions<AppSettings> appSettings { get; }
+#endif
     private TranslationRecognizer _translationRecognizerOne;
     private TranslationRecognizer _translationRecognizerTwo;
-#if ANDROID
-    private AudioRecord _audioRecord;
-#endif
     private PushAudioInputStream _pushStreamOne;
     private PushAudioInputStream _pushStreamTwo;
 
@@ -73,20 +75,37 @@ public partial class SpeakPageViewModel : BaseViewModel
     private bool _continueProcessing = true;
     private SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
-    public SpeakPageViewModel()
+    public SpeakPageViewModel(
+#if ANDROID
+        IAndroidAudioRecordService androidAudioRecordService,
+        IOptions<AppSettings> appSettings
+#endif
+        )
     {
         UserMessages = new ObservableCollection<UserMessage>();
         SetupOnDisappearEvent();
         SetupToSleepEvent();
         SetupInitializeAfterResueEvent();
+#if ANDROID
+        this.androidAudioRecordService = androidAudioRecordService;
+        this.appSettings = appSettings;
+
+#endif
     }
 
     [RelayCommand]
     async Task Stop()
     {
-        BackgroundStatus = "Stopped listening";
-
         SendAnimateButtonMessage(ButtonsEnum.StopBtn);
+
+#if ANDROID
+        if (audioRecord.RecordingState != RecordState.Stopped)
+        {
+            audioRecord.Stop();
+        }
+#endif
+
+        BackgroundStatus = "Stopped listening";
 
         if (_isRecognizerOneActive)
         {
@@ -100,10 +119,6 @@ public partial class SpeakPageViewModel : BaseViewModel
             _isRecognizerTwoActive = false;
         }
 
-#if ANDROID
-        _audioRecord.Stop();
-#endif
-
         SendChangeBorderColorMesssgae(ButtonsEnum.StopBtn);
     }
 
@@ -111,11 +126,7 @@ public partial class SpeakPageViewModel : BaseViewModel
     async Task SpeakLanguageTwo(CancellationToken cancellationToken)
     {
 
-        SendAnimateButtonMessage(ButtonsEnum.LanguageTwoBtn);
-
-#if ANDROID
-        _audioRecord.StartRecording();
-#endif
+        SpeakPageViewModel.SendAnimateButtonMessage(ButtonsEnum.LanguageTwoBtn);
 
         try
         {
@@ -131,7 +142,15 @@ public partial class SpeakPageViewModel : BaseViewModel
                 _isRecognizerTwoActive = true;
             }
 
-            SendChangeBorderColorMesssgae(ButtonsEnum.LanguageTwoBtn);
+#if ANDROID
+            if (audioRecord.RecordingState != RecordState.Recording)
+            {
+                audioRecord.StartRecording();
+            }
+#endif
+
+            SpeakPageViewModel.SendChangeBorderColorMesssgae(ButtonsEnum.LanguageTwoBtn);
+
             BackgroundStatus = $"Speak {LanguageTwo.NativeLanguageName} now.";
         }
         catch (Exception ex)
@@ -147,10 +166,6 @@ public partial class SpeakPageViewModel : BaseViewModel
 
         SendAnimateButtonMessage(ButtonsEnum.LanguageOneBtn);
 
-#if ANDROID
-        _audioRecord.StartRecording();
-#endif
-
         try
         {
             if (_isRecognizerTwoActive)
@@ -165,7 +180,15 @@ public partial class SpeakPageViewModel : BaseViewModel
                 _isRecognizerOneActive = true;
             }
 
+#if ANDROID
+            if (audioRecord.RecordingState != RecordState.Recording)
+            {
+                audioRecord.StartRecording();
+            }
+#endif
+
             SendChangeBorderColorMesssgae(ButtonsEnum.LanguageOneBtn);
+
             BackgroundStatus = $"Speak {LanguageOne.NativeLanguageName} now.";
         }
         catch (Exception ex)
@@ -185,12 +208,7 @@ public partial class SpeakPageViewModel : BaseViewModel
                 SetupRecognizerOne();
                 SetupRecognizerTwo();
 
-                if (!_continueProcessing)
-                {
-                    _continueProcessing = !_continueProcessing;
-                }
-
-                await ProcessAudio();
+                await StartProcessAudio();
             }
             catch (Exception ex)
             {
@@ -240,7 +258,7 @@ public partial class SpeakPageViewModel : BaseViewModel
 
     private SpeechTranslationConfig ConfigureSpeechTranslation(string fromLanguage, string toLanguage)
     {
-        var speechTranslationConfig = SpeechTranslationConfig.FromSubscription("058a34b3c1cf40399a6a951d772ecd94", "swedencentral");
+        var speechTranslationConfig = SpeechTranslationConfig.FromSubscription(appSettings.Value.AzureSubscriptionKey, appSettings.Value.AzureRegion);
 
         speechTranslationConfig.SpeechRecognitionLanguage = fromLanguage;
         speechTranslationConfig.AddTargetLanguage(toLanguage);
@@ -248,7 +266,7 @@ public partial class SpeakPageViewModel : BaseViewModel
         // Adjustments
         //speechTranslationConfig.SetProperty("InitialSilenceTimeout", "7000");
         //speechTranslationConfig.SetProperty("EndSilenceTimeout", "1500");
-        speechTranslationConfig.OutputFormat = OutputFormat.Detailed;
+        speechTranslationConfig.OutputFormat = OutputFormat.Simple;
 
         return speechTranslationConfig;
     }
@@ -261,12 +279,12 @@ public partial class SpeakPageViewModel : BaseViewModel
 
     private void RegisterRecognizers(TranslationRecognizer translationRecognizer, string translatedLanguageKey, int user)
     {
-          translationRecognizer.SpeechStartDetected += async (sender, args) =>
-          {
-              BackgroundStatus = "Speech detected.";
-          };
+        translationRecognizer.SpeechStartDetected += (sender, args) =>
+        {
+            BackgroundStatus = "Speech detected.";
+        };
 
-        translationRecognizer.Synthesizing += async (sender, args) =>
+        translationRecognizer.Synthesizing += (sender, args) =>
         {
             BackgroundStatus = "Thinking...";
         };
@@ -275,9 +293,9 @@ public partial class SpeakPageViewModel : BaseViewModel
         {
             switch (args.Result.Reason)
             {
-                case ResultReason.TranslatedSpeech:                    
+                case ResultReason.TranslatedSpeech:
 
-                    if (args.Result.Translations.Count() > 0)
+                    if (args.Result.Translations.Count > 0)
                     {
                         var translatedMessage = args.Result.Translations[translatedLanguageKey];
                         UserMessages.Add(new UserMessage()
@@ -286,15 +304,15 @@ public partial class SpeakPageViewModel : BaseViewModel
                             ChatMessage = translatedMessage
                         });
 
-                        AddNewMessageAndScrollCollectionView(translatedMessage);
+                        SpeakPageViewModel.AddNewMessageAndScrollCollectionView(translatedMessage);
 
-                        BackgroundStatus = "Listening...";
+                        BackgroundStatus = "Waiting for speeach...";
                     }
 
                     break;
 
                 case ResultReason.Canceled:
-                    await ShowToast(args.Result.Reason.ToString() ?? "Unable to recognize speech");
+                    await SpeakPageViewModel.ShowToast(args.Result.Reason.ToString() ?? "Unable to recognize speech");
 
                     break;
 
@@ -306,11 +324,11 @@ public partial class SpeakPageViewModel : BaseViewModel
 
         translationRecognizer.Canceled += async (sender, args) =>
         {
-            await ShowToast(args.Result.Text ?? "Unable to recognize speech");
+            await SpeakPageViewModel.ShowToast(args.Result.Text ?? "Unable to recognize speech");
         };
     }
 
-    private void SendChangeBorderColorMesssgae(ButtonsEnum button)
+    private static void SendChangeBorderColorMesssgae(ButtonsEnum button)
     {
         if (MainThread.IsMainThread)
         {
@@ -325,7 +343,7 @@ public partial class SpeakPageViewModel : BaseViewModel
         }
     }
 
-    private void SendAnimateButtonMessage(ButtonsEnum button)
+    private static void SendAnimateButtonMessage(ButtonsEnum button)
     {
 
         if (MainThread.IsMainThread)
@@ -341,7 +359,7 @@ public partial class SpeakPageViewModel : BaseViewModel
         }
     }
 
-    private void AddNewMessageAndScrollCollectionView(string message)
+    private static void AddNewMessageAndScrollCollectionView(string message)
     {
 
         if (MainThread.IsMainThread)
@@ -357,7 +375,7 @@ public partial class SpeakPageViewModel : BaseViewModel
         }
     }
 
-    private async Task ShowToast(string message)
+    private static async Task ShowToast(string message)
     {
         if (MainThread.IsMainThread)
         {
@@ -373,18 +391,23 @@ public partial class SpeakPageViewModel : BaseViewModel
 
     }
 
-    private async Task ProcessAudio()
+    private async Task StartProcessAudio()
     {
-        //Audio recorder for android, IOS and 
-#if ANDROID
-        int sampleRate = 44100;
-        var channelConfig = ChannelIn.Mono;
-        Encoding audioFormat = Encoding.Pcm16bit;
+        //https://www.syncfusion.com/blogs/post/building-an-audio-recorder-and-player-app-in-net-maui.aspx
+        //Audio recorder for android, IOS and
 
         int bufferSize = 1024;
         byte[] audioBuffer = new byte[bufferSize];
-        _audioRecord = new(AudioSource.Mic, sampleRate, channelConfig, audioFormat, bufferSize);
-        _audioRecord.StartRecording();
+        int bytesRead = 0;
+        
+#if ANDROID
+        audioRecord = new AudioRecord(AudioSource.Mic, 44100, ChannelIn.Mono, Encoding.Pcm16bit, bufferSize);
+#endif
+
+        if (!_continueProcessing)
+        {
+            _continueProcessing = !_continueProcessing;
+        }
 
         await Task.Run(async () =>
         {
@@ -393,14 +416,18 @@ public partial class SpeakPageViewModel : BaseViewModel
                 await _semaphore.WaitAsync();
                 try
                 {
-                    int bytesRead = await _audioRecord.ReadAsync(audioBuffer, 0, audioBuffer.Length);
+
+#if ANDROID
+                    bytesRead = await audioRecord.ReadAsync(audioBuffer, 0, audioBuffer.Length);
+#endif
                     if (bytesRead > 0)
                     {
                         if (_isRecognizerOneActive)
                         {
                             _pushStreamOne.Write(audioBuffer, bytesRead);
                         }
-                        else
+
+                        if (_isRecognizerTwoActive)
                         {
                             _pushStreamTwo.Write(audioBuffer, bytesRead);
                         }
@@ -412,31 +439,33 @@ public partial class SpeakPageViewModel : BaseViewModel
                 }
             }
         });
-#endif
     }
 
     /// <summary>
     /// For when a back button is clicked
     /// </summary>
-    public void StopProcessing()
-    {
-        _continueProcessing = false;
-#if ANDROID
-        _audioRecord?.Stop();
-#endif
-    }
 
     private void DisposeOfResources()
     {
-        StopProcessing();
+        _continueProcessing = false;
+        _isRecognizerOneActive = false;
+        _isRecognizerTwoActive = false;
+
+        SpeakPageViewModel.SendChangeBorderColorMesssgae(ButtonsEnum.StopBtn);
 
         try { _translationRecognizerOne.Dispose(); } catch { /* Handle or log error */ }
         try { _translationRecognizerTwo.Dispose(); } catch { /* Handle or log error */ }
         try { _pushStreamOne.Dispose(); } catch { /* Handle or log error */ }
         try { _pushStreamTwo.Dispose(); } catch { /* Handle or log error */ }
-#if ANDROID
 
-        try { _audioRecord.Dispose(); } catch { /* Handle or log error */ }
+#if ANDROID
+        try
+        {
+            if (audioRecord.RecordingState == RecordState.Recording) { audioRecord.Stop(); };
+            audioRecord.Release();
+            audioRecord.Dispose();
+        }
+        catch { /* Handle or log error */ }
 #endif
     }
 

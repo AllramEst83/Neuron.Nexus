@@ -14,6 +14,8 @@ namespace Neuron.Nexus.Services
 
     public class IOSAudioRecorderService : IAudioRecorderService
     {
+     //https://www.syncfusion.com/blogs/post/building-an-audio-recorder-and-player-app-in-net-maui.aspx
+
         AVAudioRecorder recorder;
         NSUrl url;
         NSError error;
