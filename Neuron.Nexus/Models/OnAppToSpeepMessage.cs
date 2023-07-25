@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Neuron.Nexus.Models
 {
-    public class OnAppToSpeepMessage
+    public class OnAppToSleepMessage
     {
         public DateTime TimeStamp { get; }
 
-        public OnAppToSpeepMessage()
+        public OnAppToSleepMessage()
         {
             TimeStamp = DateTime.Now;
         }

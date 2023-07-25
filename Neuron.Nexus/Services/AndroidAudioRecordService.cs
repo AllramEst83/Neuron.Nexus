@@ -1,86 +1,80 @@
-﻿    #if ANDROID
-    using Android.Media;
+﻿#if ANDROID
+using Android.Media;
 
-    namespace Neuron.Nexus.Services;
-    public interface IAndroidAudioRecordService : IDisposable
+namespace Neuron.Nexus.Services;
+public interface IAndroidAudioRecordService : IDisposable
+{
+    void StartRecording();
+    void StopRecording();
+    Task<(byte[] buffer, int bytesRead)> GetAudioStream();
+    bool IsRecording { get; }
+}
+
+public class AndroidAudioRecordService : IAndroidAudioRecordService
+{
+    private AudioRecord audioRecord;
+    private readonly int sampleRate = 44100;
+    private readonly int bufferSize = 1024;
+    private readonly ChannelIn channelConfig = ChannelIn.Mono;
+    private readonly Encoding audioFormat = Encoding.Pcm16bit;
+    private readonly byte[] audioBuffer;
+
+    public bool IsRecording { get; private set; }
+
+    public AndroidAudioRecordService()
     {
-        void StartRecording();
-        void StopRecording();
-        Task<(byte[] buffer, int bytesRead)> GetAudioStream();
-        bool IsRecording { get; }
+        audioBuffer = new byte[bufferSize];
     }
 
-    public class AndroidAudioRecordService : IAndroidAudioRecordService
+    public void StartRecording()
     {
-        private AudioRecord audioRecord;
-        private readonly int sampleRate = 44100;
-        private readonly int bufferSize = 1024;
-        private readonly ChannelIn channelConfig = ChannelIn.Mono;
-        private readonly Encoding audioFormat = Encoding.Pcm16bit;
-        private readonly byte[] audioBuffer;
-
-        public bool IsRecording { get; private set; }
-
-        public AndroidAudioRecordService()
+        if (audioRecord == null)
         {
-            audioBuffer = new byte[bufferSize];
-        }
-
-        public void StartRecording()
-        {
-            if (audioRecord != null)
-            {
-                audioRecord.Stop();
-                audioRecord.Release();
-                audioRecord.Dispose();
-                audioRecord = null;
-
-            }
-
             audioRecord = new AudioRecord(AudioSource.Mic, sampleRate, channelConfig, audioFormat, bufferSize);
-
-            if (audioRecord != null && audioRecord.State == State.Initialized)
-            {
-                audioRecord.StartRecording();
-                IsRecording = true;
-            }
         }
 
-        public void StopRecording()
+        if (audioRecord.State == State.Initialized && !IsRecording)
         {
-            if (audioRecord != null && audioRecord.RecordingState == RecordState.Recording)
-            {
-                audioRecord.Stop();
-                IsRecording = false;
-            }
-        }
-
-        public async Task<(byte[] buffer, int bytesRead)> GetAudioStream()
-        {
-            if (audioRecord == null)
-            {
-                throw new InvalidOperationException("AudioRecord is not initialized or not in recording state.");
-            }
-
-            int bytesRead = await audioRecord.ReadAsync(audioBuffer, 0, audioBuffer.Length);
-            return (audioBuffer, bytesRead);
-        }
-
-
-        public void Dispose()
-        {
-            if (audioRecord != null)
-            {
-                if (IsRecording)
-                {
-                    audioRecord.Stop();
-                }
-
-                audioRecord.Release();
-                audioRecord.Dispose();
-                audioRecord = null;
-                IsRecording = false;
-            }
+            audioRecord.StartRecording();
+            IsRecording = true;
         }
     }
-    #endif
+
+    public void StopRecording()
+    {
+        if (audioRecord != null && audioRecord.RecordingState == RecordState.Recording)
+        {
+            audioRecord.Stop();
+            IsRecording = false;
+        }
+    }
+
+    public async Task<(byte[] buffer, int bytesRead)> GetAudioStream()
+    {
+        if (audioRecord == null)
+        {
+            throw new InvalidOperationException("AudioRecord is not initialized or not in recording state.");
+        }
+
+        int bytesRead = await audioRecord.ReadAsync(audioBuffer, 0, audioBuffer.Length);
+        return (audioBuffer, bytesRead);
+    }
+
+
+    public void Dispose()
+    {
+        if (audioRecord != null)
+        {
+            if (IsRecording)
+            {
+                audioRecord.Stop();
+            }
+
+            audioRecord.Release();
+            audioRecord.Dispose();
+            audioRecord = null;
+            IsRecording = false;
+        }
+    }
+}
+#endif

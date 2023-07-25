@@ -1,7 +1,4 @@
-﻿#if ANDROID
-using Android.Media;
-#endif
-using CommunityToolkit.Maui.Alerts;
+﻿using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -51,10 +48,7 @@ public partial class SpeakPageViewModel : BaseViewModel
     [ObservableProperty]
     string recognitionTextTwo = "";
     [ObservableProperty]
-    string backgroundStatus;
-#if ANDROID
-    AudioRecord audioRecord;
-#endif
+    string uIStatustext;
     private ObservableCollection<UserMessage> _userMessages;
     public ObservableCollection<UserMessage> UserMessages
     {
@@ -63,8 +57,8 @@ public partial class SpeakPageViewModel : BaseViewModel
     }
 #if ANDROID
     public IAndroidAudioRecordService androidAudioRecordService { get; }
-    public IOptions<AppSettings> appSettings { get; }
 #endif
+    public IOptions<AppSettings> appSettings { get; }
     private TranslationRecognizer _translationRecognizerOne;
     private TranslationRecognizer _translationRecognizerTwo;
     private PushAudioInputStream _pushStreamOne;
@@ -93,20 +87,110 @@ public partial class SpeakPageViewModel : BaseViewModel
 #endif
     }
 
+    #region Commands
     [RelayCommand]
     async Task Stop()
     {
         SendAnimateButtonMessage(ButtonsEnum.StopBtn);
+        StopRecording();
+        UpdateUIStatustext("Stopped listening");
+        await StopRecognizers();
+        SendChangeBorderColorMesssgae(ButtonsEnum.StopBtn);
+    }
 
-#if ANDROID
-        if (audioRecord.RecordingState != RecordState.Stopped)
+    [RelayCommand(IncludeCancelCommand = true)]
+    async Task SpeakLanguageOne(CancellationToken cancellationToken)
+    {
+
+        SendAnimateButtonMessage(ButtonsEnum.LanguageOneBtn);
+
+        try
         {
-            audioRecord.Stop();
+            await StartRecognizerOne();
+            StartRecording();
+            SendChangeBorderColorMesssgae(ButtonsEnum.LanguageOneBtn);
+            UpdateUIStatustext($"Speak {LanguageOne.NativeLanguageName} now.");
         }
-#endif
+        catch (Exception ex)
+        {
+            Console.Write("Error thrown when trying to SpeakLanguageOne", ex);
+            throw;
+        }
+    }
 
-        BackgroundStatus = "Stopped listening";
+    [RelayCommand(IncludeCancelCommand = true)]
+    async Task SpeakLanguageTwo(CancellationToken cancellationToken)
+    {
+        SendAnimateButtonMessage(ButtonsEnum.LanguageTwoBtn);
 
+        try
+        {
+            await StartRecognizerTwo();
+            StartRecording();
+            SendChangeBorderColorMesssgae(ButtonsEnum.LanguageTwoBtn);
+            UpdateUIStatustext($"Speak {LanguageTwo.NativeLanguageName} now.");
+        }
+        catch (Exception ex)
+        {
+            Console.Write("Error thrown when trying to SpeakLanguageTwo", ex);
+            throw;
+        }
+    }
+    #endregion
+    #region SpeakViewModel Initialize
+    public void Initialize()
+    {
+        MainThread.BeginInvokeOnMainThread(async () =>
+        {
+            try
+            {
+                await CheckForMicPermission();
+                SetupRecognizerOne();
+                SetupRecognizerTwo();
+                await StartToProcessAudio();
+            }
+            catch (Exception ex)
+            {
+                Console.Write("Error thrown when trying to Initialize SpeakViewModel", ex);
+                throw;
+            }
+        });
+
+    }
+    #endregion
+    #region Start and stop recognizers
+    private async Task StartRecognizerOne()
+    {
+        if (_isRecognizerTwoActive)
+        {
+            await _translationRecognizerTwo.StopContinuousRecognitionAsync();
+            _isRecognizerTwoActive = false;
+        }
+
+        if (!_isRecognizerOneActive)
+        {
+            await _translationRecognizerOne.StartContinuousRecognitionAsync();
+            _isRecognizerOneActive = true;
+        }
+    }
+
+    private async Task StartRecognizerTwo()
+    {
+        if (_isRecognizerOneActive)
+        {
+            await _translationRecognizerOne.StopContinuousRecognitionAsync();
+            _isRecognizerOneActive = false;
+        }
+
+        if (!_isRecognizerTwoActive)
+        {
+            await _translationRecognizerTwo.StartContinuousRecognitionAsync();
+            _isRecognizerTwoActive = true;
+        }
+    }
+
+    async Task StopRecognizers()
+    {
         if (_isRecognizerOneActive)
         {
             await _translationRecognizerOne.StopContinuousRecognitionAsync();
@@ -118,107 +202,9 @@ public partial class SpeakPageViewModel : BaseViewModel
             await _translationRecognizerTwo.StopContinuousRecognitionAsync();
             _isRecognizerTwoActive = false;
         }
-
-        SendChangeBorderColorMesssgae(ButtonsEnum.StopBtn);
     }
-
-    [RelayCommand(IncludeCancelCommand = true)]
-    async Task SpeakLanguageTwo(CancellationToken cancellationToken)
-    {
-
-        SpeakPageViewModel.SendAnimateButtonMessage(ButtonsEnum.LanguageTwoBtn);
-
-        try
-        {
-            if (_isRecognizerOneActive)
-            {
-                await _translationRecognizerOne.StopContinuousRecognitionAsync();
-                _isRecognizerOneActive = false;
-            }
-
-            if (!_isRecognizerTwoActive)
-            {
-                await _translationRecognizerTwo.StartContinuousRecognitionAsync();
-                _isRecognizerTwoActive = true;
-            }
-
-#if ANDROID
-            if (audioRecord.RecordingState != RecordState.Recording)
-            {
-                audioRecord.StartRecording();
-            }
-#endif
-
-            SpeakPageViewModel.SendChangeBorderColorMesssgae(ButtonsEnum.LanguageTwoBtn);
-
-            BackgroundStatus = $"Speak {LanguageTwo.NativeLanguageName} now.";
-        }
-        catch (Exception ex)
-        {
-
-            throw;
-        }
-    }
-
-    [RelayCommand(IncludeCancelCommand = true)]
-    async Task SpeakLanguageOne(CancellationToken cancellationToken)
-    {
-
-        SendAnimateButtonMessage(ButtonsEnum.LanguageOneBtn);
-
-        try
-        {
-            if (_isRecognizerTwoActive)
-            {
-                await _translationRecognizerTwo.StopContinuousRecognitionAsync();
-                _isRecognizerTwoActive = false;
-            }
-
-            if (!_isRecognizerOneActive)
-            {
-                await _translationRecognizerOne.StartContinuousRecognitionAsync();
-                _isRecognizerOneActive = true;
-            }
-
-#if ANDROID
-            if (audioRecord.RecordingState != RecordState.Recording)
-            {
-                audioRecord.StartRecording();
-            }
-#endif
-
-            SendChangeBorderColorMesssgae(ButtonsEnum.LanguageOneBtn);
-
-            BackgroundStatus = $"Speak {LanguageOne.NativeLanguageName} now.";
-        }
-        catch (Exception ex)
-        {
-
-            throw;
-        }
-    }
-
-    public void Initialize()
-    {
-        MainThread.BeginInvokeOnMainThread(async () =>
-        {
-            try
-            {
-                await CheckForMicPermission();
-                SetupRecognizerOne();
-                SetupRecognizerTwo();
-
-                await StartProcessAudio();
-            }
-            catch (Exception ex)
-            {
-
-                throw;
-            }
-        });
-
-    }
-
+    #endregion
+    #region Mic permission
     private static async Task CheckForMicPermission()
     {
         var status = await Permissions.CheckStatusAsync<Permissions.Microphone>();
@@ -233,6 +219,45 @@ public partial class SpeakPageViewModel : BaseViewModel
             return;
         }
     }
+    #endregion
+    #region Start and stop AudioRecord
+    private void StartRecording()
+    {
+#if ANDROID
+        if (!androidAudioRecordService.IsRecording)
+        {
+            androidAudioRecordService.StartRecording();
+        }
+#endif
+    }
+
+    private void StopRecording()
+    {
+#if ANDROID
+        if (androidAudioRecordService.IsRecording)
+        {
+            androidAudioRecordService.StopRecording();
+        }
+#endif
+    }
+    #endregion
+    #region UI status 
+    private void UpdateUIStatustext(string text)
+    {
+        UIStatustext = text;
+    }
+    #endregion
+    #region Setup recognizers
+    private void SetupRecognizerOne()
+    {
+        var speechConfig = ConfigureSpeechTranslation(LanguageOne.FullLanguageCode, LanguageTwo.FullLanguageCode);
+
+        (var audioConfig, _pushStreamOne) = ConfigureAudioStream();
+
+        _translationRecognizerOne = new TranslationRecognizer(speechConfig, audioConfig);
+
+        RegisterRecognizers(_translationRecognizerOne, LanguageTwo.ShortLanguageCode, 1);
+    }
 
     private void SetupRecognizerTwo()
     {
@@ -244,17 +269,8 @@ public partial class SpeakPageViewModel : BaseViewModel
 
         RegisterRecognizers(_translationRecognizerTwo, LanguageOne.ShortLanguageCode, 2);
     }
-
-    private void SetupRecognizerOne()
-    {
-        var speechConfig = ConfigureSpeechTranslation(LanguageOne.FullLanguageCode, LanguageTwo.FullLanguageCode);
-
-        (var audioConfig, _pushStreamOne) = ConfigureAudioStream();
-
-        _translationRecognizerOne = new TranslationRecognizer(speechConfig, audioConfig);
-
-        RegisterRecognizers(_translationRecognizerOne, LanguageTwo.ShortLanguageCode, 1);
-    }
+    #endregion
+    #region TranslationRecognizer configuration
 
     private SpeechTranslationConfig ConfigureSpeechTranslation(string fromLanguage, string toLanguage)
     {
@@ -276,17 +292,18 @@ public partial class SpeakPageViewModel : BaseViewModel
         var audioConfig = AudioConfig.FromStreamInput(pushStream);
         return (audioConfig, pushStream);
     }
-
+    #endregion
+    #region Register recognizer events
     private void RegisterRecognizers(TranslationRecognizer translationRecognizer, string translatedLanguageKey, int user)
     {
         translationRecognizer.SpeechStartDetected += (sender, args) =>
         {
-            BackgroundStatus = "Speech detected.";
+            UpdateUIStatustext("Speech detected.");
         };
 
         translationRecognizer.Synthesizing += (sender, args) =>
         {
-            BackgroundStatus = "Thinking...";
+            UpdateUIStatustext("Thinking...");
         };
 
         translationRecognizer.Recognized += async (sender, args) =>
@@ -306,7 +323,7 @@ public partial class SpeakPageViewModel : BaseViewModel
 
                         SpeakPageViewModel.AddNewMessageAndScrollCollectionView(translatedMessage);
 
-                        BackgroundStatus = "Waiting for speeach...";
+                        UpdateUIStatustext("Waiting for speeach...");
                     }
 
                     break;
@@ -327,7 +344,53 @@ public partial class SpeakPageViewModel : BaseViewModel
             await SpeakPageViewModel.ShowToast(args.Result.Text ?? "Unable to recognize speech");
         };
     }
+    #endregion
+    #region Processing of audio stream
+    private async Task StartToProcessAudio()
+    {
+        //https://www.syncfusion.com/blogs/post/building-an-audio-recorder-and-player-app-in-net-maui.aspx
+        //Audio recorder for android, IOS and
 
+        if (!_continueProcessing)
+        {
+            _continueProcessing = !_continueProcessing;
+        }
+
+        await Task.Run(async () =>
+        {
+            while (_continueProcessing)
+            {
+                await _semaphore.WaitAsync();
+                try
+                {
+#if ANDROID
+                    if (androidAudioRecordService != null && androidAudioRecordService.IsRecording)
+                    {
+                        var (audioBuffer, bytesRead) = await androidAudioRecordService.GetAudioStream();
+#endif
+                        if (bytesRead > 0)
+                        {
+                            if (_isRecognizerOneActive)
+                            {
+                                _pushStreamOne.Write(audioBuffer, bytesRead);
+                            }
+
+                            if (_isRecognizerTwoActive)
+                            {
+                                _pushStreamTwo.Write(audioBuffer, bytesRead);
+                            }
+                        }
+                    }
+                }
+                finally
+                {
+                    _semaphore.Release();
+                }
+            }
+        });
+    }
+    #endregion
+    #region Event between MVVM setup
     private static void SendChangeBorderColorMesssgae(ButtonsEnum button)
     {
         if (MainThread.IsMainThread)
@@ -374,7 +437,37 @@ public partial class SpeakPageViewModel : BaseViewModel
             });
         }
     }
+    private void SetupOnDisappearEvent()
+    {
+        WeakReferenceMessenger.Default.Register<AppDisappearingMessage>(this, (r, m) =>
+        {
+            DisposeOfResources();
+            UnregisterMessages();
+        });
+    }
+    private void SetupToSleepEvent()
+    {
+        WeakReferenceMessenger.Default.Register<OnAppToSleepMessage>(this, (r, m) =>
+        {
+            DisposeOfResources();
+        });
+    }
+    private void SetupInitializeAfterResueEvent()
+    {
+        WeakReferenceMessenger.Default
+            .Register<OnInitializeAfterResumMessage>(this, (r, m) =>
+            {
+                Initialize();
+            });
+    }
 
+    private void UnregisterMessages()
+    {
+        WeakReferenceMessenger.Default.Unregister<AppDisappearingMessage>(this);
+        WeakReferenceMessenger.Default.Unregister<OnAppToSleepMessage>(this);
+    }
+    #endregion
+    #region Show toast
     private static async Task ShowToast(string message)
     {
         if (MainThread.IsMainThread)
@@ -390,68 +483,17 @@ public partial class SpeakPageViewModel : BaseViewModel
         }
 
     }
-
-    private async Task StartProcessAudio()
-    {
-        //https://www.syncfusion.com/blogs/post/building-an-audio-recorder-and-player-app-in-net-maui.aspx
-        //Audio recorder for android, IOS and
-
-        int bufferSize = 1024;
-        byte[] audioBuffer = new byte[bufferSize];
-        int bytesRead = 0;
-        
-#if ANDROID
-        audioRecord = new AudioRecord(AudioSource.Mic, 44100, ChannelIn.Mono, Encoding.Pcm16bit, bufferSize);
-#endif
-
-        if (!_continueProcessing)
-        {
-            _continueProcessing = !_continueProcessing;
-        }
-
-        await Task.Run(async () =>
-        {
-            while (_continueProcessing)
-            {
-                await _semaphore.WaitAsync();
-                try
-                {
-
-#if ANDROID
-                    bytesRead = await audioRecord.ReadAsync(audioBuffer, 0, audioBuffer.Length);
-#endif
-                    if (bytesRead > 0)
-                    {
-                        if (_isRecognizerOneActive)
-                        {
-                            _pushStreamOne.Write(audioBuffer, bytesRead);
-                        }
-
-                        if (_isRecognizerTwoActive)
-                        {
-                            _pushStreamTwo.Write(audioBuffer, bytesRead);
-                        }
-                    }
-                }
-                finally
-                {
-                    _semaphore.Release();
-                }
-            }
-        });
-    }
-
-    /// <summary>
-    /// For when a back button is clicked
-    /// </summary>
+    #endregion
+    #region Setup DisposeOfResources
 
     private void DisposeOfResources()
     {
         _continueProcessing = false;
         _isRecognizerOneActive = false;
         _isRecognizerTwoActive = false;
+        UIStatustext = "";
 
-        SpeakPageViewModel.SendChangeBorderColorMesssgae(ButtonsEnum.StopBtn);
+        SendChangeBorderColorMesssgae(ButtonsEnum.StopBtn);
 
         try { _translationRecognizerOne.Dispose(); } catch { /* Handle or log error */ }
         try { _translationRecognizerTwo.Dispose(); } catch { /* Handle or log error */ }
@@ -461,31 +503,14 @@ public partial class SpeakPageViewModel : BaseViewModel
 #if ANDROID
         try
         {
-            if (audioRecord.RecordingState == RecordState.Recording) { audioRecord.Stop(); };
-            audioRecord.Release();
-            audioRecord.Dispose();
+            if (androidAudioRecordService.IsRecording) { androidAudioRecordService.StopRecording(); };
+            androidAudioRecordService.Dispose();
         }
         catch { /* Handle or log error */ }
 #endif
     }
-
-    private void SetupOnDisappearEvent()
-    {
-        WeakReferenceMessenger.Default.Register<AppDisappearingMessage>(this, (r, m) =>
-        {
-            DisposeOfResources();
-            UnregisterMessages();
-        });
-    }
-
-    private void SetupToSleepEvent()
-    {
-        WeakReferenceMessenger.Default.Register<OnAppToSpeepMessage>(this, (r, m) =>
-        {
-            DisposeOfResources();
-        });
-    }
-
+    #endregion
+    #region CheckAndInitializeRecognizers
     private void CheckAndInitializeRecognizers()
     {
         if (_isLanguageOneSet && _isLanguageTwoSet)
@@ -493,20 +518,6 @@ public partial class SpeakPageViewModel : BaseViewModel
             Initialize();
         }
     }
-
-    private void SetupInitializeAfterResueEvent()
-    {
-        WeakReferenceMessenger.Default
-            .Register<OnInitializeAfterResumMessage>(this, (r, m) =>
-            {
-                Initialize();
-            });
-    }
-
-    private void UnregisterMessages()
-    {
-        WeakReferenceMessenger.Default.Unregister<AppDisappearingMessage>(this);
-        WeakReferenceMessenger.Default.Unregister<OnAppToSpeepMessage>(this);
-    }
+    #endregion
 }
 
