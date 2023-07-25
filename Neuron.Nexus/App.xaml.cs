@@ -14,7 +14,7 @@ public partial class App : Application
 
     protected override void OnSleep()
     {
-        WeakReferenceMessenger.Default.Send(new OnAppToSpeepMessage());
+        WeakReferenceMessenger.Default.Send(new OnAppToSleepMessage());
     }
 
     protected override void OnResume()
