@@ -5,16 +5,17 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     xmlns:pages="clr-namespace:Neuron.Nexus.Pages"
     xmlns:local="clr-namespace:Neuron.Nexus"
-    Shell.FlyoutBehavior="Disabled">
+    FlyoutBackgroundColor="{StaticResource Secondary}">
 
-    <ShellContent
-        Title="Neuron"
-        ContentTemplate="{DataTemplate local:MainPage}"
-        Route="MainPage" />
+    <!-- Flyout Header (Optional) -->
+    <Shell.FlyoutHeader>
+        <Label Margin="5" Text="Neuron Nexus" FontAttributes="Bold" FontSize="Large" HorizontalOptions="Center" VerticalOptions="Center" />
+    </Shell.FlyoutHeader>
 
-    <ShellContent Route="SummarizeDocumentsPage" ContentTemplate="{DataTemplate pages:SummarizeDocumentsPage}" />
-    <ShellContent Route="SelectLanguagePage" ContentTemplate="{DataTemplate pages:SelectLanguagePage}" />
-    <ShellContent Route="SpeechPage" ContentTemplate="{DataTemplate pages:SpeechPage}" />
-    <ShellContent Route="SpeakPage" ContentTemplate="{DataTemplate pages:SpeakPage}" />
+    <!-- Flyout Items -->
+    <FlyoutItem Title="Home" Route="MainPage">
+        <ShellContent ContentTemplate="{DataTemplate local:MainPage}" />
+    </FlyoutItem>
+
 
 </Shell>

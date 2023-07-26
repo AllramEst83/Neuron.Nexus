@@ -86,7 +86,7 @@ namespace Neuron.Nexus.ViewModels
             string languageOneToBeSent = JsonConvert.SerializeObject(SelectedLanguageOne);
             string languageTwoToBeSent = JsonConvert.SerializeObject(SelectedLanguageTwo);
 
-            await Shell.Current.GoToAsync($"//{nameof(SpeakPage)}?languageOneToBeSent={Uri.EscapeDataString(languageOneToBeSent)}&languageTwoToBeSent={Uri.EscapeDataString(languageTwoToBeSent)}");
+            await Shell.Current.GoToAsync($"{nameof(SpeakPage)}?languageOneToBeSent={Uri.EscapeDataString(languageOneToBeSent)}&languageTwoToBeSent={Uri.EscapeDataString(languageTwoToBeSent)}");
         }
 
         public void Initialize()

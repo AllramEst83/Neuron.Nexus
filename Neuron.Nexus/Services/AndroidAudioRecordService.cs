@@ -6,6 +6,7 @@ public interface IAndroidAudioRecordService : IDisposable
 {
     void StartRecording();
     void StopRecording();
+    public RecordState GetRecordState { get; }
     Task<(byte[] buffer, int bytesRead)> GetAudioStream();
     bool IsRecording { get; }
 }
@@ -18,6 +19,13 @@ public class AndroidAudioRecordService : IAndroidAudioRecordService
     private readonly ChannelIn channelConfig = ChannelIn.Mono;
     private readonly Encoding audioFormat = Encoding.Pcm16bit;
     private readonly byte[] audioBuffer;
+    public RecordState GetRecordState
+    {
+        get
+        {
+            return audioRecord == null ? RecordState.Stopped : audioRecord.RecordingState;
+        }
+    }
 
     public bool IsRecording { get; private set; }
 

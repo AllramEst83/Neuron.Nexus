@@ -56,6 +56,10 @@ public static class MauiProgram
 
             //Services
             .AddSingleton<ISpeechToText>(SpeechToText.Default)
+            .AddSingleton<ISpeechSynthesizerService, SpeechSynthesizerService>()
+#if ANDROID
+            .AddSingleton<IAndroidAudioPlayerService, AndroidAudioPlayerService>()
+#endif
             .AddSingleton<ILanguageRepository, LanguageRepository>()
             .AddSingleton<ILanguageService, LanguageService>()
 #if ANDROID

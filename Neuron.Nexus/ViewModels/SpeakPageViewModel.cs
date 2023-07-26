@@ -1,4 +1,7 @@
-﻿using CommunityToolkit.Maui.Alerts;
+﻿#if ANDROID
+using Android.Media;
+#endif
+using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -8,6 +11,7 @@ using Microsoft.CognitiveServices.Speech.Audio;
 using Microsoft.CognitiveServices.Speech.Translation;
 using Microsoft.Extensions.Options;
 using Neuron.Nexus.Models;
+using Neuron.Nexus.Pages;
 using Neuron.Nexus.Services;
 using System.Collections.ObjectModel;
 using OutputFormat = Microsoft.CognitiveServices.Speech.OutputFormat;
@@ -18,6 +22,7 @@ namespace Neuron.Nexus.ViewModels;
 [QueryProperty(nameof(LanguageTwoToBeSent), "languageTwoToBeSent")]
 public partial class SpeakPageViewModel : BaseViewModel
 {
+    //TODO: Fix animation on message click
     public string LanguageOneToBeSent
     {
         set
@@ -57,9 +62,10 @@ public partial class SpeakPageViewModel : BaseViewModel
         set => SetProperty(ref _userMessages, value);
     }
 #if ANDROID
-    public IAndroidAudioRecordService androidAudioRecordService { get; }
+    public readonly IAndroidAudioRecordService androidAudioRecordService;
+    private readonly IAndroidAudioPlayerService androidAudioPlayerService;
 #endif
-    public IOptions<AppSettings> appSettings { get; }
+    private readonly AppSettings appSettings;
     private TranslationRecognizer _translationRecognizerOne;
     private TranslationRecognizer _translationRecognizerTwo;
     private PushAudioInputStream _pushStreamOne;
@@ -71,9 +77,11 @@ public partial class SpeakPageViewModel : BaseViewModel
     private SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
 
     public SpeakPageViewModel(
-#if ANDROID
-        IAndroidAudioRecordService androidAudioRecordService,
         IOptions<AppSettings> appSettings
+#if ANDROID
+        ,
+        IAndroidAudioRecordService androidAudioRecordService,
+        IAndroidAudioPlayerService androidAudioPlayerService
 #endif
         )
     {
@@ -81,10 +89,10 @@ public partial class SpeakPageViewModel : BaseViewModel
         SetupOnDisappearEvent();
         SetupToSleepEvent();
         SetupInitializeAfterResueEvent();
+        this.appSettings = appSettings.Value;
 #if ANDROID
         this.androidAudioRecordService = androidAudioRecordService;
-        this.appSettings = appSettings;
-
+        this.androidAudioPlayerService = androidAudioPlayerService;
 #endif
     }
 
@@ -136,6 +144,30 @@ public partial class SpeakPageViewModel : BaseViewModel
             Console.Write("Error thrown when trying to SpeakLanguageTwo", ex);
             throw;
         }
+    }
+    [RelayCommand]
+    async Task HandleFrameTapped(UserMessage messsage)
+    {
+#if ANDROID
+        await Stop();
+        UpdateUIStatustext("Playing audio");
+
+        bool wasRecording = androidAudioRecordService.IsRecording;
+        if (wasRecording)
+        {
+            androidAudioRecordService.StopRecording();
+        }
+
+        if (androidAudioRecordService.GetRecordState == RecordState.Stopped)
+        {
+            await androidAudioPlayerService.PlayAudio(messsage.ChatMessage, messsage.Language);
+        }
+
+        if (wasRecording)
+        {
+            androidAudioRecordService.StartRecording();
+        }
+# endif
     }
     #endregion
     #region SpeakViewModel Initialize
@@ -207,7 +239,7 @@ public partial class SpeakPageViewModel : BaseViewModel
     #endregion
     #region Mic permission
     private static async Task CheckForMicPermission()
-    { 
+    {
         var status = await Permissions.CheckStatusAsync<Permissions.Microphone>();
 
         if (status != PermissionStatus.Granted)
@@ -257,7 +289,7 @@ public partial class SpeakPageViewModel : BaseViewModel
 
         _translationRecognizerOne = new TranslationRecognizer(speechConfig, audioConfig);
 
-        RegisterRecognizers(_translationRecognizerOne, LanguageTwo.ShortLanguageCode, 1);
+        RegisterRecognizers(_translationRecognizerOne, LanguageTwo.ShortLanguageCode, LanguageTwo.FullLanguageCode, 1);
     }
 
     private void SetupRecognizerTwo()
@@ -268,14 +300,14 @@ public partial class SpeakPageViewModel : BaseViewModel
 
         _translationRecognizerTwo = new TranslationRecognizer(speechConfig, audioConfig);
 
-        RegisterRecognizers(_translationRecognizerTwo, LanguageOne.ShortLanguageCode, 2);
+        RegisterRecognizers(_translationRecognizerTwo, LanguageOne.ShortLanguageCode, LanguageOne.FullLanguageCode, 2);
     }
     #endregion
     #region TranslationRecognizer configuration
 
     private SpeechTranslationConfig ConfigureSpeechTranslation(string fromLanguage, string toLanguage)
     {
-        var speechTranslationConfig = SpeechTranslationConfig.FromSubscription(appSettings.Value.AzureSubscriptionKey, appSettings.Value.AzureRegion);
+        var speechTranslationConfig = SpeechTranslationConfig.FromSubscription(appSettings.AzureSubscriptionKey, appSettings.AzureRegion);
 
         speechTranslationConfig.SpeechRecognitionLanguage = fromLanguage;
         speechTranslationConfig.AddTargetLanguage(toLanguage);
@@ -295,7 +327,7 @@ public partial class SpeakPageViewModel : BaseViewModel
     }
     #endregion
     #region Register recognizer events
-    private void RegisterRecognizers(TranslationRecognizer translationRecognizer, string translatedLanguageKey, int user)
+    private void RegisterRecognizers(TranslationRecognizer translationRecognizer, string translatedLanguageKey, string fullLanguageCode, int user)
     {
         translationRecognizer.SpeechStartDetected += (sender, args) =>
         {
@@ -319,11 +351,11 @@ public partial class SpeakPageViewModel : BaseViewModel
                         UserMessages.Add(new UserMessage()
                         {
                             User = user,
-                            ChatMessage = translatedMessage
+                            ChatMessage = translatedMessage,
+                            Language = fullLanguageCode
                         });
 
-                        SpeakPageViewModel.AddNewMessageAndScrollCollectionView(translatedMessage);
-
+                        AddNewMessageAndScrollCollectionView(translatedMessage);
                         UpdateUIStatustext("Listening for speeach...");
                     }
 

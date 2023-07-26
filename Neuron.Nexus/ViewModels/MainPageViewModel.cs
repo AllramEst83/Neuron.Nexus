@@ -18,9 +18,9 @@ public partial class MainPageViewModel : BaseViewModel
     // This is Dependency Injection (DI) in action - it allows for loose coupling and easy unit testing.
     public MainPageViewModel()
     {
-        NavigateToSummarizeDocumentsCommand = new Command(async () => await Shell.Current.GoToAsync($"//{nameof(SummarizeDocumentsPage)}"));
-        NavigateToSelectLanguagekCommand = new Command(async () => await Shell.Current.GoToAsync($"//{nameof(SelectLanguagePage)}"));
-        NavigateToSpeechCommand = new Command(async () => await Shell.Current.GoToAsync($"//{nameof(SpeechPage)}"));
+        NavigateToSummarizeDocumentsCommand = new Command(async () => await Shell.Current.GoToAsync($"{nameof(SummarizeDocumentsPage)}"));
+        NavigateToSelectLanguagekCommand = new Command(async () => await Shell.Current.GoToAsync($"{nameof(SelectLanguagePage)}"));
+        NavigateToSpeechCommand = new Command(async () => await Shell.Current.GoToAsync($"{nameof(SpeechPage)}"));
     }
 }
 

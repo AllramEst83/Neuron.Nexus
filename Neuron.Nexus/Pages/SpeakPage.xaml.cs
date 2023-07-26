@@ -1,6 +1,7 @@
 ﻿using Neuron.Nexus.ViewModels;
 using CommunityToolkit.Mvvm.Messaging;
 using Neuron.Nexus.Models;
+using CommunityToolkit.Maui.Views;
 
 namespace Neuron.Nexus.Pages;
 
@@ -30,6 +31,7 @@ public partial class SpeakPage : ContentPage
         SetupAnimationMessaging();
         SetupScrollToLastItemMessaging();
         UpdateImageButtonsBorderColor();
+
     }
 
     protected override void OnAppearing()
