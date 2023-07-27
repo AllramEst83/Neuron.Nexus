@@ -43,19 +43,7 @@
                  Margin property is used to add space around the button. -->
                 <Button 
                     Text="Speak"
-                    Command="{Binding NavigateToSelectLanguagekCommand}"         
-                    Style="{StaticResource Key=buttonStyle}">
-                </Button>
-
-                <Button 
-                    Text="summarize"
-                    Command="{Binding NavigateToSummarizeDocumentsCommand}"
-                    Style="{StaticResource Key=buttonStyle}">
-                </Button>
-
-                <Button 
-                    Text="Speech"
-                    Command="{Binding NavigateToSpeechCommand}"                
+                    Command="{Binding NavigateToSelectLanguagePageCommand}"         
                     Style="{StaticResource Key=buttonStyle}">
                 </Button>
 

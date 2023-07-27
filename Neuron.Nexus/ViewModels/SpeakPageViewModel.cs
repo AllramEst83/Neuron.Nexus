@@ -11,7 +11,6 @@ using Microsoft.CognitiveServices.Speech.Audio;
 using Microsoft.CognitiveServices.Speech.Translation;
 using Microsoft.Extensions.Options;
 using Neuron.Nexus.Models;
-using Neuron.Nexus.Pages;
 using Neuron.Nexus.Services;
 using System.Collections.ObjectModel;
 using OutputFormat = Microsoft.CognitiveServices.Speech.OutputFormat;
@@ -22,14 +21,19 @@ namespace Neuron.Nexus.ViewModels;
 [QueryProperty(nameof(LanguageTwoToBeSent), "languageTwoToBeSent")]
 public partial class SpeakPageViewModel : BaseViewModel
 {
-    //TODO: Fix animation on message click
+    //TODO:
+    //Fix animation on message click. Use Messaging to
+    //code behinde and r animate the frame directaly.
+    //Make the select page the first page and add flyout
+    //for settings, about and theme selector.
+    //This app should only be a translator app.
     public string LanguageOneToBeSent
     {
         set
         {
             LanguageOne = Newtonsoft.Json.JsonConvert.DeserializeObject<LanguageOption>(Uri.UnescapeDataString(value));
             _isLanguageOneSet = true;
-            CheckAndInitializeRecognizers();
+            CheckViewModelArgumenstAndInitialize();
 
         }
     }
@@ -39,7 +43,7 @@ public partial class SpeakPageViewModel : BaseViewModel
         {
             LanguageTwo = Newtonsoft.Json.JsonConvert.DeserializeObject<LanguageOption>(Uri.UnescapeDataString(value));
             _isLanguageTwoSet = true;
-            CheckAndInitializeRecognizers();
+            CheckViewModelArgumenstAndInitialize();
         }
     }
 
@@ -86,9 +90,6 @@ public partial class SpeakPageViewModel : BaseViewModel
         )
     {
         UserMessages = new ObservableCollection<UserMessage>();
-        SetupOnDisappearEvent();
-        SetupToSleepEvent();
-        SetupInitializeAfterResueEvent();
         this.appSettings = appSettings.Value;
 #if ANDROID
         this.androidAudioRecordService = androidAudioRecordService;
@@ -184,11 +185,18 @@ public partial class SpeakPageViewModel : BaseViewModel
             }
             catch (Exception ex)
             {
-                Console.Write("Error thrown when trying to Initialize SpeakViewModel", ex);
+
+                Console.Write("--> ERROR TROWN ---> when trying to Initialize SpeakViewModel --->", ex);
                 throw;
             }
         });
 
+    }
+    private void SetupEvents()
+    {
+        SetupOnDisappearEvent();
+        SetupToSleepEvent();
+        SetupInitializeAfterResueEvent();
     }
     #endregion
     #region Start and stop recognizers
@@ -480,6 +488,9 @@ public partial class SpeakPageViewModel : BaseViewModel
         WeakReferenceMessenger.Default.Register<AppDisappearingMessage>(this, (r, m) =>
         {
             DisposeOfResources();
+            _isLanguageOneSet = false;
+            _isLanguageTwoSet = false;
+            UserMessages.Clear();
             UnregisterMessages();
         });
     }
@@ -503,6 +514,7 @@ public partial class SpeakPageViewModel : BaseViewModel
     {
         WeakReferenceMessenger.Default.Unregister<AppDisappearingMessage>(this);
         WeakReferenceMessenger.Default.Unregister<OnAppToSleepMessage>(this);
+        WeakReferenceMessenger.Default.Unregister<OnInitializeAfterResumMessage>(this);
     }
     #endregion
     #region Show toast
@@ -583,10 +595,11 @@ public partial class SpeakPageViewModel : BaseViewModel
     }
     #endregion
     #region CheckAndInitializeRecognizers
-    private void CheckAndInitializeRecognizers()
+    private void CheckViewModelArgumenstAndInitialize()
     {
         if (_isLanguageOneSet && _isLanguageTwoSet)
         {
+            SetupEvents();
             Initialize();
         }
     }

@@ -6,55 +6,64 @@
              xmlns:viewmodel="clr-namespace:Neuron.Nexus.ViewModels"
              xmlns:converters="clr-namespace:Neuron.Nexus.Converters"
              xmlns:models="clr-namespace:Neuron.Nexus.Models"
+             xmlns:behaviors="clr-namespace:Neuron.Nexus.Behaviors"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
              x:DataType="viewmodel:SpeakPageViewModel">
 
     <ContentPage.Resources>
         <ResourceDictionary>
             <converters:UserTemplateToColorConverter x:Key="UserTemplateToColorConverter"/>
+
+            <DataTemplate x:Key="User1Template" x:DataType="models:UserMessage">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Frame Grid.Column="0" BackgroundColor="{Binding ., Converter={StaticResource UserTemplateToColorConverter}}">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer 
+                        Command="{Binding Path=HandleFrameTappedCommand, Source={RelativeSource AncestorType={x:Type viewmodel:SpeakPageViewModel}}}" 
+                        CommandParameter="{Binding .}"/>
+                        </Frame.GestureRecognizers>
+                        <Frame.Behaviors>
+                            <behaviors:FrameTapScaleAnimationBehavior />
+                        </Frame.Behaviors>
+
+                        <Label Text="{Binding ChatMessage}" />
+                    </Frame>
+                </Grid>
+            </DataTemplate>
+
+            <DataTemplate x:Key="User2Template" x:DataType="models:UserMessage">
+                <Grid>
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Frame x:Name="userTwoframe" Grid.Column="1" BackgroundColor="{Binding ., Converter={StaticResource UserTemplateToColorConverter}}">
+                        <Frame.GestureRecognizers>
+                            <TapGestureRecognizer 
+                        Command="{Binding Path=HandleFrameTappedCommand, Source={RelativeSource AncestorType={x:Type viewmodel:SpeakPageViewModel}}}" 
+                        CommandParameter="{Binding .}"/>
+                        </Frame.GestureRecognizers>
+
+                        <Frame.Behaviors>
+                            <behaviors:FrameTapScaleAnimationBehavior />
+                        </Frame.Behaviors>
+                        
+                        <Label Text="{Binding ChatMessage}" />
+                    </Frame>
+                </Grid>
+            </DataTemplate>
+            
+            <viewmodel:ChatTemplateSelector 
+                x:Key="ChatTemplateSelector"
+                User1Template="{StaticResource User1Template}"
+                User2Template="{StaticResource User2Template}" />
+        
         </ResourceDictionary>
-
-        <!-- Chat Message Templates -->
-        <DataTemplate x:Key="User1Template" x:DataType="models:UserMessage">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Frame Grid.Column="0" BackgroundColor="{Binding ., Converter={StaticResource UserTemplateToColorConverter}}">
-                    <Frame.GestureRecognizers>
-                        <TapGestureRecognizer 
-                        Command="{Binding Path=HandleFrameTappedCommand, Source={RelativeSource AncestorType={x:Type viewmodel:SpeakPageViewModel}}}" 
-                        CommandParameter="{Binding .}"/>
-                    </Frame.GestureRecognizers>
-                    <Label Text="{Binding ChatMessage}" />
-                </Frame>
-            </Grid>
-        </DataTemplate>
-
-        <DataTemplate x:Key="User2Template" x:DataType="models:UserMessage">
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Frame x:Name="userTwoframe" Grid.Column="1" BackgroundColor="{Binding ., Converter={StaticResource UserTemplateToColorConverter}}">
-                    <Frame.GestureRecognizers>
-                        <TapGestureRecognizer 
-                        Command="{Binding Path=HandleFrameTappedCommand, Source={RelativeSource AncestorType={x:Type viewmodel:SpeakPageViewModel}}}" 
-                        CommandParameter="{Binding .}"/>
-                    </Frame.GestureRecognizers>
-                    <Label Text="{Binding ChatMessage}" />
-                </Frame>
-            </Grid>
-        </DataTemplate>
-
-        <viewmodel:ChatTemplateSelector x:Key="ChatTemplateSelector"
-                                    User1Template="{StaticResource User1Template}"
-                                    User2Template="{StaticResource User2Template}" />
     </ContentPage.Resources>
-
-
 
     <Grid>
         <Grid.RowDefinitions>

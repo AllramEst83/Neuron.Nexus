@@ -2,6 +2,7 @@
 using CommunityToolkit.Mvvm.Messaging;
 using Neuron.Nexus.Models;
 using CommunityToolkit.Maui.Views;
+using Neuron.Nexus.Behaviors;
 
 namespace Neuron.Nexus.Pages;
 
@@ -26,17 +27,36 @@ public partial class SpeakPage : ContentPage
         // Set the BindingContext of the page to this ViewModel instance.
         // The BindingContext is used for data binding in the XAML.
         BindingContext = viewModel;
-
-        // Set up the messaging for animation. This will allow the ViewModel to trigger animations in the View.
-        SetupAnimationMessaging();
-        SetupScrollToLastItemMessaging();
-        UpdateImageButtonsBorderColor();
-
     }
 
     protected override void OnAppearing()
     {
         base.OnAppearing();
+
+        RegisterEvents();
+    }
+
+    protected override void OnDisappearing()
+    {
+        base.OnDisappearing();
+
+        UnRegisterEvents();
+    }
+    private void RegisterEvents()
+    {
+        SetupAnimationMessaging();
+        SetupScrollToLastItemMessaging();
+        UpdateImageButtonsBorderColor();
+    }
+
+    private void UnRegisterEvents()
+    {
+        WeakReferenceMessenger.Default.Send(new AppDisappearingMessage("App disappearing"));
+
+        // Unregister the message when the page disappears
+        WeakReferenceMessenger.Default.Unregister<AnimateButtonMessage>(this);
+        WeakReferenceMessenger.Default.Unregister<NewMessageMessage>(this);
+        WeakReferenceMessenger.Default.Unregister<BorderColorMessage>(this);
     }
 
     protected override void OnSizeAllocated(double width, double height)
@@ -60,9 +80,6 @@ public partial class SpeakPage : ContentPage
         });
     }
 
-    /// <summary>
-    /// Sets up the animation messaging for this page.
-    /// </summary>
     private void SetupAnimationMessaging()
     {
         WeakReferenceMessenger.Default.Register<AnimateButtonMessage>(this, async (r, m) =>
@@ -153,18 +170,6 @@ public partial class SpeakPage : ContentPage
         // Scale the button back to its original size over a period of 100ms.
         await imageButton.ScaleTo(1.0, 50);
         await label.ScaleTo(1.0, 50);
-    }
-
-    protected override void OnDisappearing()
-    {
-        base.OnDisappearing();
-
-        WeakReferenceMessenger.Default.Send(new AppDisappearingMessage("App disappearing"));
-
-        // Unregister the message when the page disappears
-        WeakReferenceMessenger.Default.Unregister<AnimateButtonMessage>(this);
-        WeakReferenceMessenger.Default.Unregister<NewMessageMessage>(this);
-        WeakReferenceMessenger.Default.Unregister<BorderColorMessage>(this);
     }
 
     private void LanguagePickerOne_SelectedIndexChanged(object sender, EventArgs e)

@@ -2,14 +2,12 @@
 using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Media;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Neuron.Nexus.Models;
 using Neuron.Nexus.Pages;
 using Neuron.Nexus.Repositories;
 using Neuron.Nexus.Services;
 using Neuron.Nexus.ViewModels;
-using System.Reflection;
 
 namespace Neuron.Nexus;
 
@@ -71,7 +69,6 @@ public static class MauiProgram
            //Pages
            .AddSingleton<MainPage>()
            .AddSingleton<SpeakPage>()
-           .AddSingleton<SpeechPage>()
            .AddSingleton<SelectLanguagePage>()
 
            //ViewModels

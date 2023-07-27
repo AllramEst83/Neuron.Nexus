@@ -42,14 +42,12 @@
 
                 <Label 
                     Text="Translation between languages"     
-                    HorizontalOptions="CenterAndExpand"
-                    IsVisible="{Binding IsButtonsAndPickerVisble}"/>
+                    HorizontalOptions="CenterAndExpand"/>
 
                 <Picker
                     x:Name="LanguagePickerOne"
                     Title="Select Language"
                     HorizontalOptions="FillAndExpand"
-                    IsVisible="{Binding IsButtonsAndPickerVisble}"
                     ItemsSource="{Binding Languages}"
                     SelectedItem="{Binding SelectedLanguageOne}"
                     ItemDisplayBinding="{Binding ., Converter={StaticResource PickerLocaleDisplayConverter}}">
@@ -68,7 +66,6 @@
                     x:Name="LanguagePickerTwo" 
                     Title="Select Language" 
                     HorizontalOptions="FillAndExpand"
-                    IsVisible="{Binding IsButtonsAndPickerVisble}"
                     ItemsSource="{Binding Languages}"
                     SelectedItem="{Binding SelectedLanguageTwo}"
                     ItemDisplayBinding="{Binding ., Converter={StaticResource PickerLocaleDisplayConverter}}">
@@ -85,8 +82,7 @@
                     Text="Start"
                     Style="{StaticResource Key=buttonStyle}"
                     Command="{Binding StartCommand}"
-                    IsEnabled="{Binding IsStartButtonEnabled}"
-                    IsVisible="{Binding IsButtonsAndPickerVisble}">
+                    IsEnabled="{Binding IsStartButtonEnabled}">
                 </Button>
             </StackLayout>
 
