@@ -1,8 +1,7 @@
 ﻿using Neuron.Nexus.ViewModels;
 using CommunityToolkit.Mvvm.Messaging;
 using Neuron.Nexus.Models;
-using CommunityToolkit.Maui.Views;
-using Neuron.Nexus.Behaviors;
+using CommunityToolkit.Maui.Alerts;
 
 namespace Neuron.Nexus.Pages;
 
@@ -33,6 +32,8 @@ public partial class SpeakPage : ContentPage
     {
         base.OnAppearing();
 
+        Connectivity.ConnectivityChanged += OnConnectivityChanged;
+
         RegisterEvents();
     }
 
@@ -40,7 +41,20 @@ public partial class SpeakPage : ContentPage
     {
         base.OnDisappearing();
 
+        Connectivity.ConnectivityChanged += OnConnectivityChanged;
+
         UnRegisterEvents();
+    }
+    private void OnConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
+    {
+        if (e.NetworkAccess != NetworkAccess.Internet)
+        {
+            DisplayAlert("No internet access", "The application does not have a internet connection. Please make shure you are connected to the internet.", "Ok");
+        }
+        else
+        {
+            Toast.Make("Application is connected. Please restart. Thank you!", CommunityToolkit.Maui.Core.ToastDuration.Long).Show(CancellationToken.None);
+        }
     }
     private void RegisterEvents()
     {

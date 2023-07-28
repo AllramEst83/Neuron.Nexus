@@ -369,21 +369,33 @@ public partial class SpeakPageViewModel : BaseViewModel
 
                     break;
 
-                case ResultReason.Canceled:
-
-                    await ShowToast(args.Result.Reason.ToString() ?? "Unable to recognize speech");
-
-                    break;
-
                 default:
-                    Console.WriteLine(args.Result.Reason.ToString());
+                    var message = $"{args.Result.Reason} - {args.Result.Text}";
+                    SentrySdk.CaptureMessage(message);
+                    Console.WriteLine(message);
                     break;
             }
         };
 
         translationRecognizer.Canceled += async (sender, args) =>
         {
-            await ShowToast(args.Result.Text ?? "Unable to recognize speech");
+            string message;
+            switch (args.Result.Reason)
+            {
+                case ResultReason.Canceled:
+                    message = "Translation has stopped. Please go back and select languages again.";
+                    break;
+                case ResultReason.NoMatch:
+                    message = "Unable to translate. Please try again. Please go back and select languages again.";
+                    break;
+
+                default:
+                    message = "An unexpected error occured. Please restart the application";
+                    break;
+
+            }
+
+            UpdateUIStatustext(message);
         };
     }
     #endregion

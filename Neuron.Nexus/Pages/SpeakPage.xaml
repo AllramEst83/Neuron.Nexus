@@ -51,17 +51,17 @@
                         <Frame.Behaviors>
                             <behaviors:FrameTapScaleAnimationBehavior />
                         </Frame.Behaviors>
-                        
+
                         <Label Text="{Binding ChatMessage}" />
                     </Frame>
                 </Grid>
             </DataTemplate>
-            
+
             <viewmodel:ChatTemplateSelector 
                 x:Key="ChatTemplateSelector"
                 User1Template="{StaticResource User1Template}"
                 User2Template="{StaticResource User2Template}" />
-        
+
         </ResourceDictionary>
     </ContentPage.Resources>
 
@@ -100,9 +100,12 @@
             Grid.Row="1" 
             Text="{Binding UIStatustext}" 
             BackgroundColor="{StaticResource Secondary}"
-            HorizontalOptions="Center" 
-            VerticalOptions="Center" 
-            Padding="10"  />
+            HorizontalTextAlignment="Center"
+            VerticalTextAlignment="Center"
+            HorizontalOptions="CenterAndExpand" 
+            VerticalOptions="CenterAndExpand" 
+            Padding="10"/>
+
 
         <!-- Static bar at the bottom -->
         <StackLayout Grid.Row="2" Style="{StaticResource stackLayoutBackground}">
