@@ -23,7 +23,7 @@ namespace Neuron.Nexus.Services
             SpeechSynthesisResult result;
             using (var stream = AudioOutputStream.CreatePullStream())
             {
-                var speechConfig = SpeechConfig.FromSubscription(appSesttings.AzureSubscriptionKey, appSesttings.AzureRegion);
+                var speechConfig = SpeechConfig.FromSubscription(appSesttings.AzureKeys.AzureSubscriptionKey, appSesttings.AzureKeys.AzureRegion);
                 speechConfig.SpeechSynthesisLanguage = targetLangugae;
                 //speechConfig.SpeechSynthesisVoiceName = targetLanguageVoice;
                 //"en-US-JennyNeural"

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Neuron.Nexus.Pages.SettingsPage"
+             Title="Settings page">
+    <ScrollView 
+        Orientation="Vertical" 
+        VerticalOptions="FillAndExpand" 
+        Style="{StaticResource scrollViewBackground}">
+
+        <!-- StackLayout stacks its children in the direction specified by Orientation. 
+         Here it's set to "Vertical", so children are stacked from top to bottom. -->
+        <StackLayout 
+            Orientation="Vertical"
+            Padding="0,10,0,0">
+
+            <!-- FlexLayout is a layout that provides flexibility by aligning its children in multiple directions, 
+             wrapping and shrinking/expanding them to fill the available space.
+             Wrap="Wrap" allows items to be wrapped to a new line if there isn't enough space.
+             AlignItems="Center" aligns items along the vertical direction to the center.
+             JustifyContent="SpaceEvenly" evenly distributes the free horizontal space between the items, including the start and end.
+             Direction="Row" arranges items horizontally. -->
+            <FlexLayout Wrap="Wrap"
+                    AlignItems="Center"
+                    JustifyContent="SpaceEvenly"
+                    Direction="Row">
+
+                <!-- The Button represents a clickable area, configured with a text, 
+                 a corner radius for rounded corners, a background color, and an event handler for click events.
+                 WidthRequest and HeightRequest specify the preferred size.
+                 Margin property is used to add space around the button. -->
+                <Button 
+                    Text="Share crash log"
+                    Command="{Binding ShareLogCommand}"         
+                    Style="{StaticResource Key=buttonStyle}">
+                </Button>
+
+                <Button 
+                    Text="Theme selector"
+                    Command="{Binding GoToThemeSelectorCommand}"         
+                    Style="{StaticResource Key=buttonStyle}">
+                </Button>
+
+                <!-- More buttons can be added to the layout, following the same structure. -->
+                <!--<Button Text="Soon to come..."
+                    CornerRadius="10"
+                    BackgroundColor="LightBlue"
+                    MinimumWidthRequest="65"
+                    MinimumHeightRequest="65" 
+                    Margin="5" 
+                    Style="{StaticResource Key=buttonShadow}">
+                </Button>-->
+
+            </FlexLayout>
+        </StackLayout>
+    </ScrollView>
+</ContentPage>

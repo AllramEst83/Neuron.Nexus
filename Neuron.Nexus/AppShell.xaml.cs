@@ -1,10 +1,12 @@
 ﻿using Neuron.Nexus.Pages;
+using Sentry;
+using System.Windows.Input;
 
 namespace Neuron.Nexus;
 
 public partial class AppShell : Shell
 {
-	public AppShell()
+    public AppShell()
 	{
 		InitializeComponent();
 
@@ -13,17 +15,20 @@ public partial class AppShell : Shell
 
         AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
         TaskScheduler.UnobservedTaskException += TaskSchedulerOnUnobservedTaskException;
+
     }
 
     private void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs e)
     {
         var exception = (Exception)e.ExceptionObject;
+        SentrySdk.CaptureException(exception);
         WriteToFile(exception);
     }
 
     private void TaskSchedulerOnUnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
     {
         var exception = e.Exception;
+        SentrySdk.CaptureException(exception);
         WriteToFile(exception);
     }
 
@@ -35,5 +40,4 @@ public partial class AppShell : Shell
         var logContent = $"[{DateTime.Now}] {exception.ToString()}\n\n";
         File.AppendAllText(filePath, logContent);
     }
-
 }

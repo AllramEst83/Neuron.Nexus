@@ -18,6 +18,12 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
+            .UseSentry(options =>
+            {
+                options.Dsn = "https://deebc4839ec6444c80f84262fa0874c2@o4505605966200832.ingest.sentry.io/4505605967970304";
+                options.Debug = true;
+                options.TracesSampleRate = 1.0;
+            })
             .UseMauiCommunityToolkit()
             .ConfigureFonts(fonts =>
             {
@@ -48,18 +54,19 @@ public static class MauiProgram
         }
 
         builder.Services.AddOptions<AppSettings>()
-                .Bind(builder.Configuration.GetSection("AzureKeys"));
+                .Bind(builder.Configuration.GetSection("ApplicationSettings"));
 
         builder.Services
 
             //Services
+            .AddSingleton<IShareLogService, ShareLogService>()
             .AddSingleton<ISpeechToText>(SpeechToText.Default)
             .AddSingleton<ISpeechSynthesizerService, SpeechSynthesizerService>()
+            .AddSingleton<ILanguageRepository, LanguageRepository>()
+            .AddSingleton<ILanguageService, LanguageService>()
 #if ANDROID
             .AddSingleton<IAndroidAudioPlayerService, AndroidAudioPlayerService>()
 #endif
-            .AddSingleton<ILanguageRepository, LanguageRepository>()
-            .AddSingleton<ILanguageService, LanguageService>()
 #if ANDROID
            .AddSingleton<IAndroidAudioRecordService, AndroidAudioRecordService>()
 #endif
@@ -70,11 +77,13 @@ public static class MauiProgram
            .AddSingleton<MainPage>()
            .AddSingleton<SpeakPage>()
            .AddSingleton<SelectLanguagePage>()
+           .AddSingleton<SettingsPage>()
 
            //ViewModels
            .AddSingleton<MainPageViewModel>()
            .AddSingleton<SpeakPageViewModel>()
-           .AddSingleton<SelectLanguagePageViewModel>();
+           .AddSingleton<SelectLanguagePageViewModel>()
+           .AddSingleton<SettingsPageViewModel>();
 
 #if DEBUG
         builder.Logging.AddDebug();

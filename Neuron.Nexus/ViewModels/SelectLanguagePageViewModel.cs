@@ -7,6 +7,7 @@ using Neuron.Nexus.Models;
 using Neuron.Nexus.Pages;
 using Neuron.Nexus.Services;
 using Newtonsoft.Json;
+using Sentry;
 using System.Collections.ObjectModel;
 using System.Windows.Input;
 

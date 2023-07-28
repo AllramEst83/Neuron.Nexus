@@ -1,14 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Neuron.Nexus.Models
+﻿namespace Neuron.Nexus.Models
 {
-    public class AppSettings
+    public class AzureKeys
     {
         public string AzureSubscriptionKey { get; set; }
         public string AzureRegion { get; set; }
+    }
+    public class AppSettings
+    {
+        public AzureKeys AzureKeys { get; set; }
+        public string DeveloperEmail { get; set; }
+        public string SentryDsn { get; set; }
     }
 }

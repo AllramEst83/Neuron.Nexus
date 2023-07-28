@@ -12,6 +12,7 @@ using Microsoft.CognitiveServices.Speech.Translation;
 using Microsoft.Extensions.Options;
 using Neuron.Nexus.Models;
 using Neuron.Nexus.Services;
+using Sentry;
 using System.Collections.ObjectModel;
 using OutputFormat = Microsoft.CognitiveServices.Speech.OutputFormat;
 
@@ -22,11 +23,8 @@ namespace Neuron.Nexus.ViewModels;
 public partial class SpeakPageViewModel : BaseViewModel
 {
     //TODO:
-    //Fix animation on message click. Use Messaging to
-    //code behinde and r animate the frame directaly.
-    //Make the select page the first page and add flyout
-    //for settings, about and theme selector.
-    //This app should only be a translator app.
+    //Look into if the setup and teardown of events an initilization is done correctlly
+    //or if we can unsubcribe onSleep and resubcribe on onResume
     public string LanguageOneToBeSent
     {
         set
@@ -123,6 +121,7 @@ public partial class SpeakPageViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
+            SentrySdk.CaptureException(ex);
             Console.Write("Error thrown when trying to SpeakLanguageOne", ex);
             throw;
         }
@@ -142,6 +141,7 @@ public partial class SpeakPageViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
+            SentrySdk.CaptureException(ex);
             Console.Write("Error thrown when trying to SpeakLanguageTwo", ex);
             throw;
         }
@@ -185,8 +185,8 @@ public partial class SpeakPageViewModel : BaseViewModel
             }
             catch (Exception ex)
             {
-
-                Console.Write("--> ERROR TROWN ---> when trying to Initialize SpeakViewModel --->", ex);
+                SentrySdk.CaptureException(ex);
+                Console.Write("Error when trying to Initialize SpeakViewModel", ex);
                 throw;
             }
         });
@@ -315,7 +315,7 @@ public partial class SpeakPageViewModel : BaseViewModel
 
     private SpeechTranslationConfig ConfigureSpeechTranslation(string fromLanguage, string toLanguage)
     {
-        var speechTranslationConfig = SpeechTranslationConfig.FromSubscription(appSettings.AzureSubscriptionKey, appSettings.AzureRegion);
+        var speechTranslationConfig = SpeechTranslationConfig.FromSubscription(appSettings.AzureKeys.AzureSubscriptionKey, appSettings.AzureKeys.AzureRegion);
 
         speechTranslationConfig.SpeechRecognitionLanguage = fromLanguage;
         speechTranslationConfig.AddTargetLanguage(toLanguage);
@@ -383,7 +383,7 @@ public partial class SpeakPageViewModel : BaseViewModel
 
         translationRecognizer.Canceled += async (sender, args) =>
         {
-            await SpeakPageViewModel.ShowToast(args.Result.Text ?? "Unable to recognize speech");
+            await ShowToast(args.Result.Text ?? "Unable to recognize speech");
         };
     }
     #endregion
@@ -425,6 +425,7 @@ public partial class SpeakPageViewModel : BaseViewModel
                 }
                 catch (Exception ex)
                 {
+                    SentrySdk.CaptureException(ex);
                     Console.WriteLine("Error occured while reading from the audio stream.", ex);
                 }
                 finally
