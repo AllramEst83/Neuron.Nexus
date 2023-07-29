@@ -99,14 +99,21 @@ namespace Neuron.Nexus.Services
                 message = "The app wont work without microphone and network permissons. Do you want to change this i the settings.";
             }
 
-            var resources = Application.Current.Resources;
 
+            var snackbar = GetSnackbar(message);
+            await snackbar.Show(cancellationToken);
+
+            return false;
+        }
+
+        private Snackbar GetSnackbar(string message)
+        {
             object bgColor = Colors.Red;
             object actionBtnTextColor = Colors.Yellow;
-            if (resources.TryGetValue("PrimaryAccent", out bgColor) &&
-                resources.TryGetValue("Secondary", out actionBtnTextColor))
-            {
-            }
+
+            var resources = Application.Current.Resources;
+            resources.TryGetValue("PrimaryAccent", out bgColor);
+            resources.TryGetValue("Secondary", out actionBtnTextColor);
 
             var snackbarOptions = new SnackbarOptions
             {
@@ -126,16 +133,14 @@ namespace Neuron.Nexus.Services
                 ActionButtonText = "Open",
                 Action = () =>
                 {
-#if ANDROID
+#if ANDROID || IOS
                     OpenSettings();
 #endif
                 },
                 VisualOptions = snackbarOptions
             };
 
-            await snackbar.Show(cancellationToken);
-
-            return false;
+            return snackbar;
         }
     }
 }
