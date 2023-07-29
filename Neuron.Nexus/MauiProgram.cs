@@ -65,6 +65,7 @@ public static class MauiProgram
             .AddSingleton<ILanguageRepository, LanguageRepository>()
             .AddSingleton<ILanguageService, LanguageService>()
             .AddSingleton<IConnectivityService, ConnectivityService>()
+            .AddSingleton<IUserPersmissionsService, UserPersmissionsService>()
 #if ANDROID
             .AddSingleton<IAndroidAudioPlayerService, AndroidAudioPlayerService>()
 #endif

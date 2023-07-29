@@ -178,7 +178,6 @@ public partial class SpeakPageViewModel : BaseViewModel
         {
             try
             {
-                await CheckForMicPermission();
                 SetupRecognizerOne();
                 SetupRecognizerTwo();
                 await StartToProcessAudio();
@@ -242,22 +241,6 @@ public partial class SpeakPageViewModel : BaseViewModel
         {
             await _translationRecognizerTwo.StopContinuousRecognitionAsync();
             _isRecognizerTwoActive = false;
-        }
-    }
-    #endregion
-    #region Mic permission
-    private static async Task CheckForMicPermission()
-    {
-        var status = await Permissions.CheckStatusAsync<Permissions.Microphone>();
-
-        if (status != PermissionStatus.Granted)
-        {
-            status = await Permissions.RequestAsync<Permissions.Microphone>();
-        }
-
-        if (status != PermissionStatus.Granted)
-        {
-            return;
         }
     }
     #endregion

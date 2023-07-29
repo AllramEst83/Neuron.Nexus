@@ -8,7 +8,9 @@ namespace Neuron.Nexus.Pages;
 public partial class SelectLanguagePage : ContentPage
 {
     private readonly IConnectivityService connectivityService;
-        public SelectLanguagePage(IConnectivityService connectivityService)
+    private readonly IUserPersmissionsService userPersmissionsService;
+
+    public SelectLanguagePage(IConnectivityService connectivityService, IUserPersmissionsService userPersmissionsService)
     {
         InitializeComponent();
 
@@ -17,16 +19,22 @@ public partial class SelectLanguagePage : ContentPage
 
         BindingContext = viewModel;
         this.connectivityService = connectivityService;
+        this.userPersmissionsService = userPersmissionsService;
     }
 
-    protected override void OnAppearing()
+    protected async override void OnAppearing()
     {
         base.OnAppearing();
+
+        var cancellactionTokenSource = new CancellationTokenSource();
+        var cancellationToken = cancellactionTokenSource.Token;
+
+       await userPersmissionsService.GetPermissionsFromUser(cancellationToken);
 
         bool isConnected = connectivityService.IsConnected();
         if (!isConnected)
         {
-            Toast.Make("No internet connection! Please connect to the internet.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show(CancellationToken.None);
+          await  Toast.Make("No internet connection! Please connect to the internet.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show(CancellationToken.None);
         }
         else
         {
