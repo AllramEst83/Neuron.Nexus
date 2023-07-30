@@ -29,7 +29,9 @@
     
     <!--ChatColors-->
     <Color x:Key="chatColorsUserOne">#b7e7ed</Color>
-    <Color x:Key="chatColorsUserTwo">#b7afdb</Color>
+    <Color x:Key="chatSpokenTextOne">#c3dbdf</Color>
+    <Color x:Key="chatColorsUserTwo">#edcad4</Color>
+    <Color x:Key="chatSpokenTextTwo">#f0dbe1</Color>
     <!--ChatColors-->
 
     <!--Main app colors-->

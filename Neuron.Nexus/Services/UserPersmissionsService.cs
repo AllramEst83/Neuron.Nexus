@@ -1,7 +1,6 @@
 ﻿using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
 using Font = Microsoft.Maui.Font;
-using Kotlin.Jvm.Internal;
 #if ANDROID
 using Android.Content;
 #endif

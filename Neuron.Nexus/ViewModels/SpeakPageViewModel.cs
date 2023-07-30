@@ -339,10 +339,13 @@ public partial class SpeakPageViewModel : BaseViewModel
                     if (args.Result.Translations.Count > 0)
                     {
                         var translatedMessage = args.Result.Translations[translatedLanguageKey];
+                        var spokenText = args.Result.Text;
+
                         UserMessages.Add(new UserMessage()
                         {
                             User = user,
                             ChatMessage = translatedMessage,
+                            SpokenText = spokenText,
                             Language = fullLanguageCode
                         });
 

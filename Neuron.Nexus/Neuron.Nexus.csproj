@@ -44,6 +44,7 @@
 		<!--Mic Icon-->
 		<MauiImage Include="Resources\Icons\microphone.png" />
 		<MauiImage Include="Resources\Icons\stop.png" />
+		<MauiImage Include="Resources\Icons\speaker.png" />
 		
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />

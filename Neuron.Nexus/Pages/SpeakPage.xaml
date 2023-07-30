@@ -20,18 +20,30 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Frame Grid.Column="0" BackgroundColor="{Binding ., Converter={StaticResource UserTemplateToColorConverter}}">
-                        <Frame.GestureRecognizers>
-                            <TapGestureRecognizer 
+
+                    <StackLayout Grid.Column="0">
+                        <!-- Smaller chat bubble positioned above the main frame -->
+                        <Frame BackgroundColor="{StaticResource chatSpokenTextOne}" Style="{StaticResource spokenTextChatBubbleOne}">
+                            <Label Text="{Binding SpokenText}" FontSize="14" VerticalOptions="Center" HorizontalOptions="Center"/>
+                        </Frame>
+
+                        <!-- Main chat bubble -->
+                        <Frame x:Name="userOneframe" Style="{StaticResource TranslatedTextFrameOne}" BackgroundColor="{Binding ., Converter={StaticResource UserTemplateToColorConverter}}">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer 
                         Command="{Binding Path=HandleFrameTappedCommand, Source={RelativeSource AncestorType={x:Type viewmodel:SpeakPageViewModel}}}" 
                         CommandParameter="{Binding .}"/>
-                        </Frame.GestureRecognizers>
-                        <Frame.Behaviors>
-                            <behaviors:FrameTapScaleAnimationBehavior />
-                        </Frame.Behaviors>
+                            </Frame.GestureRecognizers>
+                            <Frame.Behaviors>
+                                <behaviors:FrameTapScaleAnimationBehavior />
+                            </Frame.Behaviors>
 
-                        <Label Text="{Binding ChatMessage}" />
-                    </Frame>
+                            <StackLayout VerticalOptions="FillAndExpand">
+                                <Label Text="{Binding ChatMessage}" Style="{StaticResource translatedtext}" />
+                                <Image Source="speaker.png" Style="{StaticResource speakerIcon}"/>
+                            </StackLayout>
+                        </Frame>
+                    </StackLayout>
                 </Grid>
             </DataTemplate>
 
@@ -41,19 +53,30 @@
                         <ColumnDefinition Width="*"/>
                         <ColumnDefinition Width="*"/>
                     </Grid.ColumnDefinitions>
-                    <Frame x:Name="userTwoframe" Grid.Column="1" BackgroundColor="{Binding ., Converter={StaticResource UserTemplateToColorConverter}}">
-                        <Frame.GestureRecognizers>
-                            <TapGestureRecognizer 
+
+                    <StackLayout Grid.Column="1">
+                        <Frame BackgroundColor="{StaticResource chatSpokenTextTwo}" Style="{StaticResource spokenTextChatBubbleTwo}">
+                            <Label Text="{Binding SpokenText}" FontSize="14" VerticalOptions="Center" HorizontalOptions="Center"/>
+                        </Frame>
+
+
+                        <Frame x:Name="userTwoframe" Grid.Column="1" Style="{StaticResource TranslatedTextFrameTwo}"  BackgroundColor="{Binding ., Converter={StaticResource UserTemplateToColorConverter}}">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer 
                         Command="{Binding Path=HandleFrameTappedCommand, Source={RelativeSource AncestorType={x:Type viewmodel:SpeakPageViewModel}}}" 
                         CommandParameter="{Binding .}"/>
-                        </Frame.GestureRecognizers>
+                            </Frame.GestureRecognizers>
 
-                        <Frame.Behaviors>
-                            <behaviors:FrameTapScaleAnimationBehavior />
-                        </Frame.Behaviors>
+                            <Frame.Behaviors>
+                                <behaviors:FrameTapScaleAnimationBehavior />
+                            </Frame.Behaviors>
 
-                        <Label Text="{Binding ChatMessage}" />
-                    </Frame>
+                            <StackLayout VerticalOptions="FillAndExpand">
+                                <Label Text="{Binding ChatMessage}" Style="{StaticResource translatedtext}" />
+                                <Image Source="speaker.png" Style="{StaticResource speakerIcon}"/>
+                            </StackLayout>
+                        </Frame>
+                    </StackLayout>
                 </Grid>
             </DataTemplate>
 
