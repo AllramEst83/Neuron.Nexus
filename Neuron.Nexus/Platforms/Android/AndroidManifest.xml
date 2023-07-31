@@ -1,24 +1,8 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<manifest xmlns:android="http://schemas.android.com/apk/res/android">
-
+<manifest xmlns:android="http://schemas.android.com/apk/res/android" package="com.codedbykay.neuronnexus">
 	<uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 	<uses-permission android:name="android.permission.INTERNET" />
 	<uses-permission android:name="android.permission.RECORD_AUDIO" />
-
 	<uses-sdk android:minSdkVersion="33" android:targetSdkVersion="33" />
-
-	<application
-        android:allowBackup="true"
-        android:icon="@mipmap/appicon"
-        android:supportsRtl="true">
-
-		<!-- Example activity set to portrait mode -->
-		<activity android:name=".MainActivity"
-                  android:screenOrientation="portrait">
-			<!-- other activity attributes, if any -->
-		</activity>
-
-		<!-- Add other activities here and set them to portrait mode if needed -->
-
-	</application>
+	<application android:allowBackup="true" android:icon="@mipmap/appicon" android:supportsRtl="true" android:label="Neuron nexus"></application>
 </manifest>
