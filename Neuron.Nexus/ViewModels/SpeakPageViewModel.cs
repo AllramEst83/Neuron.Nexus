@@ -99,25 +99,43 @@ public partial class SpeakPageViewModel : BaseViewModel
     [RelayCommand]
     async Task Stop()
     {
-        SendAnimateButtonMessage(ButtonsEnum.StopBtn);
-        StopRecording();
-        UpdateUIStatustext("Stopped listening");
-        await StopRecognizers();
-        SendChangeBorderColorMesssgae(ButtonsEnum.StopBtn);
+        try
+        {
+            SendAnimateButtonMessage(ButtonsEnum.StopBtn);
+            SendChangeBorderColorMesssgae(ButtonsEnum.StopBtn);
+
+            StopRecording();
+            UpdateUIStatustext("Stopped listening");
+            await StopRecognizers();
+        }
+        catch (Exception ex)
+        {
+            SentrySdk.CaptureException(ex);
+            Console.Write("Error thrown when trying to Stop", ex);
+            throw;
+        }
     }
 
     [RelayCommand(IncludeCancelCommand = true)]
     async Task SpeakLanguageOne(CancellationToken cancellationToken)
     {
 
-        SendAnimateButtonMessage(ButtonsEnum.LanguageOneBtn);
 
         try
         {
-            await StartRecognizerOne();
-            StartRecording();
-            SendChangeBorderColorMesssgae(ButtonsEnum.LanguageOneBtn);
-            UpdateUIStatustext($"Speak {LanguageOne.NativeLanguageName} now.");
+            if (_isRecognizerOneActive)
+            {
+                await Stop();
+            }
+            else
+            {
+                SendAnimateButtonMessage(ButtonsEnum.LanguageOneBtn);
+                SendChangeBorderColorMesssgae(ButtonsEnum.LanguageOneBtn);
+
+                await StartRecognizerOne();
+                StartRecording();
+                UpdateUIStatustext($"Speak {LanguageOne.NativeLanguageName} now.");
+            }
         }
         catch (Exception ex)
         {
@@ -130,14 +148,22 @@ public partial class SpeakPageViewModel : BaseViewModel
     [RelayCommand(IncludeCancelCommand = true)]
     async Task SpeakLanguageTwo(CancellationToken cancellationToken)
     {
-        SendAnimateButtonMessage(ButtonsEnum.LanguageTwoBtn);
-
         try
         {
-            await StartRecognizerTwo();
-            StartRecording();
-            SendChangeBorderColorMesssgae(ButtonsEnum.LanguageTwoBtn);
-            UpdateUIStatustext($"Speak {LanguageTwo.NativeLanguageName} now.");
+            if (_isRecognizerTwoActive)
+            {
+                await Stop();
+            }
+            else
+            {
+                SendAnimateButtonMessage(ButtonsEnum.LanguageTwoBtn);
+                SendChangeBorderColorMesssgae(ButtonsEnum.LanguageTwoBtn);
+
+                await StartRecognizerTwo();
+                StartRecording();
+                UpdateUIStatustext($"Speak {LanguageTwo.NativeLanguageName} now.");
+            }
+
         }
         catch (Exception ex)
         {
@@ -146,6 +172,7 @@ public partial class SpeakPageViewModel : BaseViewModel
             throw;
         }
     }
+
     [RelayCommand]
     async Task HandleFrameTapped(UserMessage messsage)
     {

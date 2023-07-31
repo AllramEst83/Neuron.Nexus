@@ -33,7 +33,9 @@ namespace Neuron.Nexus.Repositories
                 new LanguageOption() {Id = 10,FullLanguageCode = "fi-FI", ShortLanguageCode = "fi", LanguageName = "Finnish", NativeLanguageName = "Suomi"},
                 new LanguageOption() {Id = 11,FullLanguageCode = "ar-IQ", ShortLanguageCode = "ar", LanguageName = "Arabic (Iraq)", NativeLanguageName = "al-ʿIrāq"},
                 new LanguageOption() {Id = 12,FullLanguageCode = "it-IT", ShortLanguageCode = "it", LanguageName = "Italian", NativeLanguageName = "Italia" },
-                new LanguageOption() {Id = 13,FullLanguageCode = "hr-HR", ShortLanguageCode = "hr", LanguageName = "Croatian", NativeLanguageName = "Hrvatska"}
+                new LanguageOption() {Id = 13,FullLanguageCode = "hr-HR", ShortLanguageCode = "hr", LanguageName = "Croatian", NativeLanguageName = "Hrvatska"},
+                new LanguageOption() {Id = 13,FullLanguageCode = "nb-NO", ShortLanguageCode = "nb", LanguageName = "Norwegian Bokmål ", NativeLanguageName = "Norsk"},
+                new LanguageOption() {Id = 13,FullLanguageCode = "da-DK", ShortLanguageCode = "da", LanguageName = "Danish ", NativeLanguageName = "Dansk"}
 
             };
         }
