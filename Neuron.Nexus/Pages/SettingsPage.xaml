@@ -36,6 +36,12 @@
                 </Button>
 
                 <Button 
+                    Text="Select app langugae"
+                    Command="{Binding GoToAppLanguage}"         
+                    Style="{StaticResource Key=buttonStyle}">
+                </Button>
+
+                <Button 
                     Text="Theme selector"
                     Command="{Binding GoToThemeSelectorCommand}"         
                     Style="{StaticResource Key=buttonStyle}">

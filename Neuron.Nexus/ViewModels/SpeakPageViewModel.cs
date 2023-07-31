@@ -76,7 +76,7 @@ public partial class SpeakPageViewModel : BaseViewModel
     private bool _isRecognizerOneActive = false;
     private bool _isRecognizerTwoActive = false;
     private bool _continueProcessing = true;
-    private SemaphoreSlim _semaphore = new SemaphoreSlim(1, 1);
+    private SemaphoreSlim _semaphore = new(1, 1);
 
     public SpeakPageViewModel(
         IOptions<AppSettings> appSettings
@@ -101,12 +101,12 @@ public partial class SpeakPageViewModel : BaseViewModel
     {
         try
         {
-            SendAnimateButtonMessage(ButtonsEnum.StopBtn);
-            SendChangeBorderColorMesssgae(ButtonsEnum.StopBtn);
-
             StopRecording();
-            UpdateUIStatustext("Stopped listening");
             await StopRecognizers();
+     
+            SendChangeBorderColorMesssgae(ButtonsEnum.StopBtn);
+            SendAnimateButtonMessage(ButtonsEnum.StopBtn);
+            UpdateUIStatustext("Stopped listening");
         }
         catch (Exception ex)
         {
@@ -119,8 +119,6 @@ public partial class SpeakPageViewModel : BaseViewModel
     [RelayCommand(IncludeCancelCommand = true)]
     async Task SpeakLanguageOne(CancellationToken cancellationToken)
     {
-
-
         try
         {
             if (_isRecognizerOneActive)
@@ -129,11 +127,11 @@ public partial class SpeakPageViewModel : BaseViewModel
             }
             else
             {
-                SendAnimateButtonMessage(ButtonsEnum.LanguageOneBtn);
-                SendChangeBorderColorMesssgae(ButtonsEnum.LanguageOneBtn);
-
                 await StartRecognizerOne();
                 StartRecording();
+                
+                SendChangeBorderColorMesssgae(ButtonsEnum.LanguageOneBtn);
+                SendAnimateButtonMessage(ButtonsEnum.LanguageOneBtn);
                 UpdateUIStatustext($"Speak {LanguageOne.NativeLanguageName} now.");
             }
         }
@@ -156,11 +154,11 @@ public partial class SpeakPageViewModel : BaseViewModel
             }
             else
             {
-                SendAnimateButtonMessage(ButtonsEnum.LanguageTwoBtn);
-                SendChangeBorderColorMesssgae(ButtonsEnum.LanguageTwoBtn);
-
                 await StartRecognizerTwo();
                 StartRecording();
+                
+                SendChangeBorderColorMesssgae(ButtonsEnum.LanguageTwoBtn);
+                SendAnimateButtonMessage(ButtonsEnum.LanguageTwoBtn);
                 UpdateUIStatustext($"Speak {LanguageTwo.NativeLanguageName} now.");
             }
 
