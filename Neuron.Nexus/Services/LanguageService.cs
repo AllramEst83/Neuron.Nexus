@@ -24,7 +24,7 @@ namespace Neuron.Nexus.Services
 
         public List<LanguageOption> GetLanguages()
         {
-            return _languageRepository.GetLanguages();
+            return _languageRepository.GetLanguagesOrderByLanguageName();
         }
     }
 }

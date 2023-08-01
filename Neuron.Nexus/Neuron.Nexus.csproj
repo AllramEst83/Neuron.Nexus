@@ -32,25 +32,32 @@
 
 	<ItemGroup>
 		<!-- App Icon -->
-		<MauiIcon Include="Resources\AppIcon\appicon.svg" Color="#f78fb3" />
+		<MauiIcon Include="Resources\AppIcon\appicon.svg" Color="#f78fb3" ForegroundScale="0.50" />
 
 		<!-- Splash Screen -->
-		<MauiSplashScreen Include="Resources\Splash\splash.svg" Color="#f78fb3" BaseSize="128,128" />
+		<MauiSplashScreen Include="Resources\Splash\splashscreen.svg" Color="#f78fb3" BaseSize="256, 256" />
 
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
-		<MauiImage Update="Resources\Images\dotnet_bot.svg" BaseSize="168,208" />
-		
+
 		<!--Mic Icon-->
 		<MauiImage Include="Resources\Icons\microphone.png" />
 		<MauiImage Include="Resources\Icons\stop.png" />
 		<MauiImage Include="Resources\Icons\speaker.png" />
-		
+		<MauiImage Include="Resources\Icons\cogwheel.png" />
+		<MauiImage Include="Resources\Icons\info.png" />
+		<MauiImage Include="Resources\Icons\home.png" />
+		<MauiImage Include="Resources\Icons\between.png" />
+
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />
 
 		<!-- Raw Assets (also remove the "Resources\Raw" prefix) -->
 		<MauiAsset Include="Resources\Raw\**" LogicalName="%(RecursiveDir)%(Filename)%(Extension)" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<None Remove="Resources\Icons\home.png" />
 	</ItemGroup>
 
 	<ItemGroup>
@@ -62,6 +69,8 @@
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 			<DependentUpon>appsettings.json</DependentUpon>
 		</EmbeddedResource>
+
+		<EmbeddedResource Include="Resources\Icons\home.png" />
 	</ItemGroup>
 
 
@@ -78,24 +87,27 @@
 	</ItemGroup>
 
 	<ItemGroup>
-	  <MauiXaml Update="Pages\SelectLanguagePage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pages\SettingsPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
-	  <MauiXaml Update="Pages\SpeakPage.xaml">
-	    <Generator>MSBuild:Compile</Generator>
-	  </MauiXaml>
+		<MauiXaml Update="Pages\AboutPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\SelectLanguagePage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\SettingsPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\SpeakPage.xaml">
+			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 	</ItemGroup>
 
 	<ItemGroup>
-	  <Compile Update="Pages\SettingsPage.xaml.cs">
-	    <DependentUpon>SettingsPage.xaml</DependentUpon>
-	  </Compile>
-	  <Compile Update="Pages\SpeakPage.xaml.cs">
-	    <DependentUpon>SpeakPage.xaml</DependentUpon>
-	  </Compile>
+		<Compile Update="Pages\SettingsPage.xaml.cs">
+			<DependentUpon>SettingsPage.xaml</DependentUpon>
+		</Compile>
+		<Compile Update="Pages\SpeakPage.xaml.cs">
+			<DependentUpon>SpeakPage.xaml</DependentUpon>
+		</Compile>
 	</ItemGroup>
 
 </Project>

@@ -12,13 +12,27 @@
     </Shell.FlyoutHeader>
 
     <!-- Flyout Items -->
-    <FlyoutItem Title="Home" Route="SelectLanguagePage">
+
+    <FlyoutItem Icon="home.png" Title="Translator" Route="SelectLanguagePage">
         <ShellContent ContentTemplate="{DataTemplate pages:SelectLanguagePage}" />
     </FlyoutItem>
 
-    <FlyoutItem Title="Settings page" Route="SettingsPage">
+    <FlyoutItem Icon="cogwheel.png" Title="Settings" Route="SettingsPage">
         <ShellContent ContentTemplate="{DataTemplate pages:SettingsPage}" />
     </FlyoutItem>
+
+    <MenuItem>
+        <Shell.MenuItemTemplate>
+            <DataTemplate>
+                <Label HeightRequest="1" BackgroundColor="black"></Label>
+            </DataTemplate>
+        </Shell.MenuItemTemplate>
+    </MenuItem>
+
+    <ShellContent Title="About"
+                  Icon="info.png"
+                  ContentTemplate="{DataTemplate pages:AboutPage}" 
+                  Route="AboutPage"/>
 
 
 </Shell>

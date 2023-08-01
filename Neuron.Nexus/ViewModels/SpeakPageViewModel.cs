@@ -331,7 +331,8 @@ public partial class SpeakPageViewModel : BaseViewModel
         // Adjustments
         //speechTranslationConfig.SetProperty("InitialSilenceTimeout", "7000");
         //speechTranslationConfig.SetProperty("EndSilenceTimeout", "1500");
-        speechTranslationConfig.OutputFormat = OutputFormat.Simple;
+        speechTranslationConfig.OutputFormat = OutputFormat.Detailed;
+        speechTranslationConfig.SetProfanity(ProfanityOption.Raw);
 
         return speechTranslationConfig;
     }

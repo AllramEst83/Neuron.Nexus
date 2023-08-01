@@ -40,45 +40,106 @@
                     VerticalOptions="CenterAndExpand" 
                     Scale="1"/>-->
 
-                <Label 
-                    Text="Translation between languages"     
-                    HorizontalOptions="CenterAndExpand"/>
+                <Border 
+                    HorizontalOptions="CenterAndExpand" 
+                    VerticalOptions="CenterAndExpand" 
+                    Padding="15" 
+                    Margin="0,0,0,20" 
+                    Stroke="Wheat" 
+                    BackgroundColor="Wheat"
+                    StrokeShape="RoundRectangle 10,10,10,10"
+                    StrokeThickness="2">
 
-                <Picker
-                    x:Name="LanguagePickerOne"
-                    Title="Select Language"
-                    HorizontalOptions="FillAndExpand"
-                    ItemsSource="{Binding Languages}"
-                    SelectedItem="{Binding SelectedLanguageOne}"
-                    ItemDisplayBinding="{Binding ., Converter={StaticResource PickerLocaleDisplayConverter}}">
+                    <Border.Shadow>
+                        <Shadow Brush="{StaticResource PrimaryAccent }"
+                                Offset="15,15"
+                                Radius="50"
+                                Opacity="0.7"/>
+                    </Border.Shadow>
 
-                    <Picker.Behaviors>
-                        <toolkit:EventToCommandBehavior
-                            EventName="SelectedIndexChanged"
-                            Command="{Binding HandlePickerSelectionChangedOneCommand}"
-                            CommandParameter="{Binding Source={x:Reference Name=LanguagePickerOne}}" />
-                    </Picker.Behaviors>
-                </Picker>
+                    <Label 
+                    Text="Ready to translate? Please pick your preferred languages."     
+                    FontSize="16"
+                    Margin="0"
+                    HorizontalTextAlignment="Center" 
+                    VerticalTextAlignment="Center" 
+                    HorizontalOptions="CenterAndExpand" 
+                    VerticalOptions="CenterAndExpand"/>
 
-                <!-- Language Picker Two -->
-                <!--<Label Text="Select Language" HorizontalOptions="Center" />-->
-                <Picker 
-                    x:Name="LanguagePickerTwo" 
-                    Title="Select Language" 
-                    HorizontalOptions="FillAndExpand"
-                    ItemsSource="{Binding Languages}"
-                    SelectedItem="{Binding SelectedLanguageTwo}"
-                    ItemDisplayBinding="{Binding ., Converter={StaticResource PickerLocaleDisplayConverter}}">
+                </Border>
 
-                    <Picker.Behaviors>
-                        <toolkit:EventToCommandBehavior EventName="SelectedIndexChanged"
-                                                  Command="{Binding HandlePickerSelectionChangedTwoCommand}"
-                                                  CommandParameter="{Binding Source={x:Reference Name=LanguagePickerTwo}}"/>
-                    </Picker.Behaviors>
-                </Picker>
+                <Border 
+                    HorizontalOptions="FillAndExpand" 
+                    VerticalOptions="FillAndExpand" 
+                    HeightRequest="180"
+                    Padding="20" 
+                    Margin="0,0,0,0" 
+                    Stroke="Wheat" 
+                    BackgroundColor="Wheat"
+                    StrokeShape="RoundRectangle 10,10,10,10"
+                    StrokeThickness="1">
+
+                    <Border.Shadow>
+                        <Shadow 
+                            Brush="{StaticResource PrimaryAccent }"
+                            Offset="15,15"
+                            Radius="50"
+                            Opacity="0.8"/>
+                    </Border.Shadow>
+
+                    <StackLayout                     
+                        HorizontalOptions="FillAndExpand" 
+                        VerticalOptions="FillAndExpand"
+                        Spacing="5">
+
+
+                        <Picker
+                            x:Name="LanguagePickerOne"
+                            Title="Select Language"
+                            HorizontalOptions="FillAndExpand" 
+                            VerticalOptions="FillAndExpand"
+                            Margin="10,0,0,0"
+                            ItemsSource="{Binding Languages}"
+                            SelectedItem="{Binding SelectedLanguageOne}"
+                            ItemDisplayBinding="{Binding ., Converter={StaticResource PickerLocaleDisplayConverter}}">
+
+                            <Picker.Behaviors>
+                                <toolkit:EventToCommandBehavior
+                                            EventName="SelectedIndexChanged"
+                                            Command="{Binding HandlePickerSelectionChangedOneCommand}"
+                                            CommandParameter="{Binding Source={x:Reference Name=LanguagePickerOne}}" />
+                            </Picker.Behaviors>
+                        </Picker>
+
+                        <Image 
+                            Margin="0,4,0,0"
+                            Source="between.png"
+                            VerticalOptions="Center"
+                            HorizontalOptions="Center"
+                            HeightRequest="20"
+                            WidthRequest="20"/>
+
+                        <Picker 
+                            x:Name="LanguagePickerTwo" 
+                            Title="Select Language" 
+                            HorizontalOptions="FillAndExpand" 
+                            VerticalOptions="FillAndExpand"
+                            ItemsSource="{Binding Languages}"
+                            SelectedItem="{Binding SelectedLanguageTwo}"
+                            ItemDisplayBinding="{Binding ., Converter={StaticResource PickerLocaleDisplayConverter}}">
+
+                            <Picker.Behaviors>
+                                <toolkit:EventToCommandBehavior EventName="SelectedIndexChanged"
+                              Command="{Binding HandlePickerSelectionChangedTwoCommand}"
+                              CommandParameter="{Binding Source={x:Reference Name=LanguagePickerTwo}}"/>
+                            </Picker.Behaviors>
+                        </Picker>
+                    </StackLayout>
+                </Border>
 
                 <!--StartButton-->
                 <Button 
+                    Margin="0,42,0,0"
                     Text="Start"
                     Style="{StaticResource Key=buttonStyle}"
                     Command="{Binding StartCommand}"

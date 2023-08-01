@@ -21,7 +21,7 @@ namespace Neuron.Nexus.ViewModels
         [RelayCommand]
         public async Task GoToThemeSelector()
         {
-            await Application.Current.MainPage.DisplayAlert("Theme", "The app language page has not been created yet. Thank you for your patience.", "Ok");
+            await Application.Current.MainPage.DisplayAlert("App language", "The app language page has not been created yet. Thank you for your patience.", "Ok");
         }
 
         [RelayCommand]

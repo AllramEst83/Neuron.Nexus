@@ -43,7 +43,7 @@ namespace Neuron.Nexus.ViewModels
             {
                 string languageOneToBeSent = JsonConvert.SerializeObject(SelectedLanguageOne);
                 string languageTwoToBeSent = JsonConvert.SerializeObject(SelectedLanguageTwo);
-
+                    
                 await Shell.Current.GoToAsync($"{nameof(SpeakPage)}?languageOneToBeSent={Uri.EscapeDataString(languageOneToBeSent)}&languageTwoToBeSent={Uri.EscapeDataString(languageTwoToBeSent)}");
             }
         }
@@ -74,11 +74,11 @@ namespace Neuron.Nexus.ViewModels
 
         public void Initialize()
         {
-            Languages = new ObservableCollection<LanguageOption>(_languageService.GetLanguages().OrderBy(x => x.LanguageName));
+            Languages = new ObservableCollection<LanguageOption>(_languageService.GetLanguages());
             if (IsStartButtonEnabled)
             {
                 IsStartButtonEnabled = !IsStartButtonEnabled;
-            }            
-        }        
+            }
+        }
     }
 }

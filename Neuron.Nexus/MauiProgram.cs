@@ -80,6 +80,7 @@ public static class MauiProgram
            .AddSingleton<SpeakPage>()
            .AddSingleton<SelectLanguagePage>()
            .AddSingleton<SettingsPage>()
+           .AddSingleton<AboutPage>()
 
            //ViewModels
            .AddSingleton<MainPageViewModel>()

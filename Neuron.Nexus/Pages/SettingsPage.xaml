@@ -37,7 +37,7 @@
 
                 <Button 
                     Text="Select app langugae"
-                    Command="{Binding GoToAppLanguage}"         
+                    Command="{Binding GoToAppLanguageCommand}"         
                     Style="{StaticResource Key=buttonStyle}">
                 </Button>
 
