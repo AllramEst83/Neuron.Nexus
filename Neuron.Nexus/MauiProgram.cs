@@ -81,12 +81,15 @@ public static class MauiProgram
            .AddSingleton<SelectLanguagePage>()
            .AddSingleton<SettingsPage>()
            .AddSingleton<AboutPage>()
+           .AddSingleton<TutorialPage>()
 
            //ViewModels
            .AddSingleton<MainPageViewModel>()
            .AddSingleton<SpeakPageViewModel>()
            .AddSingleton<SelectLanguagePageViewModel>()
-           .AddSingleton<SettingsPageViewModel>();
+           .AddSingleton<SettingsPageViewModel>()
+           .AddSingleton<AboutPageViewModel>()
+           .AddSingleton<TutorialPageViewModel>();
 
 #if DEBUG
         builder.Logging.AddDebug();

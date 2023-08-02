@@ -3,10 +3,109 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Neuron.Nexus.Pages.AboutPage"
              Title="About Neuron nexus">
-    <VerticalStackLayout>
-        <Label 
-            Text="About Neuron nexus"
-            VerticalOptions="Center" 
-            HorizontalOptions="Center" />
-    </VerticalStackLayout>
+    <ScrollView
+        Padding="25"
+          Style="{StaticResource scrollViewBackground}"
+        HorizontalOptions="CenterAndExpand">
+
+
+
+
+        <VerticalStackLayout>
+            <Label
+                    TextType="Html"
+                    FontSize="16"
+                    FontAttributes="Bold"
+                    LineBreakMode="WordWrap"
+                    >
+                Welcome!
+            </Label>
+
+
+            <Label
+                TextType="Html"
+                FontSize="16"
+                FontAttributes="None"
+                LineBreakMode="WordWrap"
+                Margin="0,25,0,0"
+                >
+                Welcome! to the beta version of Neuron nexus. We're thrilled to have you on board as one of our early users. 
+                As you embark on this journey with us, there are a few key points to bear in mind.
+            </Label>
+            
+            <Label
+                TextType="Html"
+                FontSize="16"
+                FontAttributes="None"
+                LineBreakMode="WordWrap"
+                Margin="0,25,0,0"
+                >
+                This app is currently in its beta testing phase. Being in beta means that you get a firsthand experience of our features 
+            before they're rolled out to the broader public. However, it also means that you might encounter unexpected bugs or issues 
+            along the way. We’re constantly working behind the scenes to refine and improve, but we appreciate your patience and 
+            understanding if things don’t always work seamlessly.
+            </Label>
+
+            <Label
+                TextType="Html"
+                FontSize="16"
+                FontAttributes="None"
+                LineBreakMode="WordWrap"
+                Margin="0,25,0,0"
+                >
+                The lifespan and future trajectory of this app remain uncertain. Based on feedback, testing results, and various other factors, 
+            we might make significant changes, or the app might even be removed from availability without prior notice. There's also the 
+            possibility that the app could experience interruptions or stop working due to unforeseen circumstances.
+            </Label>
+
+            <Label
+                TextType="Html"
+                FontSize="16"
+                FontAttributes="None"
+                LineBreakMode="WordWrap"
+                Margin="0,25,0,0"
+                >
+                Your role as a beta tester is paramount to our development process. Your feedback, insights, and experiences with the app are incredibly 
+            valuable to us, helping guide our next steps and refinements.
+            </Label>
+
+            <Label
+                TextType="Html"
+                FontSize="16"
+                FontAttributes="None"
+                LineBreakMode="WordWrap"
+                Margin="0,25,0,0"
+                >
+                Lastly, we want to express our gratitude for your involvement. Engaging with a beta app requires understanding and patience, and your willingness 
+            to be part of this phase makes all the difference. Thank you for joining us on this exciting journey.
+            </Label>
+
+            <Label
+                FontSize="16"
+                FontAttributes="None"
+                LineBreakMode="WordWrap"
+                Margin="0,25,0,0"
+                >
+                CodedByKay team.
+            </Label>
+
+
+
+            <Label
+            Margin="0,50,0,0"
+            Grid.Column="1"
+            HorizontalTextAlignment="Center"
+            TextColor="Blue"
+            FontAttributes="Bold">
+
+                Icons designed by Freepik
+
+                <Label.GestureRecognizers>
+                    <TapGestureRecognizer 
+                                            Command="{Binding GoToHyperlinkAdressCommand}"
+                                            CommandParameter="https://www.freepik.com/" />
+                </Label.GestureRecognizers>
+            </Label>
+        </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

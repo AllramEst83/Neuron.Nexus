@@ -87,7 +87,7 @@
 
         </ResourceDictionary>
     </ContentPage.Resources>
-
+    
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
@@ -131,7 +131,9 @@
 
 
         <!-- Static bar at the bottom -->
-        <StackLayout Grid.Row="2" Style="{StaticResource stackLayoutBackground}">
+        <StackLayout 
+            Grid.Row="2" 
+            Style="{StaticResource stackLayoutBackground}">
             <FlexLayout JustifyContent="SpaceEvenly">
 
                 <!-- LanguageOneBtn and its Label -->
@@ -166,7 +168,6 @@
 
             </FlexLayout>
         </StackLayout>
-
     </Grid>
 
 </ContentPage>

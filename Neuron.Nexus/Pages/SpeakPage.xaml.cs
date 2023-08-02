@@ -46,15 +46,13 @@ public partial class SpeakPage : ContentPage
 
         UnRegisterEvents();
     }
-    private void OnConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
+    private async void OnConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
     {
         if (e.NetworkAccess != NetworkAccess.Internet)
         {
-            DisplayAlert("No internet access", "The application does not have a internet connection. Please make shure you are connected to the internet.", "Ok");
-        }
-        else
-        {
-            Toast.Make("Application is connected. Please restart. Thank you!", CommunityToolkit.Maui.Core.ToastDuration.Long).Show(CancellationToken.None);
+            await DisplayAlert("No internet access", "Oops! We've lost the internet connection. We'll take you back to the start page for now. Please check your connection and try again.", "Ok");
+
+            await Shell.Current.GoToAsync($"//{nameof(SelectLanguagePage)}");
         }
     }
     private void RegisterEvents()

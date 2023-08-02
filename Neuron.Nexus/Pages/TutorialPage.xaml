@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Neuron.Nexus.Pages.TutorialPage"
+             Title="Instructions">
+    <ScrollView
+        Padding="25"
+        Style="{StaticResource scrollViewBackground}"
+        HorizontalOptions="CenterAndExpand">
+
+        <VerticalStackLayout>
+
+            <Grid RowSpacing="8">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!-- Instructions in the Grid -->
+                <Label Grid.Row="0" Text="1. Select Preferred Languages:" />
+                <Label Grid.Row="1" Text="· Go to the start page" Margin="20,0,0,0" />
+                <Label Grid.Row="2" Text="· From here, choose your preferred languages for translation." Margin="20,0,0,0" />
+
+                <Label Grid.Row="3" Text="2. Start Translation:" />
+                <Label Grid.Row="4" Text="· Tap on the 'Start' button." Margin="20,0,0,0" />
+
+                <Label Grid.Row="5" Text="3. Speak:" />
+                <Label Grid.Row="6" Text="· Identify the icon positioned above the language you intend to speak." Margin="20,0,0,0" />
+                <Label Grid.Row="7" Text="· Tap on this icon." Margin="20,0,0,0" />
+                <Label Grid.Row="8" Text="· Begin speaking into your device. · Remember:" Margin="20,0,0,0" />
+                <Label Grid.Row="9" Text="· Speak clearly." Margin="40,0,0,0" />
+                <Label Grid.Row="10" Text="· Ensure that background noise is minimal to get the most accurate translation." Margin="40,0,0,0" />
+
+                <Label Grid.Row="11" Text="4. Stop Translation:" />
+                <Label Grid.Row="12" Text="· To stop the translation, tap the same icon again or hit the 'Stop' button." Margin="20,0,0,0" />
+
+                <Label Grid.Row="13" Text="5. Hear the Translation:" />
+                <Label Grid.Row="14" Text="· To have the translated text read out loud, simply tap on the translated text bubble." Margin="20,0,0,0" />
+
+                <Label Grid.Row="15" Text="You're now all set to use the translator app effectively. Good luck!" Margin="0,15,0,0"/>
+            </Grid>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

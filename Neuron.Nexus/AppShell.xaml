@@ -13,12 +13,16 @@
 
     <!-- Flyout Items -->
 
-    <FlyoutItem Icon="home.png" Title="Translator" Route="SelectLanguagePage">
+    <FlyoutItem Icon="home.png" Title="Start" Route="SelectLanguagePage">
         <ShellContent ContentTemplate="{DataTemplate pages:SelectLanguagePage}" />
     </FlyoutItem>
 
     <FlyoutItem Icon="cogwheel.png" Title="Settings" Route="SettingsPage">
         <ShellContent ContentTemplate="{DataTemplate pages:SettingsPage}" />
+    </FlyoutItem>
+
+    <FlyoutItem Icon="instructions.png" Title="How to use the app" Route="TutorialPage">
+        <ShellContent ContentTemplate="{DataTemplate pages:TutorialPage}" />
     </FlyoutItem>
 
     <MenuItem>

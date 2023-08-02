@@ -48,6 +48,7 @@
 		<MauiImage Include="Resources\Icons\info.png" />
 		<MauiImage Include="Resources\Icons\home.png" />
 		<MauiImage Include="Resources\Icons\between.png" />
+		<MauiImage Include="Resources\Icons\instructions.png" />
 
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />
@@ -98,6 +99,9 @@
 		</MauiXaml>
 		<MauiXaml Update="Pages\SpeakPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\TutorialPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 	</ItemGroup>
 
