@@ -14,6 +14,7 @@ using Neuron.Nexus.Models;
 using Neuron.Nexus.Services;
 using Sentry;
 using System.Collections.ObjectModel;
+using System.Text.RegularExpressions;
 using OutputFormat = Microsoft.CognitiveServices.Speech.OutputFormat;
 
 namespace Neuron.Nexus.ViewModels;
@@ -174,25 +175,20 @@ public partial class SpeakPageViewModel : BaseViewModel
     [RelayCommand]
     async Task HandleFrameTapped(UserMessage messsage)
     {
+        if (string.IsNullOrEmpty(messsage.ChatMessage) ||
+            Regex.IsMatch(messsage.ChatMessage, @"^[.,\W]+$"))
+        {
+            UpdateUIStatustext("Could not play audio");
+            return;
+        }
+
 #if ANDROID
         await Stop();
-        UpdateUIStatustext("Creating audio...");
-
-        bool wasRecording = androidAudioRecordService.IsRecording;
-        if (wasRecording)
-        {
-            androidAudioRecordService.StopRecording();
-        }
 
         if (androidAudioRecordService.GetRecordState == RecordState.Stopped)
         {
             UpdateUIStatustext("Playing audio");
             await androidAudioPlayerService.PlayAudio(messsage.ChatMessage, messsage.Language);
-        }
-
-        if (wasRecording)
-        {
-            androidAudioRecordService.StartRecording();
         }
 # endif
     }
