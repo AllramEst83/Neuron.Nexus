@@ -14,6 +14,7 @@ public partial class AppShell : Shell
         //Routing.RegisterRoute(nameof(SelectLanguagePage), typeof(SelectLanguagePage));
         //Routing.RegisterRoute(nameof(SettingsPage), typeof(SettingsPage));
         Routing.RegisterRoute(nameof(SpeakPage), typeof(SpeakPage));
+        Routing.RegisterRoute(nameof(SelectCulturePage), typeof(SelectCulturePage));
 
         AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
         TaskScheduler.UnobservedTaskException += TaskSchedulerOnUnobservedTaskException;

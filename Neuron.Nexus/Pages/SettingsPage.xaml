@@ -2,7 +2,10 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="Neuron.Nexus.Pages.SettingsPage"
-             Title="Settings page">
+             Title="{translator:Translate Settings}"
+               xmlns:translator="clr-namespace:Neuron.Nexus.Exstensions"
+              xmlns:viewmodel="clr-namespace:Neuron.Nexus.ViewModels"
+             x:DataType="viewmodel:SettingsPageViewModel">
     <ScrollView 
         Orientation="Vertical" 
         VerticalOptions="FillAndExpand" 
@@ -30,19 +33,22 @@
                  WidthRequest and HeightRequest specify the preferred size.
                  Margin property is used to add space around the button. -->
                 <Button 
-                    Text="Share crash log"
+                    HorizontalOptions="StartAndExpand"
+                    Text="{translator:Translate ShareCrashLog}"
                     Command="{Binding ShareLogCommand}"         
                     Style="{StaticResource Key=buttonStyle}">
                 </Button>
 
                 <Button 
-                    Text="Select app langugae"
+                    HorizontalOptions="StartAndExpand"
+                    Text="{translator:Translate SelectAppLangugae}"
                     Command="{Binding GoToAppLanguageCommand}"         
                     Style="{StaticResource Key=buttonStyle}">
                 </Button>
 
                 <Button 
-                    Text="Theme selector"
+                    HorizontalOptions="StartAndExpand"
+                    Text="{translator:Translate ThemeSelector}"
                     Command="{Binding GoToThemeSelectorCommand}"         
                     Style="{StaticResource Key=buttonStyle}">
                 </Button>

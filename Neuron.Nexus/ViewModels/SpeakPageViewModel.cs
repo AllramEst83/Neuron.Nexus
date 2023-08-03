@@ -103,7 +103,7 @@ public partial class SpeakPageViewModel : BaseViewModel
         {
             StopRecording();
             await StopRecognizers();
-     
+
             SendChangeBorderColorMesssgae(ButtonsEnum.StopBtn);
             SendAnimateButtonMessage(ButtonsEnum.StopBtn);
             UpdateUIStatustext("Stopped listening");
@@ -129,7 +129,7 @@ public partial class SpeakPageViewModel : BaseViewModel
             {
                 await StartRecognizerOne();
                 StartRecording();
-                
+
                 SendChangeBorderColorMesssgae(ButtonsEnum.LanguageOneBtn);
                 SendAnimateButtonMessage(ButtonsEnum.LanguageOneBtn);
                 UpdateUIStatustext($"Speak {LanguageOne.NativeLanguageName} now.");
@@ -156,7 +156,7 @@ public partial class SpeakPageViewModel : BaseViewModel
             {
                 await StartRecognizerTwo();
                 StartRecording();
-                
+
                 SendChangeBorderColorMesssgae(ButtonsEnum.LanguageTwoBtn);
                 SendAnimateButtonMessage(ButtonsEnum.LanguageTwoBtn);
                 UpdateUIStatustext($"Speak {LanguageTwo.NativeLanguageName} now.");
@@ -176,7 +176,7 @@ public partial class SpeakPageViewModel : BaseViewModel
     {
 #if ANDROID
         await Stop();
-        UpdateUIStatustext("Playing audio");
+        UpdateUIStatustext("Creating audio...");
 
         bool wasRecording = androidAudioRecordService.IsRecording;
         if (wasRecording)
@@ -186,6 +186,7 @@ public partial class SpeakPageViewModel : BaseViewModel
 
         if (androidAudioRecordService.GetRecordState == RecordState.Stopped)
         {
+            UpdateUIStatustext("Playing audio");
             await androidAudioPlayerService.PlayAudio(messsage.ChatMessage, messsage.Language);
         }
 
@@ -540,23 +541,6 @@ public partial class SpeakPageViewModel : BaseViewModel
         WeakReferenceMessenger.Default.Unregister<AppDisappearingMessage>(this);
         WeakReferenceMessenger.Default.Unregister<OnAppToSleepMessage>(this);
         WeakReferenceMessenger.Default.Unregister<OnInitializeAfterResumMessage>(this);
-    }
-    #endregion
-    #region Show toast
-    private static async Task ShowToast(string message)
-    {
-        if (MainThread.IsMainThread)
-        {
-            await Toast.Make(message ?? "Unable to recognize speech", ToastDuration.Long).Show(CancellationToken.None);
-        }
-        else
-        {
-            MainThread.BeginInvokeOnMainThread(() =>
-            {
-                Toast.Make(message ?? "Unable to recognize speech", ToastDuration.Long).Show(CancellationToken.None);
-            });
-        }
-
     }
     #endregion
     #region Setup DisposeOfResources

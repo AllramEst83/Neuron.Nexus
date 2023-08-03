@@ -33,8 +33,6 @@ public partial class SpeakPage : ContentPage
     {
         base.OnAppearing();
 
-        Connectivity.ConnectivityChanged += OnConnectivityChanged;
-
         RegisterEvents();
     }
 
@@ -42,19 +40,9 @@ public partial class SpeakPage : ContentPage
     {
         base.OnDisappearing();
 
-        Connectivity.ConnectivityChanged += OnConnectivityChanged;
-
         UnRegisterEvents();
     }
-    private async void OnConnectivityChanged(object sender, ConnectivityChangedEventArgs e)
-    {
-        if (e.NetworkAccess != NetworkAccess.Internet)
-        {
-            await DisplayAlert("No internet access", "Oops! We've lost the internet connection. We'll take you back to the start page for now. Please check your connection and try again.", "Ok");
 
-            await Shell.Current.GoToAsync($"//{nameof(SelectLanguagePage)}");
-        }
-    }
     private void RegisterEvents()
     {
         SetupAnimationMessaging();
@@ -66,7 +54,6 @@ public partial class SpeakPage : ContentPage
     {
         WeakReferenceMessenger.Default.Send(new AppDisappearingMessage("App disappearing"));
 
-        // Unregister the message when the page disappears
         WeakReferenceMessenger.Default.Unregister<AnimateButtonMessage>(this);
         WeakReferenceMessenger.Default.Unregister<NewMessageMessage>(this);
         WeakReferenceMessenger.Default.Unregister<BorderColorMessage>(this);

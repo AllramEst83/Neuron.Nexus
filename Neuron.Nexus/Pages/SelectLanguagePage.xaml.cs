@@ -1,5 +1,7 @@
 
 using CommunityToolkit.Maui.Alerts;
+using CommunityToolkit.Mvvm.Messaging;
+using Neuron.Nexus.Models;
 using Neuron.Nexus.Services;
 using Neuron.Nexus.ViewModels;
 
@@ -9,13 +11,14 @@ public partial class SelectLanguagePage : ContentPage
 {
     private readonly IConnectivityService connectivityService;
     private readonly IUserPersmissionsService userPersmissionsService;
+    private SelectLanguagePageViewModel viewModel;
 
     public SelectLanguagePage(IConnectivityService connectivityService, IUserPersmissionsService userPersmissionsService)
     {
         InitializeComponent();
 
         // Create a new instance of SelectLanguagePage with dependency injetced services.
-        var viewModel = Application.Current.Handler.MauiContext.Services.GetService<SelectLanguagePageViewModel>();
+        viewModel = Application.Current.Handler.MauiContext.Services.GetService<SelectLanguagePageViewModel>();
 
         BindingContext = viewModel;
         this.connectivityService = connectivityService;
@@ -26,27 +29,35 @@ public partial class SelectLanguagePage : ContentPage
     {
         base.OnAppearing();
 
+        viewModel.SubscribeToEvents();
+
+        WeakReferenceMessenger.Default.Send(new InitializeStartMessage());
+
+        SubscribeToEvents();
+
         var cancellactionTokenSource = new CancellationTokenSource();
         var cancellationToken = cancellactionTokenSource.Token;
 
-       await userPersmissionsService.GetPermissionsFromUser(cancellationToken);
+        await userPersmissionsService.GetPermissionsFromUser(cancellationToken);
 
         bool isConnected = connectivityService.IsConnected();
         if (!isConnected)
         {
-          await  Toast.Make("No internet connection! Please connect to the internet.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show(CancellationToken.None);
+            await Toast.Make("No internet connection! Please connect to the internet.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show(CancellationToken.None);
         }
         else
         {
-            ((SelectLanguagePageViewModel)BindingContext).Initialize();
+            WeakReferenceMessenger.Default.Send(new InitializeStartMessage());
         }
-
-        Connectivity.ConnectivityChanged += OnConnectivityChanged;
     }
 
     protected override void OnDisappearing()
     {
-        Connectivity.ConnectivityChanged -= OnConnectivityChanged;
+        UnSubscribeToEvents();
+
+        WeakReferenceMessenger.Default.Send(new DisposeStartMessage());
+
+
         base.OnDisappearing();
     }
 
@@ -55,14 +66,23 @@ public partial class SelectLanguagePage : ContentPage
         if (e.NetworkAccess == NetworkAccess.Internet)
         {
             Toast.Make("Application is connected. Thank you!", CommunityToolkit.Maui.Core.ToastDuration.Long).Show(CancellationToken.None);
-            
-            //Change to using WeakRef messaging
-            ((SelectLanguagePageViewModel)BindingContext).Initialize();
+
+            WeakReferenceMessenger.Default.Send(new InitializeStartMessage());
         }
         else
         {
             DisplayAlert("No internet access", "The application does not have a internet connection. Please make shure you are connected to the internet.", "Ok");
         }
+    }
+
+    private void SubscribeToEvents()
+    {
+        Connectivity.ConnectivityChanged += OnConnectivityChanged;
+    }
+
+    private void UnSubscribeToEvents()
+    {
+        Connectivity.ConnectivityChanged -= OnConnectivityChanged;
     }
 
 }

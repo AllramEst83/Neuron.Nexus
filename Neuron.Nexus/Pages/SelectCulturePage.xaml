@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Neuron.Nexus.Pages.SelectCulturePage"
+             
+              xmlns:translator="clr-namespace:Neuron.Nexus.Exstensions"
+             Title="{translator:Translate SelectAppLangugae}"
+             xmlns:viewmodel="clr-namespace:Neuron.Nexus.ViewModels"
+             x:DataType="viewmodel:SelectCulturePageViewModel">
+    
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <DataTemplate x:Key="cultureTemplate">
+                <Border 
+                        Stroke="{DynamicResource PrimaryAccent}" 
+                        StrokeShape="RoundRectangle 10,10,10,10"
+                        StrokeThickness="4"
+                        Margin="0">
+
+                    <Button 
+                        Padding="14"
+                        Text="{Binding .}" 
+                        Command="{Binding SetLanguageCommand, Source={RelativeSource AncestorType={x:Type viewmodel:SelectCulturePageViewModel}}}"
+                        CommandParameter="{Binding .}"
+                        BackgroundColor="{DynamicResource Primary}"  
+                        VerticalOptions="Center" 
+                        HorizontalOptions="FillAndExpand" />
+
+                </Border>
+            </DataTemplate>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <VerticalStackLayout
+    Padding="15"
+    VerticalOptions="Start"
+    HorizontalOptions="FillAndExpand">
+
+        <CollectionView 
+        VerticalOptions="Start"
+        HorizontalOptions="FillAndExpand"
+        ItemTemplate="{StaticResource cultureTemplate}"
+        ItemsSource="{Binding Cultures}"/>
+    </VerticalStackLayout>
+
+
+</ContentPage>

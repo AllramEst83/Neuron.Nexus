@@ -7,6 +7,7 @@
              xmlns:converter="clr-namespace:Neuron.Nexus.Converters"
              xmlns:models="clr-namespace:Neuron.Nexus.Models"
              xmlns:toolkit="http://schemas.microsoft.com/dotnet/2022/maui/toolkit"
+             xmlns:translator="clr-namespace:Neuron.Nexus.Exstensions"
              x:DataType="viewmodel:SelectLanguagePageViewModel">
 
     <ContentPage.Resources>
@@ -67,7 +68,7 @@
                         Spacing="5">
 
                         <Label 
-                            Text="Pick your preferred languages."
+                            Text="{translator:Translate PreferredLanguage}"
                             FontSize="16"
                             Margin="0,0,0,15"
                             FontAttributes="None"
@@ -90,7 +91,7 @@
                             StrokeThickness="1">
                             <Picker
                                 x:Name="LanguagePickerOne"
-                                Title="Select language"
+                                Title="{translator:Translate SelectLanguages}"
                                 HorizontalOptions="FillAndExpand" 
                                 VerticalOptions="FillAndExpand"
                                 Margin="0,0,0,0"
@@ -130,7 +131,7 @@
 
                             <Picker 
                             x:Name="LanguagePickerTwo" 
-                            Title="Select language" 
+                            Title="{translator:Translate SelectLanguages}"
                             HorizontalOptions="FillAndExpand" 
                             VerticalOptions="FillAndExpand"
                             ItemsSource="{Binding Languages}"
