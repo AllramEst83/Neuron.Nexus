@@ -5,11 +5,22 @@ namespace Neuron.Nexus.Repositories
     public interface ILanguageRepository
     {
         List<LanguageOption> GetLanguagesOrderByLanguageName();
+        List<CultureOption> GetCultureOptions();
     }
     public class LanguageRepository : ILanguageRepository
     {
         public LanguageRepository()
         {
+        }
+
+        public List<CultureOption> GetCultureOptions()
+        {
+            return new List<CultureOption>()
+            {
+                new CultureOption(){ Id = 1, CultureCode = "sv-SE", CultureDisplayName = "Svenska", CultureIconName = "swedenflag" },
+                new CultureOption(){ Id = 2, CultureCode = "en-US", CultureDisplayName = "English", CultureIconName = "usflag"}
+
+            }.OrderBy(x => x.CultureDisplayName).ToList();
         }
 
         /// <summary>
@@ -55,12 +66,12 @@ namespace Neuron.Nexus.Repositories
                 new LanguageOption() {Id = 13,FullLanguageCode = "da-DK", ShortLanguageCode = "da", LanguageName = "Danish ", NativeLanguageName = "Dansk"},
                 new LanguageOption() {Id = 10,FullLanguageCode = "fi-FI", ShortLanguageCode = "fi", LanguageName = "Finnish", NativeLanguageName = "Suomi"},
                 new LanguageOption() {Id = 2,FullLanguageCode = "en-US", ShortLanguageCode = "en", LanguageName = "English", NativeLanguageName = "English"},
-                
+
                 new LanguageOption() {Id = 5,FullLanguageCode = "fr-FR", ShortLanguageCode = "fr", LanguageName = "French ", NativeLanguageName = "Français"},
                 new LanguageOption() {Id = 7,FullLanguageCode = "de-DE", ShortLanguageCode = "de", LanguageName = "German ", NativeLanguageName = "Deutsch"},
                 new LanguageOption() {Id = 4,FullLanguageCode = "es-ES", ShortLanguageCode = "es", LanguageName = "Spanish ", NativeLanguageName = "Español "},
                 new LanguageOption() {Id = 12,FullLanguageCode = "it-IT", ShortLanguageCode = "it", LanguageName = "Italian", NativeLanguageName = "Italia" },
-                
+
                 new LanguageOption() {Id = 11,FullLanguageCode = "ar-IQ", ShortLanguageCode = "ar", LanguageName = "Arabic (Iraq)", NativeLanguageName = "al-ʿIrāq"},
                 new LanguageOption() {Id = 11,FullLanguageCode = "ar-SY", ShortLanguageCode = "ar", LanguageName = "Arabic (Syria)", NativeLanguageName = "Syria"},
                 new LanguageOption() {Id = 11,FullLanguageCode = "fa-IR", ShortLanguageCode = "fa", LanguageName = "Persian (Iran)", NativeLanguageName = "Iran"},
@@ -74,7 +85,7 @@ namespace Neuron.Nexus.Repositories
                 new LanguageOption() {Id = 13,FullLanguageCode = "am-ET", ShortLanguageCode = "am", LanguageName = "Amharic (Ethiopia)", NativeLanguageName = "Amharic"},
 
                 new LanguageOption() {Id = 6,FullLanguageCode = "ro-RO", ShortLanguageCode = "ro", LanguageName = "Romanian (Romania)", NativeLanguageName = "Romanian"},
-                new LanguageOption() {Id = 6,FullLanguageCode = "bs-BA", ShortLanguageCode = "bs", LanguageName = "Bosnian", NativeLanguageName = "Bosnia"},                
+                new LanguageOption() {Id = 6,FullLanguageCode = "bs-BA", ShortLanguageCode = "bs", LanguageName = "Bosnian", NativeLanguageName = "Bosnia"},
                 new LanguageOption() {Id = 13,FullLanguageCode = "hr-HR", ShortLanguageCode = "hr", LanguageName = "Croatian", NativeLanguageName = "Hrvatska"},
                 new LanguageOption() {Id = 13,FullLanguageCode = "sr-RS", ShortLanguageCode = "hsr", LanguageName = "Serbian (Cyrillic, Serbia)", NativeLanguageName = "Serbian"}
 

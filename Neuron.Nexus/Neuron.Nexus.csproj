@@ -49,7 +49,10 @@
 		<MauiImage Include="Resources\Icons\home.png" />
 		<MauiImage Include="Resources\Icons\between.png" />
 		<MauiImage Include="Resources\Icons\instructions.png" />
-		<MauiImage Include="Resources\Icons\topleft.png" />
+		<MauiImage Include="Resources\Icons\usflag.png" />
+		<MauiImage Include="Resources\Icons\swedenflag.png" />
+		<MauiImage Include="Resources\Icons\tap.png" />
+
 
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />

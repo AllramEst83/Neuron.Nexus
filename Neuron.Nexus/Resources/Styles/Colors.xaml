@@ -43,6 +43,8 @@
     <Color x:Key="SecondaryAccent">#c7a500</Color>
     <Color x:Key="TertiaryAccent">#0057c7</Color>
 
+    <Color x:Key="HyperLinkBlue">#3366CC</Color>
+    
     <!--Main app colors-->
 
     <Color x:Key="White">White</Color>

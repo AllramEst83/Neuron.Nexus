@@ -19,6 +19,8 @@ namespace Neuron.Nexus.ViewModels
         private LanguageOption selectedLanguageTwo = null;
         [ObservableProperty]
         private bool isStartButtonEnabled = false;
+        [ObservableProperty]
+        private bool showTutorial = true;
         private ObservableCollection<LanguageOption> _languages;
         public ObservableCollection<LanguageOption> Languages
         {
@@ -36,6 +38,12 @@ namespace Neuron.Nexus.ViewModels
             _speechToText = speecheTotext;
             _languageService = languageService;
             this.userPersmissionsService = userPersmissionsService;
+
+            var userhasSeenTutorial = Preferences.Get("hasSeenTutorial", false);
+            if (userhasSeenTutorial)
+            {
+                ShowTutorial = !ShowTutorial;
+            }
         }
 
         [RelayCommand(IncludeCancelCommand = true)]
@@ -80,6 +88,14 @@ namespace Neuron.Nexus.ViewModels
             }
         }
 
+        [RelayCommand]
+        async Task GoToTutorialPage()
+        {
+            Preferences.Set("hasSeenTutorial", true);
+            ShowTutorial = !ShowTutorial;
+
+            await Shell.Current.GoToAsync($"//{nameof(TutorialPage)}");
+        }
         public void Initialize()
         {
             Languages = new ObservableCollection<LanguageOption>(_languageService.GetLanguages());

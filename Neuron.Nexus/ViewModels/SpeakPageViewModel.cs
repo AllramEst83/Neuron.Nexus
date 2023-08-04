@@ -352,7 +352,7 @@ public partial class SpeakPageViewModel : BaseViewModel
             UpdateUIStatustext("Thinking...");
         };
 
-        translationRecognizer.Recognized += async (sender, args) =>
+        translationRecognizer.Recognized += (sender, args) =>
         {
             switch (args.Result.Reason)
             {
@@ -385,7 +385,7 @@ public partial class SpeakPageViewModel : BaseViewModel
             }
         };
 
-        translationRecognizer.Canceled += async (sender, args) =>
+        translationRecognizer.Canceled += (sender, args) =>
         {
             string message;
             switch (args.Result.Reason)

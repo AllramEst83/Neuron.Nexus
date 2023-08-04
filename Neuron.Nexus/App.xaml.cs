@@ -92,6 +92,8 @@ namespace Neuron.Nexus
             string currentCulture = Preferences.Get("currentCulture", "en-US");
 
             LocalizationResourceManager.Instance.SetCulture(new CultureInfo(currentCulture));
+
+            Preferences.Set("currentCulture", currentCulture);
         }
     }
 }
