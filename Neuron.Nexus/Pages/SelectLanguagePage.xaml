@@ -14,36 +14,46 @@
         <converter:PickerLocaleDisplayConverter x:Key="PickerLocaleDisplayConverter" />
     </ContentPage.Resources>
 
-    <Grid>
-        <Grid.RowDefinitions>
-            <RowDefinition Height="*" />
-            <RowDefinition Height="Auto" />
-        </Grid.RowDefinitions>
-
-        <ScrollView 
-            Grid.Row="0"
+    <ScrollView 
             Style="{StaticResource scrollViewBackground}">
 
-
-            <!-- Language Selection -->
-            <StackLayout x:Name="ChatArea"  
-                         VerticalOptions="CenterAndExpand"
-                         Orientation="Vertical"
-                         Padding="10">
-
-                <!-- Language Picker One -->
-                <!--<Label Text="Select Language" HorizontalOptions="Center" />-->
-
-                <!--<ActivityIndicator 
-                    IsRunning="{Binding StartCommand.IsRunning}" 
-                    IsVisible="{Binding StartCommand.IsRunning}"
-                    Color="Orange" 
-                    VerticalOptions="CenterAndExpand" 
-                    Scale="1"/>-->
+        <StackLayout 
+                    VerticalOptions="CenterAndExpand"
+                    Orientation="Vertical"
+                    Padding="10">
 
 
+            <Border
+                    HorizontalOptions="Center" 
+                    VerticalOptions="Center"
+                    Padding="5" 
+                    Margin="0,0,0,5" 
+                    Stroke="Black" 
+                    BackgroundColor="Transparent"
+                    StrokeShape="RoundRectangle 10,10,10,10"
+                    StrokeThickness="1">
+                
+                <HorizontalStackLayout HorizontalOptions="CenterAndExpand">
 
-                <Border 
+                    <Image 
+                        Source="topleft.png" 
+                        WidthRequest="35"
+                        HeightRequest="35"
+                        Rotation="15" />
+
+                    <Label Text="{translator:Translate Tutorial}"
+                           FontAttributes="Bold"
+                           FontSize="14"
+                           HorizontalTextAlignment="Center"
+                           VerticalTextAlignment="Center"
+                           HorizontalOptions="CenterAndExpand"
+                           Margin="0,0,6,0"
+                           Padding="0"/>
+                </HorizontalStackLayout>
+            </Border>
+
+
+            <Border 
                     HorizontalOptions="FillAndExpand" 
                     VerticalOptions="FillAndExpand" 
                     HeightRequest="290"
@@ -54,22 +64,22 @@
                     StrokeShape="RoundRectangle 10,10,10,10"
                     StrokeThickness="1">
 
-                    <Border.Shadow>
-                        <Shadow 
+                <Border.Shadow>
+                    <Shadow 
                             Brush="{StaticResource PrimaryAccent }"
                             Offset="15,15"
                             Radius="50"
                             Opacity="0.8"/>
-                    </Border.Shadow>
+                </Border.Shadow>
 
-                    <StackLayout                     
+                <StackLayout                     
                         HorizontalOptions="FillAndExpand" 
                         VerticalOptions="FillAndExpand"
                         Spacing="5">
 
-                        <Label 
+                    <Label 
                             Text="{translator:Translate PreferredLanguage}"
-                            FontSize="16"
+                            FontSize="18"
                             Margin="0,0,0,15"
                             FontAttributes="None"
                             HorizontalTextAlignment="Center" 
@@ -79,7 +89,7 @@
 
 
 
-                        <Border
+                    <Border
                             HorizontalOptions="FillAndExpand" 
                             VerticalOptions="FillAndExpand" 
                             HeightRequest="70"
@@ -89,7 +99,7 @@
                             BackgroundColor="Transparent"
                             StrokeShape="RoundRectangle 10,10,10,10"
                             StrokeThickness="1">
-                            <Picker
+                        <Picker
                                 x:Name="LanguagePickerOne"
                                 Title="{translator:Translate SelectLanguages}"
                                 HorizontalOptions="FillAndExpand" 
@@ -99,18 +109,18 @@
                                 SelectedItem="{Binding SelectedLanguageOne}"
                                 ItemDisplayBinding="{Binding ., Converter={StaticResource PickerLocaleDisplayConverter}}">
 
-                                <Picker.Behaviors>
-                                    <toolkit:EventToCommandBehavior
+                            <Picker.Behaviors>
+                                <toolkit:EventToCommandBehavior
                                             EventName="SelectedIndexChanged"
                                             Command="{Binding HandlePickerSelectionChangedOneCommand}"
                                             CommandParameter="{Binding Source={x:Reference Name=LanguagePickerOne}}" />
-                                </Picker.Behaviors>
-                            </Picker>
-                        </Border>
+                            </Picker.Behaviors>
+                        </Picker>
+                    </Border>
 
 
 
-                        <Image 
+                    <Image 
                             Margin="0,0,0,0"
                             Source="between.png"
                             VerticalOptions="Center"
@@ -118,7 +128,7 @@
                             HeightRequest="20"
                             WidthRequest="20"/>
 
-                        <Border
+                    <Border
                             HorizontalOptions="FillAndExpand" 
                             VerticalOptions="FillAndExpand" 
                             HeightRequest="70"
@@ -129,7 +139,7 @@
                             StrokeShape="RoundRectangle 10,10,10,10"
                             StrokeThickness="1">
 
-                            <Picker 
+                        <Picker 
                             x:Name="LanguagePickerTwo" 
                             Title="{translator:Translate SelectLanguages}"
                             HorizontalOptions="FillAndExpand" 
@@ -138,28 +148,27 @@
                             SelectedItem="{Binding SelectedLanguageTwo}"
                             ItemDisplayBinding="{Binding ., Converter={StaticResource PickerLocaleDisplayConverter}}">
 
-                                <Picker.Behaviors>
-                                    <toolkit:EventToCommandBehavior EventName="SelectedIndexChanged"
+                            <Picker.Behaviors>
+                                <toolkit:EventToCommandBehavior EventName="SelectedIndexChanged"
                               Command="{Binding HandlePickerSelectionChangedTwoCommand}"
                               CommandParameter="{Binding Source={x:Reference Name=LanguagePickerTwo}}"/>
-                                </Picker.Behaviors>
-                            </Picker>
-                        </Border>
-                       
-                    </StackLayout>
-                </Border>
+                            </Picker.Behaviors>
+                        </Picker>
+                    </Border>
 
-                <!--StartButton-->
-                <Button 
+                </StackLayout>
+            </Border>
+
+            <!--StartButton-->
+            <Button 
                     Margin="0,42,0,0"
                     WidthRequest ="200"
                     Text="Start"
                     Style="{StaticResource Key=buttonStyle}"
                     Command="{Binding StartCommand}"
                     IsEnabled="{Binding IsStartButtonEnabled}">
-                </Button>
-            </StackLayout>
+            </Button>
+        </StackLayout>
 
-        </ScrollView>
-    </Grid>
+    </ScrollView>
 </ContentPage>

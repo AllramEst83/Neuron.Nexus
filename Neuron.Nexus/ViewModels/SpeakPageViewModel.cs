@@ -175,8 +175,7 @@ public partial class SpeakPageViewModel : BaseViewModel
     [RelayCommand]
     async Task HandleFrameTapped(UserMessage messsage)
     {
-        if (string.IsNullOrEmpty(messsage.ChatMessage) ||
-            Regex.IsMatch(messsage.ChatMessage, @"^[.,\W]+$"))
+        if (string.IsNullOrEmpty(messsage.ChatMessage))
         {
             UpdateUIStatustext("Could not play audio");
             return;

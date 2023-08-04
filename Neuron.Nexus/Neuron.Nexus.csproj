@@ -49,6 +49,7 @@
 		<MauiImage Include="Resources\Icons\home.png" />
 		<MauiImage Include="Resources\Icons\between.png" />
 		<MauiImage Include="Resources\Icons\instructions.png" />
+		<MauiImage Include="Resources\Icons\topleft.png" />
 
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />
