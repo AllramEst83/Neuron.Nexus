@@ -88,6 +88,15 @@ namespace Neuron.Nexus.Resources.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to No internet connection! Please connect to the internet..
+        /// </summary>
+        internal static string NoInternetConnection {
+            get {
+                return ResourceManager.GetString("NoInternetConnection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Pick your preferred languages..
         /// </summary>
         internal static string PreferredLanguage {
@@ -111,6 +120,15 @@ namespace Neuron.Nexus.Resources.Languages {
         internal static string SelectLanguages {
             get {
                 return ResourceManager.GetString("SelectLanguages", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Please select languages before starting..
+        /// </summary>
+        internal static string SelectLanguagesFromPicker {
+            get {
+                return ResourceManager.GetString("SelectLanguagesFromPicker", resourceCulture);
             }
         }
         

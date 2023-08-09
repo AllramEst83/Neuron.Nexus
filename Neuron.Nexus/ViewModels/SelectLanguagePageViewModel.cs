@@ -5,6 +5,7 @@ using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
 using Neuron.Nexus.Models;
 using Neuron.Nexus.Pages;
+using Neuron.Nexus.Resources.Languages;
 using Neuron.Nexus.Services;
 using Newtonsoft.Json;
 using System.Collections.ObjectModel;
@@ -51,16 +52,22 @@ namespace Neuron.Nexus.ViewModels
         {
             if (Connectivity.NetworkAccess != NetworkAccess.Internet)
             {
-                await Toast.Make("No internet connection! Please connect to the internet.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show(CancellationToken.None);
+                await Toast.Make(AppResources.NoInternetConnection, CommunityToolkit.Maui.Core.ToastDuration.Long).Show(CancellationToken.None);
                 return;
             }
 
-            if (await userPersmissionsService.GetPermissionsFromUser(cancellationToken))
+            if (SelectedLanguageOne is not null && 
+                SelectedLanguageTwo is not null &&
+                await userPersmissionsService.GetPermissionsFromUser(cancellationToken))
             {
                 string languageOneToBeSent = JsonConvert.SerializeObject(SelectedLanguageOne);
                 string languageTwoToBeSent = JsonConvert.SerializeObject(SelectedLanguageTwo);
 
                 await Shell.Current.GoToAsync($"{nameof(SpeakPage)}?languageOneToBeSent={Uri.EscapeDataString(languageOneToBeSent)}&languageTwoToBeSent={Uri.EscapeDataString(languageTwoToBeSent)}");
+            }
+            else
+            {
+                await Toast.Make(AppResources.SelectLanguagesFromPicker, CommunityToolkit.Maui.Core.ToastDuration.Long).Show(CancellationToken.None);
             }
         }
 
@@ -123,7 +130,7 @@ namespace Neuron.Nexus.ViewModels
                         hasBeenInitialized = !hasBeenInitialized;
                     }
                 });
-            }            
+            }
         }
 
         private void UnSubscribeToEvents()

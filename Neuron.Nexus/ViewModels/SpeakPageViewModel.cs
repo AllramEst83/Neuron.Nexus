@@ -173,7 +173,7 @@ public partial class SpeakPageViewModel : BaseViewModel
     }
 
     [RelayCommand]
-    async Task HandleFrameTapped(UserMessage messsage)
+    async Task HandleFrameTappedForTranslatedText(UserMessage messsage)
     {
         if (string.IsNullOrEmpty(messsage.ChatMessage))
         {
@@ -187,7 +187,27 @@ public partial class SpeakPageViewModel : BaseViewModel
         if (androidAudioRecordService.GetRecordState == RecordState.Stopped)
         {
             UpdateUIStatustext("Playing audio");
-            await androidAudioPlayerService.PlayAudio(messsage.ChatMessage, messsage.Language);
+            await androidAudioPlayerService.PlayAudio(messsage.ChatMessage, messsage.TranslatedLanguage);
+        }
+# endif
+    }
+
+    [RelayCommand]
+    async Task HandleFrameTappedForSpokenText(UserMessage messsage)
+    {
+        if (string.IsNullOrEmpty(messsage.ChatMessage))
+        {
+            UpdateUIStatustext("Could not play audio");
+            return;
+        }
+
+#if ANDROID
+        await Stop();
+
+        if (androidAudioRecordService.GetRecordState == RecordState.Stopped)
+        {
+            UpdateUIStatustext("Playing audio");
+            await androidAudioPlayerService.PlayAudio(messsage.SpokenText, messsage.SpokenLanguage);
         }
 # endif
     }
@@ -301,7 +321,7 @@ public partial class SpeakPageViewModel : BaseViewModel
 
         _translationRecognizerOne = new TranslationRecognizer(speechConfig, audioConfig);
 
-        RegisterRecognizers(_translationRecognizerOne, LanguageTwo.ShortLanguageCode, LanguageTwo.FullLanguageCode, 1);
+        RegisterRecognizers(_translationRecognizerOne, LanguageTwo.ShortLanguageCode, LanguageOne.FullLanguageCode, LanguageTwo.FullLanguageCode, 1);
     }
 
     private void SetupRecognizerTwo()
@@ -312,7 +332,7 @@ public partial class SpeakPageViewModel : BaseViewModel
 
         _translationRecognizerTwo = new TranslationRecognizer(speechConfig, audioConfig);
 
-        RegisterRecognizers(_translationRecognizerTwo, LanguageOne.ShortLanguageCode, LanguageOne.FullLanguageCode, 2);
+        RegisterRecognizers(_translationRecognizerTwo, LanguageOne.ShortLanguageCode, LanguageTwo.FullLanguageCode, LanguageOne.FullLanguageCode, 2);
     }
     #endregion
     #region TranslationRecognizer configuration
@@ -340,7 +360,7 @@ public partial class SpeakPageViewModel : BaseViewModel
     }
     #endregion
     #region Register recognizer events
-    private void RegisterRecognizers(TranslationRecognizer translationRecognizer, string translatedLanguageKey, string fullLanguageCode, int user)
+    private void RegisterRecognizers(TranslationRecognizer translationRecognizer, string translatedLanguageKey, string spokenWordLanguageKey, string fullLanguageCode, int user)
     {
         translationRecognizer.SpeechStartDetected += (sender, args) =>
         {
@@ -360,19 +380,23 @@ public partial class SpeakPageViewModel : BaseViewModel
 
                     if (args.Result.Translations.Count > 0)
                     {
-                        var translatedMessage = args.Result.Translations[translatedLanguageKey];
-                        var spokenText = args.Result.Text;
+                        var translatedMessage = args.Result.Translations[translatedLanguageKey].Trim();
+                        var spokenText = args.Result.Text.Trim();
 
-                        UserMessages.Add(new UserMessage()
+                        if (!string.IsNullOrEmpty(spokenText) && !string.IsNullOrEmpty(translatedMessage))
                         {
-                            User = user,
-                            ChatMessage = translatedMessage,
-                            SpokenText = spokenText,
-                            Language = fullLanguageCode
-                        });
+                            UserMessages.Add(new UserMessage()
+                            {
+                                User = user,
+                                ChatMessage = translatedMessage,
+                                SpokenText = spokenText,
+                                SpokenLanguage = spokenWordLanguageKey,
+                                TranslatedLanguage = fullLanguageCode
+                            });
 
-                        AddNewMessageAndScrollCollectionView(translatedMessage);
-                        UpdateUIStatustext("Listening for speeach...");
+                            AddNewMessageAndScrollCollectionView(translatedMessage);
+                            UpdateUIStatustext("Listening for speeach...");
+                        }
                     }
 
                     break;

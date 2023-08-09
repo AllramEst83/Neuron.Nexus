@@ -126,6 +126,9 @@
   <data name="InterpreterTitle" xml:space="preserve">
     <value>Tolken</value>
   </data>
+  <data name="NoInternetConnection" xml:space="preserve">
+    <value>Inget internet! Vänligen koppla upp dig mot internet.</value>
+  </data>
   <data name="PreferredLanguage" xml:space="preserve">
     <value>Välj de språk du föredrar.</value>
   </data>
@@ -134,6 +137,9 @@
   </data>
   <data name="SelectLanguages" xml:space="preserve">
     <value>Välj språk</value>
+  </data>
+  <data name="SelectLanguagesFromPicker" xml:space="preserve">
+    <value>Vänligen välj spårk innan du börjar.</value>
   </data>
   <data name="Settings" xml:space="preserve">
     <value>Inställningar</value>

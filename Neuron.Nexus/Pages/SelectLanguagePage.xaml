@@ -98,9 +98,9 @@
                     <Border
                             HorizontalOptions="FillAndExpand" 
                             VerticalOptions="FillAndExpand" 
-                            HeightRequest="70"
+                            HeightRequest="68"
                             Padding="18,10,18,10" 
-                            Margin="10,0,10,0" 
+                            Margin="10,0,10,0"
                             Stroke="Black" 
                             BackgroundColor="Transparent"
                             StrokeShape="RoundRectangle 10,10,10,10"
@@ -137,8 +137,8 @@
                     <Border
                             HorizontalOptions="FillAndExpand" 
                             VerticalOptions="FillAndExpand" 
-                            HeightRequest="70"
-                            Padding="18,10,18,10" 
+                            HeightRequest="65"
+                            Padding="18,10,18,8" 
                             Margin="10,0,10,0" 
                             Stroke="Black" 
                             BackgroundColor="Transparent"
@@ -150,6 +150,7 @@
                             Title="{translator:Translate SelectLanguages}"
                             HorizontalOptions="FillAndExpand" 
                             VerticalOptions="FillAndExpand"
+                            Margin="0,0,0,0"
                             ItemsSource="{Binding Languages}"
                             SelectedItem="{Binding SelectedLanguageTwo}"
                             ItemDisplayBinding="{Binding ., Converter={StaticResource PickerLocaleDisplayConverter}}">
@@ -160,7 +161,7 @@
                               CommandParameter="{Binding Source={x:Reference Name=LanguagePickerTwo}}"/>
                             </Picker.Behaviors>
                         </Picker>
-                    </Border>
+                    </Border>   
 
                 </StackLayout>
             </Border>
@@ -172,7 +173,7 @@
                     Text="Start"
                     Style="{StaticResource Key=buttonStyle}"
                     Command="{Binding StartCommand}"
-                    IsEnabled="{Binding IsStartButtonEnabled}">
+                    IsEnabled="True">
             </Button>
         </StackLayout>
 

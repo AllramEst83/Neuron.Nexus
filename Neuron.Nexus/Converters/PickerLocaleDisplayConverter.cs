@@ -10,7 +10,7 @@ namespace Neuron.Nexus.Converters
 
         public override string ConvertFrom(LanguageOption value, CultureInfo culture)
         {
-            return $"{value.LanguageName} ({value.FullLanguageCode})";
+            return $"{value.LanguageName} ({value.NativeLanguageName})";
         }
     }
 }

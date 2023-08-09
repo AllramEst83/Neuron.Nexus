@@ -41,8 +41,8 @@
         <Setter Property="Margin" Value="5" />
         <Setter Property="MinimumHeightRequest" Value="65"/>
         <Setter Property="MinimumWidthRequest" Value="65"/>
-        <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
-        <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource Primary}}" />
+        <Setter Property="BackgroundColor" Value="{StaticResource Primary}" />
+        <Setter Property="TextColor" Value="{StaticResource Black}" />
         <Setter Property="CornerRadius" Value="10"/>
         <Setter Property="Shadow">
             <Setter.Value>
@@ -56,8 +56,8 @@
                     <VisualState x:Name="Normal" />
                     <VisualState x:Name="Disabled">
                         <VisualState.Setters>
-                            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray950}, Dark={StaticResource Gray200}}" />
-                            <Setter Property="BackgroundColor" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray600}}" />
+                            <Setter Property="TextColor" Value="{StaticResource Gray950}" />
+                            <Setter Property="BackgroundColor" Value="{StaticResource Gray200}" />
                         </VisualState.Setters>
                     </VisualState>
                 </VisualStateGroup>
@@ -119,7 +119,7 @@
         <Setter Property="StrokeShape" Value="Rectangle"/>
         <Setter Property="StrokeThickness" Value="1"/>
     </Style>-->
-    
+
     <Style TargetType="BoxView">
         <Setter Property="Color" Value="{AppThemeBinding Light={StaticResource Gray950}, Dark={StaticResource Gray200}}" />
     </Style>
@@ -147,7 +147,7 @@
         <Setter Property="BackgroundColor" Value="Transparent" />
         <Setter Property="FontFamily" Value="OpenSansRegular"/>
         <Setter Property="FontSize" Value="14"/>
-        <Setter Property="MinimumHeightRequest" Value="50"/>
+        <Setter Property="MinimumHeightRequest" Value="60"/>
         <Setter Property="MinimumWidthRequest" Value="44"/>
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
@@ -310,26 +310,26 @@
                 <VisualStateGroup x:Name="CommonStates">
                     <VisualState x:Name="Disabled">
                         <VisualState.Setters>
-                            <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray600}}" />
-                            <Setter Property="TitleColor" Value="{AppThemeBinding Light={StaticResource Gray300}, Dark={StaticResource Gray600}}" />
+                            <Setter Property="TextColor" Value="{StaticResource Gray300}" />
+                            <Setter Property="TitleColor" Value="{StaticResource Gray300}" />
                         </VisualState.Setters>
                     </VisualState>
                     <VisualState x:Name="Focused">
                         <VisualState.Setters>
-                            <Setter Property="TextColor" Value="{StaticResource Primary}" />
-                            <Setter Property="TitleColor" Value="{StaticResource Primary}" />
+                            <Setter Property="TextColor" Value="{StaticResource PickerText}" />
+                            <Setter Property="TitleColor" Value="{StaticResource PickerText}" />
                         </VisualState.Setters>
                     </VisualState>
                     <VisualState x:Name="Selected">
                         <VisualState.Setters>
-                            <Setter Property="TextColor" Value="{StaticResource Primary}" />
-                            <Setter Property="TitleColor" Value="{StaticResource Primary}" />
+                            <Setter Property="TextColor" Value="{StaticResource PickerText}" />
+                            <Setter Property="TitleColor" Value="{StaticResource PickerText}" />
                         </VisualState.Setters>
                     </VisualState>
                     <VisualState x:Name="Normal">
                         <VisualState.Setters>
-                            <Setter Property="TextColor" Value="{StaticResource Primary}" />
-                            <Setter Property="TitleColor" Value="{StaticResource Primary}" />
+                            <Setter Property="TextColor" Value="{StaticResource PickerText}" />
+                            <Setter Property="TitleColor" Value="{StaticResource PickerText}" />
                         </VisualState.Setters>
                     </VisualState>
                 </VisualStateGroup>

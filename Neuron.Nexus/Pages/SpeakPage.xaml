@@ -25,14 +25,29 @@
                     <StackLayout Grid.Column="0">
                         <!-- Smaller chat bubble positioned above the main frame -->
                         <Frame BackgroundColor="{StaticResource chatSpokenTextOne}" Style="{StaticResource spokenTextChatBubbleOne}">
-                            <Label Text="{Binding SpokenText}" FontSize="14" VerticalOptions="Center" HorizontalOptions="Center"/>
+                            <StackLayout VerticalOptions="FillAndExpand">
+                                
+                                <Label Text="{Binding SpokenText}" FontSize="14" VerticalOptions="Center" HorizontalOptions="Center"/>
+                                <Image Source="speaker.png" Style="{StaticResource speakerIcon}"/>
+                            </StackLayout>
+
+
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer 
+                   Command="{Binding Path=HandleFrameTappedForSpokenTextCommand, Source={RelativeSource AncestorType={x:Type viewmodel:SpeakPageViewModel}}}" 
+                   CommandParameter="{Binding .}"/>
+                            </Frame.GestureRecognizers>
+
+                            <Frame.Behaviors>
+                                <behaviors:FrameTapScaleAnimationBehavior />
+                            </Frame.Behaviors>
                         </Frame>
 
                         <!-- Main chat bubble -->
                         <Frame x:Name="userOneframe" Style="{StaticResource TranslatedTextFrameOne}" BackgroundColor="{Binding ., Converter={StaticResource UserTemplateToColorConverter}}">
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer 
-                        Command="{Binding Path=HandleFrameTappedCommand, Source={RelativeSource AncestorType={x:Type viewmodel:SpeakPageViewModel}}}" 
+                        Command="{Binding Path=HandleFrameTappedForTranslatedTextCommand, Source={RelativeSource AncestorType={x:Type viewmodel:SpeakPageViewModel}}}" 
                         CommandParameter="{Binding .}"/>
                             </Frame.GestureRecognizers>
                             <Frame.Behaviors>
@@ -57,14 +72,27 @@
 
                     <StackLayout Grid.Column="1">
                         <Frame BackgroundColor="{StaticResource chatSpokenTextTwo}" Style="{StaticResource spokenTextChatBubbleTwo}">
-                            <Label Text="{Binding SpokenText}" FontSize="14" VerticalOptions="Center" HorizontalOptions="Center"/>
+                            <StackLayout VerticalOptions="FillAndExpand">
+                                <Label Text="{Binding SpokenText}" FontSize="14" VerticalOptions="Center" HorizontalOptions="Center"/>
+                                <Image Source="speaker.png" Style="{StaticResource speakerIcon}"/>
+                            </StackLayout>
+
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer 
+                                       Command="{Binding Path=HandleFrameTappedForSpokenTextCommand, Source={RelativeSource AncestorType={x:Type viewmodel:SpeakPageViewModel}}}" 
+                                       CommandParameter="{Binding .}"/>
+                            </Frame.GestureRecognizers>
+
+                            <Frame.Behaviors>
+                                <behaviors:FrameTapScaleAnimationBehavior />
+                            </Frame.Behaviors>
                         </Frame>
 
 
                         <Frame x:Name="userTwoframe" Grid.Column="1" Style="{StaticResource TranslatedTextFrameTwo}"  BackgroundColor="{Binding ., Converter={StaticResource UserTemplateToColorConverter}}">
                             <Frame.GestureRecognizers>
                                 <TapGestureRecognizer 
-                        Command="{Binding Path=HandleFrameTappedCommand, Source={RelativeSource AncestorType={x:Type viewmodel:SpeakPageViewModel}}}" 
+                        Command="{Binding Path=HandleFrameTappedForTranslatedTextCommand, Source={RelativeSource AncestorType={x:Type viewmodel:SpeakPageViewModel}}}" 
                         CommandParameter="{Binding .}"/>
                             </Frame.GestureRecognizers>
 
