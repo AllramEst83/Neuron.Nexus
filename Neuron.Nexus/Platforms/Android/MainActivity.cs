@@ -21,7 +21,7 @@ public class MainActivity : MauiAppCompatActivity
     {
         base.OnCreate(savedInstanceState);
 
-        AppCenter.Start(appSettings.AppCenterSecret,
+        AppCenter.Start($"android={appSettings.AppCenterSecret}",
                    typeof(Analytics), typeof(Crashes));
     }
 }
