@@ -1,8 +1,6 @@
 ﻿#if ANDROID
 using Android.Media;
 #endif
-using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Core;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using CommunityToolkit.Mvvm.Messaging;
@@ -12,9 +10,7 @@ using Microsoft.CognitiveServices.Speech.Translation;
 using Microsoft.Extensions.Options;
 using Neuron.Nexus.Models;
 using Neuron.Nexus.Services;
-using Sentry;
 using System.Collections.ObjectModel;
-using System.Text.RegularExpressions;
 using OutputFormat = Microsoft.CognitiveServices.Speech.OutputFormat;
 
 namespace Neuron.Nexus.ViewModels;
@@ -111,7 +107,6 @@ public partial class SpeakPageViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            SentrySdk.CaptureException(ex);
             Console.Write("Error thrown when trying to Stop", ex);
             throw;
         }
@@ -138,7 +133,6 @@ public partial class SpeakPageViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            SentrySdk.CaptureException(ex);
             Console.Write("Error thrown when trying to SpeakLanguageOne", ex);
             throw;
         }
@@ -166,7 +160,6 @@ public partial class SpeakPageViewModel : BaseViewModel
         }
         catch (Exception ex)
         {
-            SentrySdk.CaptureException(ex);
             Console.Write("Error thrown when trying to SpeakLanguageTwo", ex);
             throw;
         }
@@ -225,7 +218,6 @@ public partial class SpeakPageViewModel : BaseViewModel
             }
             catch (Exception ex)
             {
-                SentrySdk.CaptureException(ex);
                 Console.Write("Error when trying to Initialize SpeakViewModel", ex);
                 throw;
             }
@@ -403,7 +395,6 @@ public partial class SpeakPageViewModel : BaseViewModel
 
                 default:
                     var message = $"{args.Result.Reason} - {args.Result.Text}";
-                    SentrySdk.CaptureMessage(message);
                     Console.WriteLine(message);
                     break;
             }
@@ -469,7 +460,6 @@ public partial class SpeakPageViewModel : BaseViewModel
                 }
                 catch (Exception ex)
                 {
-                    SentrySdk.CaptureException(ex);
                     Console.WriteLine("Error occured while reading from the audio stream.", ex);
                 }
                 finally

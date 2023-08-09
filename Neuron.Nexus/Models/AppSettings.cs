@@ -9,6 +9,6 @@
     {
         public AzureKeys AzureKeys { get; set; }
         public string DeveloperEmail { get; set; }
-        public string SentryDsn { get; set; }
+        public string AppCenterSecret { get; set; }
     }
 }
