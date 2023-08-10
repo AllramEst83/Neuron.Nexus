@@ -1,0 +1,83 @@
+name: Build .Net MAUI Android app
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+  workflow_dispatch: # Manual trigger
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Setup Keystore File 
+      run: |
+        echo "${{secret.KEYSTORE_FILE}}" > coded-by-kay.keystore.asc
+        gpg -d --passphrase "{{secrets.KEYSTORE_PASSWORD_GPG}}" --batch coded-by-kay.keystore.asc > coded-by-kay.keystore
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 7.0.x
+    
+    - name: Install .Net MAUI
+      run: dotnet workload install maui
+    
+    - name: Restore dependencies
+      run: dotnet restore
+    
+    - name: JSON Replace
+      uses: beards-and-binary/json-replace@v1.0
+      with:
+        # Path to the JSON file you want to update
+        json: Neuron.Nexus/appsettings.json
+        # Replace the placeholders with the values from the secrets and environment variable
+        updates: |
+          ApplicationSettings.DeveloperEmail ${{ secrets.DEVELOPER_MAIL }}
+          ApplicationSettings.AppCenterSecret ${{ secrets.APP_CENTER_SECRET }}
+          ApplicationSettings.AzureKeys.AzureSubscriptionKey ${{ secrets.AZURE_SUBSCRIPTION_KEY }}
+          ApplicationSettings.AzureKeys.AzureRegion ${{ secrets.AZURE_REGION }}
+    
+    - name: Build
+      run: dotnet build Neuron.Nexus/Neuron.Nexus.csproj -c Release -f net7-android /p:AndroidSigningKeyPass=${{secrets.KEYSTORE_PASSWORD}} /p:AndroidSigningStorePass=${{secrets.KEYSTORE_PASSWORD}} --no-restore
+    
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v3.1.0
+      with:
+        name: android-ci-build
+        path: |
+          ./**/*.aab
+          ./**/*.apk
+        
+    
+    - name: Download a single artifact
+      uses: actions/download-artifact@v3
+      with:
+        name: android-ci-build
+
+    - name: Upload artifact to App Center
+      uses: wzieba/AppCenter-Github-Action@v1
+      with:
+        appName: Kay Wiberg/Nerual nexus - android
+        token: ${{secrets.APP_CENTER_SECRET}}
+        group: Testers
+        file: /home/runner/work/*Signed.aab
+        notifyTesters: true
+        debug: false
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
+      
