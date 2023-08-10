@@ -14,6 +14,12 @@ jobs:
     steps:
     - uses: actions/checkout@v3
     
+    - name: Update json-values
+      uses: restack/update-json-values-action@v1.0.0
+      with:
+        file: Neuron.Nexus/appsettings.json
+        values: "{'DEVELOPEREMAIL': '${{ secrets.DEVELOPER_MAIL }}', 'APPCENTERSECRET': '${{ secrets.APP_CENTER_SECRET }}', 'AZURESUBSCRIPTIONKEY': '${{ secrets.AZURE_SUBSCRIPTION_KEY }}','AZUREREGION': '${{ secrets.AZURE_REGION }}'}" 
+  
     - name: Setup Keystore File 
       run: |
         echo "${{ secrets.KEYSTORE_FILE }}" > coded-by-kay.keystore.asc
@@ -26,35 +32,7 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 7.0.x
-
-    - name: Replace DeveloperEmail
-      uses: nguyenvanuyn96/str-find-and-replace-action@0.0.5
-      with:
-        find: "DEVELOPEREMAIL"
-        replace: ${{ secrets.DEVELOPER_MAIL }}
-        path: Neuron.Nexus/appsettings.json
-
-    - name: Replace AppCenterSecret
-      uses: nguyenvanuyn96/str-find-and-replace-action@0.0.5
-      with:
-        find: "APPCENTERSECRET"
-        replace: ${{ secrets.APP_CENTER_SECRET }}
-        path: Neuron.Nexus/appsettings.json
-
-    - name: Replace AzureSubscriptionKey
-      uses: nguyenvanuyn96/str-find-and-replace-action@0.0.5
-      with:
-        find: "AZURESUBSCRIPTIONKEY"
-        replace: ${{ secrets.AZURE_SUBSCRIPTION_KEY }}
-        path: Neuron.Nexus/appsettings.json
-
-    - name: Replace AzureRegion
-      uses: nguyenvanuyn96/str-find-and-replace-action@0.0.5
-      with:
-        find: "AZUREREGION"
-        replace: ${{ secrets.AZURE_REGION }}
-        path: Neuron.Nexus/appsettings.json
-
+        
     - name: Install .Net MAUI
       run: dotnet workload install maui
     
