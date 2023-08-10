@@ -89,8 +89,6 @@
 		</EmbeddedResource>
 	</ItemGroup>
 
-
-
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui" Version="5.2.0" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
@@ -147,8 +145,12 @@
 
 	<PropertyGroup Condition="$(TargetFramework.Contains('-android')) and '$(Configuration)' == 'Release'">
 		<AndroidKeyStore>True</AndroidKeyStore>
-		<AndroidSigningKeyStore>Key/coded-by-kay.keystore</AndroidSigningKeyStore>
+		<AndroidSigningKeyStore>coded-by-kay.keystore</AndroidSigningKeyStore>
 		<AndroidSigningKeyAlias>coded-by-kay-keystore</AndroidSigningKeyAlias>
+		
+		<!--Password is needed when the project is being signed in VS.-->
+		<!--<AndroidSigningStorePass></AndroidSigningStorePass>
+		<AndroidSigningKeyPass></AndroidSigningKeyPass>-->
 	</PropertyGroup>
 
 </Project>
