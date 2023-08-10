@@ -17,7 +17,7 @@ jobs:
     - name: App Settings Variable Substitution
       uses: microsoft/variable-substitution@v1
       with:
-        files: '${{env.DOTNET_ROOT}}/Neuron.Nexus/appsettings.json'
+        files: 'Neuron.Nexus/appsettings.json'
       env:
         ApplicationSettings.DeveloperEmail: ${{ secrets.DEVELOPER_MAIL }}
         ApplicationSettings.AzureKeys.AzureSubscriptionKey: ${{ secrets.AZURE_SUBSCRIPTION_KEY }}
