@@ -78,17 +78,17 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<EmbeddedResource Include="appsettings.json">
+		<EmbeddedResource Include="appsettings.json" Condition="'$(Configuration)'=='Release'">
 			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
 		</EmbeddedResource>
-
-		<EmbeddedResource Include="appsettings.Local.json">
-			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
-			<DependentUpon>appsettings.json</DependentUpon>
-		</EmbeddedResource>
-
-		<EmbeddedResource Include="Resources\Icons\home.png" />
 	</ItemGroup>
+
+	<ItemGroup>
+		<EmbeddedResource Include="appsettings.Local.json" Condition="'$(Configuration)'=='Debug'">
+			<CopyToOutputDirectory>Always</CopyToOutputDirectory>
+		</EmbeddedResource>
+	</ItemGroup>
+
 
 
 	<ItemGroup>

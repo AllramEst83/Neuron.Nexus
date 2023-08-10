@@ -25,17 +25,13 @@ public static class MauiProgram
             });
 
         var assembly = typeof(MauiProgram).Assembly;
-        string environmentName;
+        string configFileName;
 
 #if DEBUG
-        environmentName = "Local";
+        configFileName = "Neuron.Nexus.appsettings.Local.json";
 #else
-    environmentName = "";      
+configFileName = "Neuron.Nexus.appsettings.json";
 #endif
-
-        string configFileName = string.IsNullOrEmpty(environmentName)
-                                ? "Neuron.Nexus.appsettings.json"
-                                : $"Neuron.Nexus.appsettings.{environmentName}.json";
 
         using (Stream stream = assembly.GetManifestResourceStream(configFileName))
         {
