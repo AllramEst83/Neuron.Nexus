@@ -26,11 +26,13 @@ jobs:
     
     - name: Setup Keystore File 
       run: |
-        echo "${{ secrets.KEYSTORE_FILE }}" > coded-by-kay.keystore.asc
+        echo "${{ secrets.KEYSTORE_FILE }}" > Neuron.Nexus/coded-by-kay.keystore.asc
         echo "GPG Version:"
         gpg --version
         echo "Decrypting..."
-        gpg -d --passphrase "${{ secrets.KEYSTORE_PASSWORD_GPG }}" --batch coded-by-kay.keystore.asc > coded-by-kay.keystore
+        gpg -d --passphrase "${{ secrets.KEYSTORE_PASSWORD_GPG }}" --batch Neuron.Nexus/coded-by-kay.keystore.asc > Neuron.Nexus/coded-by-kay.keystore
+        echo "Listing files in Neuron.Nexus directory:"
+        ls -l Neuron.Nexus
     
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
@@ -44,7 +46,7 @@ jobs:
       run: dotnet restore
     
     - name: Build
-      run: dotnet build Neuron.Nexus/Neuron.Nexus.csproj -c Release -f net7.0-android /p:Configuration=Release /p:AndroidSigningKeyPass=${{ secrets.KEYSTORE_PASSWORD }} /p:AndroidSigningStorePass=${{ secrets.KEYSTORE_PASSWORD }} --no-restore
+      run: dotnet build Neuron.Nexus/Neuron.Nexus.csproj -c Release -f net7.0-android /p:AndroidSigningKeyPass=${{ secrets.KEYSTORE_PASSWORD }} /p:AndroidSigningStorePass=${{ secrets.KEYSTORE_PASSWORD }} --no-restore
     
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3.1.0
@@ -52,8 +54,7 @@ jobs:
         name: android-ci-build
         path: |
           ./**/*.aab
-          ./**/*.apk
-        
+          ./**/*.apk        
     
     - name: Download a single artifact
       uses: actions/download-artifact@v3
