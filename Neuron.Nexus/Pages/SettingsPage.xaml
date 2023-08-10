@@ -36,21 +36,21 @@
                     HorizontalOptions="StartAndExpand"
                     Text="{translator:Translate ShareCrashLog}"
                     Command="{Binding ShareLogCommand}"         
-                    Style="{StaticResource Key=buttonStyle}">
+                    Style="{StaticResource Key=DefaultButtonStyle}">
                 </Button>
 
                 <Button 
                     HorizontalOptions="StartAndExpand"
                     Text="{translator:Translate SelectAppLangugae}"
                     Command="{Binding GoToAppLanguageCommand}"         
-                    Style="{StaticResource Key=buttonStyle}">
+                    Style="{StaticResource Key=DefaultButtonStyle}">
                 </Button>
 
                 <Button 
                     HorizontalOptions="StartAndExpand"
                     Text="{translator:Translate ThemeSelector}"
                     Command="{Binding GoToThemeSelectorCommand}"         
-                    Style="{StaticResource Key=buttonStyle}">
+                    Style="{StaticResource Key=DefaultButtonStyle}">
                 </Button>
 
                 <!-- More buttons can be added to the layout, following the same structure. -->

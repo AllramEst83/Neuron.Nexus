@@ -168,12 +168,13 @@
 
             <!--StartButton-->
             <Button 
+                    x:Name="StartButton"
                     Margin="0,42,0,0"
                     WidthRequest ="200"
                     Text="Start"
-                    Style="{StaticResource Key=buttonStyle}"
+                    Style="{StaticResource Key=DefaultButtonStyle}"
                     Command="{Binding StartCommand}"
-                    IsEnabled="True">
+                    IsEnabled="{Binding IsStartButtonEnabled}">
             </Button>
         </StackLayout>
 

@@ -1,5 +1,4 @@
 ﻿using Neuron.Nexus.Pages;
-using Sentry;
 using System.Windows.Input;
 
 namespace Neuron.Nexus;
@@ -24,14 +23,12 @@ public partial class AppShell : Shell
     private void CurrentDomainOnUnhandledException(object sender, UnhandledExceptionEventArgs e)
     {
         var exception = (Exception)e.ExceptionObject;
-        SentrySdk.CaptureException(exception);
         WriteToFile(exception);
     }
 
     private void TaskSchedulerOnUnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
     {
         var exception = e.Exception;
-        SentrySdk.CaptureException(exception);
         WriteToFile(exception);
     }
 

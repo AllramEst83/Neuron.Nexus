@@ -138,9 +138,6 @@
   <data name="SelectLanguages" xml:space="preserve">
     <value>Select language</value>
   </data>
-  <data name="SelectLanguagesFromPicker" xml:space="preserve">
-    <value>Please select languages before starting.</value>
-  </data>
   <data name="Settings" xml:space="preserve">
     <value>Settings</value>
   </data>

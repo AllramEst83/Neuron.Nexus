@@ -124,15 +124,6 @@ namespace Neuron.Nexus.Resources.Languages {
         }
         
         /// <summary>
-        ///   Looks up a localized string similar to Please select languages before starting..
-        /// </summary>
-        internal static string SelectLanguagesFromPicker {
-            get {
-                return ResourceManager.GetString("SelectLanguagesFromPicker", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Looks up a localized string similar to Settings.
         /// </summary>
         internal static string Settings {

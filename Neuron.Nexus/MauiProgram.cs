@@ -1,5 +1,4 @@
-﻿
-using CommunityToolkit.Maui;
+﻿using CommunityToolkit.Maui;
 using CommunityToolkit.Maui.Media;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
@@ -18,12 +17,6 @@ public static class MauiProgram
         var builder = MauiApp.CreateBuilder();
         builder
             .UseMauiApp<App>()
-            .UseSentry(options =>
-            {
-                options.Dsn = "https://deebc4839ec6444c80f84262fa0874c2@o4505605966200832.ingest.sentry.io/4505605967970304";
-                options.Debug = true;
-                options.TracesSampleRate = 1.0;
-            })
             .UseMauiCommunityToolkit()
             .ConfigureFonts(fonts =>
             {

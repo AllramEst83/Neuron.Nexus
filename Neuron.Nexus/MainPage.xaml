@@ -44,7 +44,7 @@
                 <Button 
                     Text="Speak"
                     Command="{Binding NavigateToSelectLanguagePageCommand}"         
-                    Style="{StaticResource Key=buttonStyle}">
+                    Style="{StaticResource Key=DefaultButtonStyle}">
                 </Button>
 
                 <!-- More buttons can be added to the layout, following the same structure. -->

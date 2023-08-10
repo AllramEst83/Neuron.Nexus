@@ -138,9 +138,6 @@
   <data name="SelectLanguages" xml:space="preserve">
     <value>Välj språk</value>
   </data>
-  <data name="SelectLanguagesFromPicker" xml:space="preserve">
-    <value>Vänligen välj spårk innan du börjar.</value>
-  </data>
   <data name="Settings" xml:space="preserve">
     <value>Inställningar</value>
   </data>
