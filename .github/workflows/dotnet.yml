@@ -28,28 +28,28 @@ jobs:
         dotnet-version: 7.0.x
 
     - name: Replace DeveloperEmail
-      uses: jacobtomlinson/gha-find-replace@v0.1.2
+      uses: nguyenvanuyn96/str-find-and-replace-action@0.0.5
       with:
         find: "DEVELOPEREMAIL"
         replace: ${{ secrets.DEVELOPER_MAIL }}
         path: Neuron.Nexus/appsettings.json
 
     - name: Replace AppCenterSecret
-      uses: jacobtomlinson/gha-find-replace@v0.1.2
+      uses: nguyenvanuyn96/str-find-and-replace-action@0.0.5
       with:
         find: "APPCENTERSECRET"
         replace: ${{ secrets.APP_CENTER_SECRET }}
         path: Neuron.Nexus/appsettings.json
 
     - name: Replace AzureSubscriptionKey
-      uses: jacobtomlinson/gha-find-replace@v0.1.2
+      uses: nguyenvanuyn96/str-find-and-replace-action@0.0.5
       with:
         find: "AZURESUBSCRIPTIONKEY"
         replace: ${{ secrets.AZURE_SUBSCRIPTION_KEY }}
         path: Neuron.Nexus/appsettings.json
 
     - name: Replace AzureRegion
-      uses: jacobtomlinson/gha-find-replace@v0.1.2
+      uses: nguyenvanuyn96/str-find-and-replace-action@0.0.5
       with:
         find: "AZUREREGION"
         replace: ${{ secrets.AZURE_REGION }}
