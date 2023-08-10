@@ -19,7 +19,7 @@ jobs:
       with:
         files: '${{env.DOTNET_ROOT}}/Neuron.Nexus/appsettings.json'
       env:
-        ApplicationSettings.DEVELOPEREMAIL: ${{ secrets.DEVELOPER_MAIL }}
+        ApplicationSettings.DeveloperEmail: ${{ secrets.DEVELOPER_MAIL }}
         ApplicationSettings.AzureKeys.AzureSubscriptionKey: ${{ secrets.AZURE_SUBSCRIPTION_KEY }}
     
     - name: Setup Keystore File 
