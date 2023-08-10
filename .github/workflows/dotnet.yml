@@ -32,6 +32,9 @@ jobs:
         echo "Decrypting..."
         gpg -d --passphrase "${{ secrets.KEYSTORE_PASSWORD_GPG }}" --batch coded-by-kay.keystore.asc > coded-by-kay.keystore
     
+    - name: Move Keystore File to Project Directory
+      run: mv coded-by-kay.keystore Neuron.Nexus/
+    
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
@@ -44,7 +47,7 @@ jobs:
       run: dotnet restore
     
     - name: Build
-      run: dotnet build Neuron.Nexus/Neuron.Nexus.csproj -c Release -f net7.0-android /p:Configuration=Release /p:AndroidSigningKeyPass=${{ secrets.KEYSTORE_PASSWORD }} /p:AndroidSigningStorePass=${{ secrets.KEYSTORE_PASSWORD }} --no-restore
+      run: dotnet build Neuron.Nexus/Neuron.Nexus.csproj -c Release -f net7.0-android /p:AndroidSigningKeyPass=${{ secrets.KEYSTORE_PASSWORD }} /p:AndroidSigningStorePass=${{ secrets.KEYSTORE_PASSWORD }} --no-restore
     
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3.1.0
@@ -52,8 +55,7 @@ jobs:
         name: android-ci-build
         path: |
           ./**/*.aab
-          ./**/*.apk
-        
+          ./**/*.apk        
     
     - name: Download a single artifact
       uses: actions/download-artifact@v3
