@@ -16,7 +16,7 @@ jobs:
     
     - name: Setup Keystore File 
       run: |
-        echo "${{secret.KEYSTORE_FILE}}" > coded-by-kay.keystore.asc
+        echo "${{secrets.KEYSTORE_FILE}}" > coded-by-kay.keystore.asc
         gpg -d --passphrase "{{secrets.KEYSTORE_PASSWORD_GPG}}" --batch coded-by-kay.keystore.asc > coded-by-kay.keystore
     
     - name: Setup .NET
