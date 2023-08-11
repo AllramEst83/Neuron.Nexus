@@ -83,6 +83,9 @@ jobs:
         with:
           name: android-ci-build
 
+      - name: List files in android-ci-build directory
+        run: ls -l ./android-ci-build/
+
       - name: Upload artifact to App Center
         uses: wzieba/AppCenter-Github-Action@v1
         with:
