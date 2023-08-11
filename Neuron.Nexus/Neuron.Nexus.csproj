@@ -143,14 +143,14 @@
 	</ItemGroup>
 
 
-	<PropertyGroup Condition="$(TargetFramework.Contains('-android')) and '$(Configuration)' == 'Release'">
+	<!--<PropertyGroup Condition="$(TargetFramework.Contains('-android')) and '$(Configuration)' == 'Release'">
 		<AndroidKeyStore>True</AndroidKeyStore>
 		<AndroidSigningKeyStore>coded-by-kay.keystore</AndroidSigningKeyStore>
 		<AndroidSigningKeyAlias>coded-by-kay-keystore</AndroidSigningKeyAlias>
 		
-		<!--Password is needed when the project is being signed in VS.-->
-		<!--<AndroidSigningStorePass></AndroidSigningStorePass>
-		<AndroidSigningKeyPass></AndroidSigningKeyPass>-->
-	</PropertyGroup>
+		--><!--Password is needed when the project is being signed in VS.--><!--
+		--><!--<AndroidSigningStorePass></AndroidSigningStorePass>
+		<AndroidSigningKeyPass></AndroidSigningKeyPass>--><!--
+	</PropertyGroup>-->
 
 </Project>
