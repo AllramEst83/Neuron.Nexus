@@ -38,13 +38,13 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 7.0.x
+        include-prerelease: true
         
     - name: Setup Java
       uses: actions/setup-java@v3
       with:
         distribution: 'microsoft'
         java-version: '11'
-        include-prerelease: true
         
     - name: Install .Net MAUI
       run: |
