@@ -89,6 +89,7 @@ jobs:
           appName: kaywib/NeuronNexus
           token: ${{secrets.APP_CENTER_SECRET}}
           group: Testers
-          file: ./android-ci-build/com.codedbykay.neuronnexus-Signed.aab
+          file: /home/runner/work/Neuron.Nexus/Neuron.Nexus/android-ci-build/com.codedbykay.neuronnexus-Signed.aab
           notifyTesters: true
           debug: false
+
