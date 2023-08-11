@@ -38,7 +38,6 @@ jobs:
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 7.0.x
-        include-prerelease: true
         
     - name: Setup Java
       uses: actions/setup-java@v3
@@ -80,12 +79,13 @@ jobs:
       - name: Upload artifact to App Center
         uses: wzieba/AppCenter-Github-Action@v1
         with:
-          appName: Kay Wiberg/Nerual nexus - android
+          appName: kaywib/NeuronNexus
           token: ${{secrets.APP_CENTER_SECRET}}
           group: Testers
           file: /home/runner/work/*Signed.aab
           notifyTesters: true
           debug: false
+
       
       
       
