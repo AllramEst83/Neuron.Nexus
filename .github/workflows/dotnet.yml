@@ -46,7 +46,10 @@ jobs:
         java-version: '17'
         
     - name: Install .Net MAUI
-      run: dotnet workload install maui
+      run: |
+        dotnet workload install maui
+        dotnet workload install android
+      
     
     - name: Restore dependencies
       run: dotnet restore
