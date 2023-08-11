@@ -43,13 +43,13 @@ jobs:
       uses: actions/setup-java@v3
       with:
         distribution: 'microsoft'
-        java-version: '17'
+        java-version: '11'
+        include-prerelease: true
         
     - name: Install .Net MAUI
       run: |
-        dotnet workload install maui
         dotnet workload install android
-      
+        dotnet workload install maui
     
     - name: Restore dependencies
       run: dotnet restore
