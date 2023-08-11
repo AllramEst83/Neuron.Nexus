@@ -19,8 +19,8 @@
 		<ApplicationIdGuid>ad327468-1f4a-4d3e-9e8c-f85559775092</ApplicationIdGuid>
 
 		<!-- Versions -->
-		<ApplicationDisplayVersion>1.1</ApplicationDisplayVersion>
-		<ApplicationVersion>2</ApplicationVersion>
+		<ApplicationDisplayVersion>1.3</ApplicationDisplayVersion>
+		<ApplicationVersion>4</ApplicationVersion>
 
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'ios'">11.0</SupportedOSPlatformVersion>
 		<SupportedOSPlatformVersion Condition="$([MSBuild]::GetTargetPlatformIdentifier('$(TargetFramework)')) == 'maccatalyst'">13.1</SupportedOSPlatformVersion>
@@ -142,15 +142,15 @@
 	  </EmbeddedResource>
 	</ItemGroup>
 
-
-	<!--<PropertyGroup Condition="$(TargetFramework.Contains('-android')) and '$(Configuration)' == 'Release'">
+	<!--OBS!!!! GLÖM INTE ATT UPPDATERA RELEASE APPSETTINGS OCKSÅ
+	<PropertyGroup Condition="$(TargetFramework.Contains('-android')) and '$(Configuration)' == 'Release'">
 		<AndroidKeyStore>True</AndroidKeyStore>
-		<AndroidSigningKeyStore>coded-by-kay.keystore</AndroidSigningKeyStore>
+			<AndroidSigningKeyStore>../coded-by-kay.keystore</AndroidSigningKeyStore>
 		<AndroidSigningKeyAlias>coded-by-kay-keystore</AndroidSigningKeyAlias>
 		
-		--><!--Password is needed when the project is being signed in VS.--><!--
-		--><!--<AndroidSigningStorePass></AndroidSigningStorePass>
-		<AndroidSigningKeyPass></AndroidSigningKeyPass>--><!--
+		Password is needed when the project is being signed in VS.
+		<AndroidSigningStorePass></AndroidSigningStorePass>
+		<AndroidSigningKeyPass></AndroidSigningKeyPass>
 	</PropertyGroup>-->
 
 </Project>
