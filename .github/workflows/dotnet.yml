@@ -70,15 +70,22 @@ jobs:
       with:
         name: android-ci-build
 
-    - name: Upload artifact to App Center
-      uses: wzieba/AppCenter-Github-Action@v1
-      with:
-        appName: Kay Wiberg/Nerual nexus - android
-        token: ${{secrets.APP_CENTER_SECRET}}
-        group: Testers
-        file: /home/runner/work/*Signed.aab
-        notifyTesters: true
-        debug: false
+  appcenter:
+      needs: build
+      runs-on: ubuntu-latest
+      name: AppCenter Publish
+      
+      steps:
+      
+      - name: Upload artifact to App Center
+        uses: wzieba/AppCenter-Github-Action@v1
+        with:
+          appName: Kay Wiberg/Nerual nexus - android
+          token: ${{secrets.APP_CENTER_SECRET}}
+          group: Testers
+          file: /home/runner/work/*Signed.aab
+          notifyTesters: true
+          debug: false
       
       
       
