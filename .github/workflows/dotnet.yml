@@ -69,6 +69,11 @@ jobs:
       with:
         name: android-ci-build
 
+    - name: List .aab files
+      run: |
+        echo "Searching for .aab files..."
+        find . -name "*.aab"
+
   appcenter:
       needs: build
       runs-on: ubuntu-latest
@@ -76,13 +81,18 @@ jobs:
       
       steps:
       
+      - name: List .aab files
+        run: |
+          echo "Searching for .aab files..."
+          find . -name "*.aab"
+      
       - name: Upload artifact to App Center
         uses: wzieba/AppCenter-Github-Action@v1
         with:
           appName: kaywib/NeuronNexus
           token: ${{secrets.APP_CENTER_SECRET}}
           group: Testers
-          file: /home/runner/work/*Signed.aab
+          file: /home/runner/work/com.codedbykay.neuronnexus-Signed.aab
           notifyTesters: true
           debug: false
 
