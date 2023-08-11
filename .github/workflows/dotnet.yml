@@ -2,89 +2,79 @@ name: Build .Net MAUI Android app
 
 on:
   push:
-    branches: [ main ]
-    paths-ignore:
-      - '**/*.md'
-      - '**/*.gitignore'
-      - '**/*.gitattributes'
+    branches: [ "master" ]
   pull_request:
-    branches: [ main ]
-  workflow_dispatch:
-
-permissions:
-  contents: read
-
-env:
-  DOTNET_NOLOGO: true
-  DOTNET_SKIP_FIRST_TIME_EXPERIENCE: true
-  DOTNET_CLI_TELEMETRY_OPTOUT: true
+    branches: [ "master" ]
+  workflow_dispatch: # Manual trigger
 
 jobs:
-  build-android:
+  build:
     runs-on: windows-latest
-    name: Android Build
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
+    - uses: actions/checkout@v3
+    
+    - name: App Settings Variable Substitution
+      uses: microsoft/variable-substitution@v1
+      with:
+        files: 'Neuron.Nexus/appsettings.json'
+      env:
+        ApplicationSettings.DeveloperEmail: ${{ secrets.DEVELOPER_MAIL }}
+        ApplicationSettings.AppCenterSecret: ${{ secrets.APP_CENTER_SECRET }}
+        ApplicationSettings.AzureKeys.AzureSubscriptionKey: ${{ secrets.AZURE_SUBSCRIPTION_KEY }}       
+        ApplicationSettings.AzureKeys.AzureRegion: ${{ secrets.AZURE_REGION }}
+    
+    - name: Setup Keystore File 
+      run: |
+        echo "${{ secrets.KEYSTORE_FILE }}" > Neuron.Nexus/coded-by-kay.keystore.asc
+        echo "GPG Version:"
+        gpg --version
+        echo "Decrypting..."
+        gpg -d --passphrase "${{ secrets.KEYSTORE_PASSWORD_GPG }}" --batch Neuron.Nexus/coded-by-kay.keystore.asc > Neuron.Nexus/coded-by-kay.keystore
+        echo "Listing files in Neuron.Nexus directory:"
+        ls -l Neuron.Nexus
+    
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v3
+      with:
+        dotnet-version: 7.0.x
+        
+    - name: Setup Java
+      uses: actions/setup-java@v3
+      with:
+        distribution: 'microsoft'
+        java-version: '11'
+        
+    - name: Install .Net MAUI
+      run: |
+        dotnet workload install android
+        dotnet workload install maui
+    
+    - name: Restore dependencies
+      run: dotnet restore
+    
+    - name: Build
+      run: dotnet build Neuron.Nexus/Neuron.Nexus.csproj -c Release -f net7.0-android /p:AndroidSigningKeyStore=${{secrets.KEYSTORE}} /p:AndroidSigningKeyAlias=${{ secrets.KEYSTORE_ALIAS }} /p:AndroidSigningKeyPass=${{ secrets.KEYSTORE_PASSWORD }} /p:AndroidSigningStorePass=${{ secrets.KEYSTORE_PASSWORD }} --no-restore
 
-      - name: App Settings Variable Substitution
-        uses: microsoft/variable-substitution@v1
-        with:
-          files: 'Neuron.Nexus/appsettings.json'
-        env:
-          ApplicationSettings.DeveloperEmail: ${{ secrets.DEVELOPER_MAIL }}
-          ApplicationSettings.AppCenterSecret: ${{ secrets.APP_CENTER_SECRET }}
-          ApplicationSettings.AzureKeys.AzureSubscriptionKey: ${{ secrets.AZURE_SUBSCRIPTION_KEY }}       
-          ApplicationSettings.AzureKeys.AzureRegion: ${{ secrets.AZURE_REGION }}
-
-      - name: Setup Keystore File 
-        run: |
-          echo "${{ secrets.KEYSTORE_FILE }}" > Neuron.Nexus/coded-by-kay.keystore.asc
-          gpg --version
-          gpg -d --passphrase "${{ secrets.KEYSTORE_PASSWORD_GPG }}" --batch Neuron.Nexus/coded-by-kay.keystore.asc > Neuron.Nexus/coded-by-kay.keystore
-
-      - name: Setup .NET
-        uses: actions/setup-dotnet@v1
-        with:
-          dotnet-version: 7.0.x
-          include-prerelease: true
-
-      - uses: actions/setup-java@v2
-        with:
-          distribution: 'microsoft'
-          java-version: '11'
-
-      - name: Install MAUI Workloads
-        run: |
-          dotnet workload install android --ignore-failed-sources
-          dotnet workload install maui --ignore-failed-sources
-
-      - name: Restore Dependencies
-        run: dotnet restore Neuron.Nexus/Neuron.Nexus.csproj
-
-      - name: Publish MAUI Android
-        run: dotnet publish Neuron.Nexus/Neuron.Nexus.csproj -c Release -f net7.0-android /p:AndroidSigningKeyStore=${{secrets.KEYSTORE}} /p:AndroidSigningKeyAlias=${{ secrets.KEYSTORE_ALIAS }} /p:AndroidSigningKeyPass=${{ secrets.KEYSTORE_PASSWORD }} /p:AndroidSigningStorePass=${{ secrets.KEYSTORE_PASSWORD }}
-
-      - name: Upload Android Artifact
-        uses: actions/upload-artifact@v2.3.1
-        with:
-          name: android-ci-build
-          path: Neuron.Nexus/bin/Release/net7.0-android/*Signed.aab*
+    - name: Upload a Build Artifact
+      uses: actions/upload-artifact@v3.1.0
+      with:
+        name: android-ci-build
+        path: Neuron.Nexus/bin/Release/net7.0-android/*Signed.aab*
 
   appcenter:
-    needs: build-android
-    runs-on: ubuntu-latest
-    name: AppCenter Publish
-
-    steps:
+      needs: build
+      runs-on: ubuntu-latest
+      name: AppCenter Publish
+      
+      steps:
       - name: Download a single artifact
         uses: actions/download-artifact@v3
         with:
           name: android-ci-build
 
-      - name: List files in android-ci-build directory
-        run: ls -l ./android-ci-build/
+      - name: List files in the artifact directory
+        run: ls -l ./ 
 
       - name: Upload artifact to App Center
         uses: wzieba/AppCenter-Github-Action@v1
@@ -92,7 +82,6 @@ jobs:
           appName: kaywib/NeuronNexus
           token: ${{secrets.APP_CENTER_SECRET}}
           group: Testers
-          file: /home/runner/work/Neuron.Nexus/Neuron.Nexus/android-ci-build/com.codedbykay.neuronnexus-Signed.aab
+          file: ./com.codedbykay.neuronnexus-Signed.aab
           notifyTesters: true
           debug: false
-
