@@ -143,6 +143,8 @@
 	</ItemGroup>
 
 	<!--OBS!!!! GLÖM INTE ATT UPPDATERA RELEASE APPSETTINGS OCKSÅ
+	RUN: <dotnet publish -c Release -f:net7.0-android>TO BUILD RELEASE VERSION LOCALLY
+	
 	<PropertyGroup Condition="$(TargetFramework.Contains('-android')) and '$(Configuration)' == 'Release'">
 		<AndroidKeyStore>True</AndroidKeyStore>
 			<AndroidSigningKeyStore>../coded-by-kay.keystore</AndroidSigningKeyStore>
