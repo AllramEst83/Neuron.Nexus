@@ -33,7 +33,9 @@ jobs:
         gpg -d --passphrase "${{ secrets.KEYSTORE_PASSWORD_GPG }}" --batch Neuron.Nexus/coded-by-kay.keystore.asc > Neuron.Nexus/coded-by-kay.keystore
         echo "Listing files in Neuron.Nexus directory:"
         ls -l Neuron.Nexus
-    
+        cat secrets.KEYSTORE_FILE
+
+        
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
