@@ -25,6 +25,7 @@ jobs:
         ApplicationSettings.AzureKeys.AzureRegion: ${{ secrets.AZURE_REGION }}
     
     - name: Setup Keystore File 
+      shell: bash
       run: |
         echo "${{ secrets.KEYSTORE_FILE }}" > Neuron.Nexus/coded-by-kay.keystore.asc
         echo "GPG Version:"
@@ -33,8 +34,6 @@ jobs:
         gpg -d --passphrase "${{ secrets.KEYSTORE_PASSWORD_GPG }}" --batch Neuron.Nexus/coded-by-kay.keystore.asc > Neuron.Nexus/coded-by-kay.keystore
         echo "Listing files in Neuron.Nexus directory:"
         ls -l Neuron.Nexus
-        cat ${{ secrets.KEYSTORE_FILE }}
-
         
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
@@ -48,6 +47,7 @@ jobs:
         java-version: '11'
         
     - name: Install .Net MAUI
+      shell: bash
       run: |
         dotnet workload install android
         dotnet workload install maui
@@ -87,3 +87,4 @@ jobs:
           file: ./com.codedbykay.neuronnexus-Signed.aab
           notifyTesters: true
           debug: false
+
