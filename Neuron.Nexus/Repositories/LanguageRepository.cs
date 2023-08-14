@@ -31,7 +31,7 @@ namespace Neuron.Nexus.Repositories
         public List<LanguageOption> GetLanguagesOrderByLanguageName()
         {
             return new List<LanguageOption>
-            {   
+            {
                 new LanguageOption() { Id = 1, FullLanguageCode = "fa-IR", ShortLanguageCode = "fa", LanguageName = "Persian (Iran)", NativeLanguageName = "Dari" },
                 new LanguageOption() { Id = 2, FullLanguageCode = "ar-IQ", ShortLanguageCode = "ar", LanguageName = "Arabic (Iraq)", NativeLanguageName = "Iraq" },
                 new LanguageOption() { Id = 3, FullLanguageCode = "ar-SY", ShortLanguageCode = "ar", LanguageName = "Arabic (Syria)", NativeLanguageName = "Syria" },
@@ -44,7 +44,11 @@ namespace Neuron.Nexus.Repositories
                 new LanguageOption() { Id = 10, FullLanguageCode = "pl-PL", ShortLanguageCode = "pl", LanguageName = "Polish (Poland)", NativeLanguageName = "Polska" },
                 new LanguageOption() { Id = 11, FullLanguageCode = "so-SO", ShortLanguageCode = "so", LanguageName = "Somali (Somalia)", NativeLanguageName = "Soomaaliya" },
                 new LanguageOption() {Id = 12,FullLanguageCode = "sv-SE", ShortLanguageCode = "sv" ,LanguageName = "Sweden (Swedish)", NativeLanguageName = "Svenska" },
-                new LanguageOption() {Id = 13,FullLanguageCode = "en-US", ShortLanguageCode = "en", LanguageName = "USA (English)", NativeLanguageName = "English"}
+                new LanguageOption() {Id = 13,FullLanguageCode = "en-US", ShortLanguageCode = "en", LanguageName = "USA (English)", NativeLanguageName = "English"},
+                new LanguageOption() {Id = 14, FullLanguageCode = "es-ES", ShortLanguageCode = "es", LanguageName = "Spanish (Spain)", NativeLanguageName = "Español" },
+                new LanguageOption() { Id = 15, FullLanguageCode = "de-DE", ShortLanguageCode = "de", LanguageName = "German (Germany)", NativeLanguageName = "Deutsch" },
+                new LanguageOption() { Id = 16, FullLanguageCode = "it-IT", ShortLanguageCode = "it", LanguageName = "Italian (Italy)", NativeLanguageName = "Italiano" },
+                new LanguageOption() { Id = 17, FullLanguageCode = "fr-FR", ShortLanguageCode = "fr", LanguageName = "French (France)", NativeLanguageName = "Français" },
 
             }.OrderBy(x => x.LanguageName).ToList();
         }
