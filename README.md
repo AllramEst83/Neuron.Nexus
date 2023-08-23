@@ -45,8 +45,7 @@ This repository includes an automated build action that performs the following t
 - **Signs** the .aab file with the appropriate credentials to ensure authenticity.
 - **Publishes** the signed .aab file to AppCenter, allowing for streamlined distribution and testing.
 
-This build action simplifies the development workflow and ensures that the application is consistently built and ready for deployment. Refer to the repository's build configuration files for specific details on how this process is configured.
-
+The build action is triggered when a commit or merge is made to the master branch, or it can be manually triggered as needed. This automation simplifies the development workflow and ensures that the application is consistently built and ready for deployment. Refer to the repository's build configuration files for specific details on how this process is configured.
 
 ## License
 
