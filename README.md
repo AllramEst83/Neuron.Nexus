@@ -37,13 +37,24 @@ To develop locally, you will need to create an `appsettings.DEV.json` file and r
 2. **Set Up appsettings.DEV.json**: Follow the instructions above to set up the `appsettings.DEV.json` file.
 3. **Build and Run**: Use your preferred development environment to build and run the application.
 
+## GitHub Build Action
+
+This repository includes an automated build action that performs the following tasks:
+
+- **Builds** the .NET MAUI application into an .aab file suitable for Android distribution.
+- **Signs** the .aab file with the appropriate credentials to ensure authenticity.
+- **Publishes** the signed .aab file to AppCenter, allowing for streamlined distribution and testing.
+
+This build action simplifies the development workflow and ensures that the application is consistently built and ready for deployment. Refer to the repository's build configuration files for specific details on how this process is configured.
+
+
 ## License
 
 Please refer to the repository's license file for information on licensing.
 
 ## Contributing
 
-Feel free to contribute to the project by opening issues, creating pull requests, or suggesting new features. below is a list of Features and Bugs.
+Feel free to contribute to the project by opening issues, creating pull requests, or suggesting new features. Below is a list of Features and Bugs.
 
 ## Features and Bugs to be Fixed
 
