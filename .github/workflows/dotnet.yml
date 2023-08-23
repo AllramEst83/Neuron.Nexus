@@ -8,15 +8,12 @@ on:
   workflow_dispatch: # Manual trigger
 
 jobs:
-  checkout:
+  build:
     runs-on: windows-latest
+
     steps:
     - uses: actions/checkout@v3
-
-  app-settings:
-    needs: checkout
-    runs-on: windows-latest
-    steps:
+    
     - name: App Settings Variable Substitution
       uses: microsoft/variable-substitution@v1
       with:
@@ -26,64 +23,41 @@ jobs:
         ApplicationSettings.AppCenterSecret: ${{ secrets.APP_CENTER_SECRET }}
         ApplicationSettings.AzureKeys.AzureSubscriptionKey: ${{ secrets.AZURE_SUBSCRIPTION_KEY }}       
         ApplicationSettings.AzureKeys.AzureRegion: ${{ secrets.AZURE_REGION }}
-
-  keystore-setup:
-    needs: app-settings
-    runs-on: windows-latest
-    steps:
+    
     - name: Setup Keystore File 
       shell: bash
       run: |
-        # Keystore setup commands here
-
-  dotnet-setup:
-    needs: keystore-setup
-    runs-on: windows-latest
-    steps:
+        echo "${{ secrets.KEYSTORE_FILE }}" > Neuron.Nexus/coded-by-kay.keystore.asc
+        echo "GPG Version:"
+        gpg --version
+        echo "Decrypting..."
+        gpg -d --passphrase "${{ secrets.KEYSTORE_PASSWORD_GPG }}" --batch Neuron.Nexus/coded-by-kay.keystore.asc > Neuron.Nexus/coded-by-kay.keystore
+        echo "Listing files in Neuron.Nexus directory:"
+        ls -l Neuron.Nexus
+        
     - name: Setup .NET
       uses: actions/setup-dotnet@v3
       with:
         dotnet-version: 7.0.x
-
-  java-setup:
-    needs: dotnet-setup
-    runs-on: windows-latest
-    steps:
+        
     - name: Setup Java
       uses: actions/setup-java@v3
       with:
         distribution: 'microsoft'
         java-version: '11'
-
-  maui-install:
-    needs: java-setup
-    runs-on: windows-latest
-    steps:
+        
     - name: Install .Net MAUI
       shell: bash
       run: |
         dotnet workload install android
         dotnet workload install maui
-
-  dependencies-restore:
-    needs: maui-install
-    runs-on: windows-latest
-    steps:
+    
     - name: Restore dependencies
       run: dotnet restore
-
-  build:
-    needs: dependencies-restore
-    runs-on: windows-latest
-    steps:
+    
     - name: Build
-      run: |
-        # Build commands here
+      run: dotnet publish Neuron.Nexus/Neuron.Nexus.csproj -c Release -f net7.0-android /p:AndroidKeyStore=true /p:AndroidSigningKeyStore=${{secrets.KEYSTORE}} /p:AndroidSigningKeyAlias=${{ secrets.KEYSTORE_ALIAS }} /p:AndroidSigningKeyPass=${{ secrets.KEYSTORE_PASSWORD }} /p:AndroidSigningStorePass=${{ secrets.KEYSTORE_PASSWORD }} --no-restore
 
-  upload-artifact:
-    needs: build
-    runs-on: windows-latest
-    steps:
     - name: Upload a Build Artifact
       uses: actions/upload-artifact@v3.1.0
       with:
@@ -91,24 +65,25 @@ jobs:
         path: Neuron.Nexus/bin/Release/net7.0-android/*Signed.aab*
 
   appcenter:
-    needs: upload-artifact
-    runs-on: ubuntu-latest
-    name: AppCenter Publish
-    steps:
-    - name: Download a single artifact
-      uses: actions/download-artifact@v3
-      with:
-        name: android-ci-build
+      needs: build
+      runs-on: ubuntu-latest
+      name: AppCenter Publish
+      
+      steps:
+      - name: Download a single artifact
+        uses: actions/download-artifact@v3
+        with:
+          name: android-ci-build
 
-    - name: List files in the artifact directory
-      run: ls -l ./ 
+      - name: List files in the artifact directory
+        run: ls -l ./ 
 
-    - name: Upload artifact to App Center
-      uses: wzieba/AppCenter-Github-Action@v1.3.4
-      with:
-        appName: kaywib/NeuronNexus
-        token: ${{secrets.APP_CENTER_SECRET}}
-        group: Testers
-        file: ./com.codedbykay.neuronnexus-Signed.aab
-        notifyTesters: true
-        debug: false
+      - name: Upload artifact to App Center
+        uses: wzieba/AppCenter-Github-Action@v1.3.4
+        with:
+          appName: kaywib/NeuronNexus
+          token: ${{secrets.APP_CENTER_SECRET}}
+          group: Testers
+          file: ./com.codedbykay.neuronnexus-Signed.aab
+          notifyTesters: true
+          debug: false
