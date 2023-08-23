@@ -13,7 +13,8 @@ Neuron.Nexus is a .NET MAUI application designed to be an interpreter app using 
 To develop locally, you will need to create an `appsettings.DEV.json` file and replace the placeholders with the appropriate values.
 
 ### appsettings.DEV.json
-```json
+
+\\\json
 {
   "Logging": {
     "LogLevel": {
@@ -30,7 +31,8 @@ To develop locally, you will need to create an `appsettings.DEV.json` file and r
     "DeveloperEmail": "DEVELOPEREMAIL"
   }
 }
-```
+\\\
+
 ## Getting Started
 
 1. **Clone the Repository**: Clone the repository from [here](https://github.com/AllramEst83/Neuron.Nexus).
