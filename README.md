@@ -37,13 +37,13 @@ To develop locally, you will need to create an `appsettings.DEV.json` file and r
 2. **Set Up appsettings.DEV.json**: Follow the instructions above to set up the `appsettings.DEV.json` file.
 3. **Build and Run**: Use your preferred development environment to build and run the application.
 
-## Contributing
-
-Feel free to contribute to the project by opening issues, creating pull requests, or suggesting new features.
-
 ## License
 
 Please refer to the repository's license file for information on licensing.
+
+## Contributing
+
+Feel free to contribute to the project by opening issues, creating pull requests, or suggesting new features. below is a list of Features and Bugs.
 
 ## Features and Bugs to be Fixed
 
