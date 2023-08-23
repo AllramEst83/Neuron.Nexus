@@ -44,3 +44,18 @@ Feel free to contribute to the project by opening issues, creating pull requests
 ## License
 
 Please refer to the repository's license file for information on licensing.
+
+## Features and Bugs to be Fixed
+
+### Features
+- **Create Theme Selector**: Implement a theme selector to allow users to choose different visual themes.
+- **Build Different Components for Tutorial Versions**: Construct various components for different versions of the tutorial, or create a resource for all text.
+- **Review MainThread Usage**: Evaluate how the MainThread is being used within the application.
+- **Add Attribution for MediaPlayer and Recorder**: Include proper attribution for the media player and recorder components.
+- **Animate Button Wiggle and Switch Border Color**: Consider implementing animation for button wiggle and switch border color, possibly within the same message event.
+
+### Bugs
+- **Fix Connectivity Alert on Resume**: Ensure that the connectivity alert does not appear when returning to the start page after resuming the app.
+- **Event Unsubscription on Sleep**: Determine whether events should also be unsubscribed when the app is put to sleep.
+- **Handle App Resource Shutdown**: Manage the shutdown of app resources if audio or translation is working and the user clicks the back button. Consider implementing an ActivityIndicator.
+
