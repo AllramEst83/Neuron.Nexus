@@ -8,6 +8,16 @@ Neuron.Nexus is a .NET MAUI application designed to be an interpreter app using 
 - **iOS Support**: Currently not available.
 - **Translation Service**: Utilizes MS Azure Cognitive Service Speech for translation.
 
+## Development Environment
+
+This project was developed using the following tools and technologies:
+
+- **Visual Studio 2022**: The primary development environment used for coding, debugging, and testing.
+- **.NET 7**: The project is built on the .NET 7 framework, utilizing its features and capabilities to create a robust and efficient application.
+
+Ensure that you have these versions installed if you plan to contribute to or build the project locally.
+
+
 ## Development Setup
 
 To develop locally, you will need to create an `appsettings.DEV.json` file and replace the placeholders with the appropriate values.
