@@ -44,7 +44,7 @@ To develop locally, you will need to create an `appsettings.Local.json` file and
 ## Getting Started
 
 1. **Clone the Repository**: Clone the repository from [here](https://github.com/AllramEst83/Neuron.Nexus).
-2. **Set Up appsettings.DEV.json**: Follow the instructions above to set up the `appsettings.DEV.json` file.
+2. **Set Up appsettings.Local.json**: Follow the instructions above to set up the `appsettings.Local.json` file.
 3. **Build and Run**: Use your preferred development environment to build and run the application.
 
 ## GitHub Build Action
