@@ -17,19 +17,10 @@ This project was developed using the following tools and technologies:
 
 Ensure that you have these versions installed if you plan to contribute to or build the project locally.
 
-## Development Environment
-
-This project was developed using the following tools and technologies:
-
-- **Visual Studio 2022**: The primary development environment used for coding, debugging, and testing.
-- **.NET 7**: The project is built on the .NET 7 framework, utilizing its features and capabilities to create a robust and efficient application.
-
-Ensure that you have these versions installed if you plan to contribute to or build the project locally.
-
 
 ## Development Setup
 
-To develop locally, you will need to create an `appsettings.DEV.json` file and replace the placeholders with the appropriate values.
+To develop locally, you will need to create an `appsettings.Local.json` file and replace the placeholders with the appropriate values.
 
 ### appsettings.DEV.json
 ```json
@@ -53,7 +44,7 @@ To develop locally, you will need to create an `appsettings.DEV.json` file and r
 ## Getting Started
 
 1. **Clone the Repository**: Clone the repository from [here](https://github.com/AllramEst83/Neuron.Nexus).
-2. **Set Up appsettings.DEV.json**: Follow the instructions above to set up the `appsettings.DEV.json` file.
+2. **Set Up appsettings.Local.json**: Follow the instructions above to set up the `appsettings.Local.json` file.
 3. **Build and Run**: Use your preferred development environment to build and run the application.
 
 ## GitHub Build Action

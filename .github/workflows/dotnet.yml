@@ -22,7 +22,13 @@ jobs:
         ApplicationSettings.DeveloperEmail: ${{ secrets.DEVELOPER_MAIL }}
         ApplicationSettings.AppCenterSecret: ${{ secrets.APP_CENTER_SECRET }}
         ApplicationSettings.AzureKeys.AzureSubscriptionKey: ${{ secrets.AZURE_SUBSCRIPTION_KEY }}       
-        ApplicationSettings.AzureKeys.AzureRegion: ${{ secrets.AZURE_REGION }}
+        ApplicationSettings.AzureKeys.AzureRegion: ${{ secrets.AZURE_REGION }}        
+        ApplicationSettings.ChatGptSettings.ApiKey: ${{ secrets.CHATGPT_APIKEY }}
+        ApplicationSettings.ChatGptSettings.EndPoint: ${{ secrets.CHATGPT_ENDPOINT }}
+        ApplicationSettings.ChatGptSettings.Model: ${{ secrets.CHATGPT_MODEL }}
+        ApplicationSettings.ChatGptSettings.TopP: ${{ secrets.CHATGPT_TOPP }}
+        ApplicationSettings.ChatGptSettings.Temperature: ${{ secrets.CHATGPT_TEMPERATURE }}
+        ApplicationSettings.ChatGptSettings.MaxTokens: ${{ secrets.CHATGPT_MAXTOKENS }}
     
     - name: Setup Keystore File 
       shell: bash
