@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:viewmodel="clr-namespace:Neuron.Nexus.ViewModels"
+             xmlns:converters="clr-namespace:Neuron.Nexus.Converters"
+             xmlns:skia="clr-namespace:SkiaSharp.Extended.UI.Controls;assembly=SkiaSharp.Extended.UI"
+              xmlns:translator="clr-namespace:Neuron.Nexus.Exstensions"
+             Title="{translator:Translate NotesTitle}"
+             x:Class="Neuron.Nexus.Pages.AiNotesPage" >
+    <ContentPage.Resources>
+        <ResourceDictionary>
+            <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
+        </ResourceDictionary>
+
+    </ContentPage.Resources>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <skia:SKLottieView
+        IsAnimationEnabled="{Binding AnimationIsActive}"
+        IsVisible="{Binding AnimationIsActive}"
+        Source="lottieanimation.json"
+        SemanticProperties.Description="Test test"
+        RepeatCount="-1"
+        RepeatMode="Restart"
+        HeightRequest="350"
+        WidthRequest="350"
+        HorizontalOptions="Center" />
+
+        <Button
+        Grid.RowSpan="2" 
+        Style="{StaticResource DefaultButtonStyle}"
+        Text="{Binding ButtonText}"
+        Command="{Binding ToggleTranscriptionCommand}"
+        HorizontalOptions="Center"
+        VerticalOptions="Center"
+        IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolConverter}}"
+        WidthRequest="160"
+        HeightRequest="160"
+        CornerRadius="80"/>
+
+        <ActivityIndicator 
+        Grid.RowSpan="2"
+        WidthRequest="310"
+        HeightRequest="310"
+        IsVisible="{Binding IsBusy}"
+        IsRunning="{Binding IsBusy}"
+        HorizontalOptions="Center"
+        VerticalOptions="Center" />
+
+        <Label
+            Text="{Binding TokenCounterDisplay}"
+            Grid.Column="1"
+            HorizontalOptions="Center"
+            VerticalOptions="Start"
+            Padding="10"
+            BackgroundColor="{StaticResource Secondary}"
+            TextColor="Black"/>
+    </Grid>
+
+
+</ContentPage>

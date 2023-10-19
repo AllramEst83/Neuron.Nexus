@@ -61,6 +61,15 @@ namespace Neuron.Nexus.Resources.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to 75% of tokens has been used. Wrap up the conversation.
+        /// </summary>
+        internal static string _75ProcentTokenLimitMessage {
+            get {
+                return ResourceManager.GetString("75ProcentTokenLimitMessage", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to About us.
         /// </summary>
         internal static string About {
@@ -79,6 +88,15 @@ namespace Neuron.Nexus.Resources.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Error occured while trying to get response from GPT-3.
+        /// </summary>
+        internal static string Gpt3ErrorOccured {
+            get {
+                return ResourceManager.GetString("Gpt3ErrorOccured", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Interpreter.
         /// </summary>
         internal static string InterpreterTitle {
@@ -93,6 +111,33 @@ namespace Neuron.Nexus.Resources.Languages {
         internal static string NoInternetConnection {
             get {
                 return ResourceManager.GetString("NoInternetConnection", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Notes summary.
+        /// </summary>
+        internal static string NotesSummary {
+            get {
+                return ResourceManager.GetString("NotesSummary", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Ai notes.
+        /// </summary>
+        internal static string NotesTitle {
+            get {
+                return ResourceManager.GetString("NotesTitle", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to ### &lt;span style=&quot;color:red; font-weight:bold;&quot;&gt;There was no text to summarize or an error has occurred.&lt;/span&gt;.
+        /// </summary>
+        internal static string NoTextFromResponse {
+            get {
+                return ResourceManager.GetString("NoTextFromResponse", resourceCulture);
             }
         }
         
@@ -142,11 +187,47 @@ namespace Neuron.Nexus.Resources.Languages {
         }
         
         /// <summary>
+        ///   Looks up a localized string similar to Start.
+        /// </summary>
+        internal static string Start {
+            get {
+                return ResourceManager.GetString("Start", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Stop.
+        /// </summary>
+        internal static string Stop {
+            get {
+                return ResourceManager.GetString("Stop", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to Summarizing....
+        /// </summary>
+        internal static string Summarizing {
+            get {
+                return ResourceManager.GetString("Summarizing", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Looks up a localized string similar to Theme selector.
         /// </summary>
         internal static string ThemeSelector {
             get {
                 return ResourceManager.GetString("ThemeSelector", resourceCulture);
+            }
+        }
+        
+        /// <summary>
+        ///   Looks up a localized string similar to tokens left.
+        /// </summary>
+        internal static string TokenDisplay {
+            get {
+                return ResourceManager.GetString("TokenDisplay", resourceCulture);
             }
         }
         

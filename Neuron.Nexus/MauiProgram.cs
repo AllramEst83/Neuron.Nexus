@@ -7,6 +7,7 @@ using Neuron.Nexus.Pages;
 using Neuron.Nexus.Repositories;
 using Neuron.Nexus.Services;
 using Neuron.Nexus.ViewModels;
+using SkiaSharp.Views.Maui.Controls.Hosting;
 
 namespace Neuron.Nexus;
 
@@ -18,6 +19,7 @@ public static class MauiProgram
         builder
             .UseMauiApp<App>()
             .UseMauiCommunityToolkit()
+            .UseSkiaSharp()
             .ConfigureFonts(fonts =>
             {
                 fonts.AddFont("OpenSans-Regular.ttf", "OpenSansRegular");
@@ -55,6 +57,8 @@ configFileName = "Neuron.Nexus.appsettings.json";
             .AddSingleton<ILanguageService, LanguageService>()
             .AddSingleton<IConnectivityService, ConnectivityService>()
             .AddSingleton<IUserPersmissionsService, UserPersmissionsService>()
+            .AddSingleton<IChatGptService, ChatGptService>()
+            .AddSingleton<ITranscriptionManager, TranscriptionManager>()
 #if ANDROID
             .AddSingleton<IAndroidAudioPlayerService, AndroidAudioPlayerService>()
 #endif
@@ -64,24 +68,27 @@ configFileName = "Neuron.Nexus.appsettings.json";
 #if IOS
            .AddTransient<IOSAudioRecorderService, IOSAudioRecorderService>()
 #endif
-           //Pages
-           .AddSingleton<MainPage>()
-           .AddSingleton<SpeakPage>()
-           .AddSingleton<SelectLanguagePage>()
-           .AddSingleton<SettingsPage>()
-           .AddSingleton<AboutPage>()
-           .AddSingleton<TutorialPage>()
-           .AddSingleton<SelectCulturePage>()
+            //Pages
+          .AddSingleton<MainPage>()
+          .AddSingleton<SpeakPage>()
+          .AddSingleton<SelectLanguagePage>()
+          .AddSingleton<SettingsPage>()
+          .AddSingleton<AboutPage>()
+          .AddSingleton<TutorialPage>()
+          .AddSingleton<SelectCulturePage>()
+          .AddSingleton<AiNotesPage>()
+          .AddSingleton<AiNotesSummaryPage>()
 
-           //ViewModels
+            //ViewModels
            .AddSingleton<MainPageViewModel>()
            .AddSingleton<SpeakPageViewModel>()
            .AddSingleton<SelectLanguagePageViewModel>()
            .AddSingleton<SettingsPageViewModel>()
            .AddSingleton<AboutPageViewModel>()
            .AddSingleton<TutorialPageViewModel>()
-           .AddSingleton<SelectCulturePageViewModel>();
-
+           .AddSingleton<SelectCulturePageViewModel>()
+           .AddSingleton<AiNotesViewModel>()
+           .AddSingleton<AiNotesSummaryViewModel>();
 #if DEBUG
         builder.Logging.AddDebug();
 #endif

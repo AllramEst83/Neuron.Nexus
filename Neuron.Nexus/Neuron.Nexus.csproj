@@ -68,6 +68,7 @@
 		<MauiImage Include="Resources\Icons\usflag.png" />
 		<MauiImage Include="Resources\Icons\swedenflag.png" />
 		<MauiImage Include="Resources\Icons\tap.png" />
+    <MauiImage Include="Resources\Icons\notes.png" />
 
 
 		<!-- Custom Fonts -->
@@ -92,16 +93,24 @@
 	<ItemGroup>
 		<PackageReference Include="CommunityToolkit.Maui" Version="5.2.0" />
 		<PackageReference Include="CommunityToolkit.Mvvm" Version="8.2.1" />
+		<PackageReference Include="Markdig" Version="0.33.0" />
 		<PackageReference Include="Microsoft.CognitiveServices.Speech" Version="1.31.0" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Binder" Version="7.0.4" />
 		<PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Logging.Debug" Version="7.0.0" />
 		<PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="7.0.0" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
+		<PackageReference Include="SkiaSharp.Extended.UI.Maui" Version="2.0.0-preview.86" />
 	</ItemGroup>
 
 	<ItemGroup>
 		<MauiXaml Update="Pages\AboutPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\AiNotes.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
+		<MauiXaml Update="Pages\AiNotesSummaryPage.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Pages\SelectCulturePage.xaml">

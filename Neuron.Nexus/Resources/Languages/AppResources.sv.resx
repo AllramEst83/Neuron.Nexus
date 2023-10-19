@@ -117,17 +117,32 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="75ProcentTokenLimitMessage" xml:space="preserve">
+    <value>75% av polletterna har använts. Avsluta konversationen.</value>
+  </data>
   <data name="About" xml:space="preserve">
     <value>Om oss</value>
   </data>
   <data name="AppLanguagesSet" xml:space="preserve">
     <value>App språket du valt har uppdaterats.</value>
   </data>
+  <data name="Gpt3ErrorOccured" xml:space="preserve">
+    <value>Error occured while trying to get response from GPT-3</value>
+  </data>
   <data name="InterpreterTitle" xml:space="preserve">
     <value>Tolken</value>
   </data>
   <data name="NoInternetConnection" xml:space="preserve">
     <value>Inget internet! Vänligen koppla upp dig mot internet.</value>
+  </data>
+  <data name="NotesSummary" xml:space="preserve">
+    <value>Antecknings summering</value>
+  </data>
+  <data name="NotesTitle" xml:space="preserve">
+    <value>Ai anteckningar</value>
+  </data>
+  <data name="NoTextFromResponse" xml:space="preserve">
+    <value>### &lt;span style="color:red; font-weight:bold;"&gt;Det fanns ingen text att summera eller så har det uppståt ett fel.&lt;/span&gt;</value>
   </data>
   <data name="PreferredLanguage" xml:space="preserve">
     <value>Välj de språk du föredrar.</value>
@@ -144,8 +159,20 @@
   <data name="ShareCrashLog" xml:space="preserve">
     <value>Dela kraschlog</value>
   </data>
+  <data name="Start" xml:space="preserve">
+    <value>Start</value>
+  </data>
+  <data name="Stop" xml:space="preserve">
+    <value>Stop</value>
+  </data>
+  <data name="Summarizing" xml:space="preserve">
+    <value>Summerar...</value>
+  </data>
   <data name="ThemeSelector" xml:space="preserve">
     <value>Tema väljare</value>
+  </data>
+  <data name="TokenDisplay" xml:space="preserve">
+    <value>polletter kvar</value>
   </data>
   <data name="Tutorial" xml:space="preserve">
     <value>Hur du använder appen</value>

@@ -2,7 +2,8 @@
 <?xaml-comp compile="true" ?>
 <ResourceDictionary 
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml">
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:local="clr-namespace:Neuron.Nexus.Controls" >
 
     <!--ImageButton-->
     <Style TargetType="ImageButton">
@@ -14,6 +15,7 @@
         <Setter Property="MaximumHeightRequest" Value="60"/>
         <Setter Property="MaximumWidthRequest" Value="60"/>
         <Setter Property="Padding" Value="5" />
+      
         <Setter Property="BorderColor" Value="Black"/>
         <Setter Property="BorderWidth" Value="2"/>
 
@@ -61,6 +63,12 @@
     </Style>
     <!--Button-->
 
+    <!--StartStopButton-->
+    <Style TargetType="StackLayout" x:Key="StartStopNotesButton">
+        <Setter Property="Margin" Value="0,0,0,10" />
+    </Style>
+    <!--StartStopButton-->
+    
     <!--ScrollView-->
 
     <Style TargetType="ScrollView" x:Key="scrollViewBackground">
@@ -101,7 +109,7 @@
     <!--Image-->
 
     <Style TargetType="ActivityIndicator">
-        <Setter Property="Color" Value="{AppThemeBinding Light={StaticResource Primary}, Dark={StaticResource White}}" />
+        <Setter Property="Color" Value="{AppThemeBinding Light={StaticResource Blue300Accent}, Dark={StaticResource Blue100Accent}}" />
     </Style>
 
     <Style TargetType="IndicatorView">
@@ -166,6 +174,7 @@
         <Setter Property="PlaceholderColor" Value="{AppThemeBinding Light={StaticResource Gray200}, Dark={StaticResource Gray500}}" />
         <Setter Property="MinimumHeightRequest" Value="44"/>
         <Setter Property="MinimumWidthRequest" Value="44"/>
+        <Setter Property="Margin" Value="5,5,5,5" />
         <Setter Property="VisualStateManager.VisualStateGroups">
             <VisualStateGroupList>
                 <VisualStateGroup x:Name="CommonStates">
@@ -179,7 +188,11 @@
             </VisualStateGroupList>
         </Setter>
     </Style>
-
+    
+    <Style TargetType="{x:Type local:MarkdownWebView}">
+        <Setter Property="BackgroundColor" Value="{StaticResource SecondaryAccent}" />
+    </Style>
+    
     <Style TargetType="Entry">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
         <Setter Property="BackgroundColor" Value="Transparent" />

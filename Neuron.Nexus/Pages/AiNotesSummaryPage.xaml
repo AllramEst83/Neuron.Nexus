@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="Neuron.Nexus.Pages.AiNotesSummaryPage"
+             xmlns:translator="clr-namespace:Neuron.Nexus.Exstensions"
+             Title="{translator:Translate NotesSummary}"
+             xmlns:local="clr-namespace:Neuron.Nexus.Controls"
+             >
+    
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*" />
+            <RowDefinition Height="Auto" />
+        </Grid.RowDefinitions>
+
+        <!-- Horizontal Layout Grid -->
+        <Grid x:Name="HorizontalGrid" Grid.Row="0" IsVisible="{Binding IsHorizontal}">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*" />
+                <ColumnDefinition Width="*" />
+            </Grid.ColumnDefinitions>
+
+            <Editor x:Name="RawEditor" Text="{Binding RawMarkdownText}" Grid.Column="0" />
+            <local:MarkdownWebView Markdown="{Binding MarkdownPreview}" Grid.Column="1" />
+        </Grid>
+
+        <!-- Vertical Layout Grid -->
+        <Grid x:Name="VerticalGrid" Grid.Row="0" IsVisible="{Binding IsVertical}">
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*" />
+                <RowDefinition Height="*" />
+            </Grid.RowDefinitions>
+
+            <Editor x:Name="RawEditorVertical" Text="{Binding RawMarkdownText}" Grid.Row="0" />
+            <local:MarkdownWebView Markdown="{Binding MarkdownPreview}" Grid.Row="1" />
+        </Grid>
+
+        <FlexLayout Direction="Row" JustifyContent="SpaceAround" Grid.Row="1" Margin="15">
+            <Button Text="Copy to Clipboard"
+            Command="{Binding CopyToClipboardCommand}" />
+
+            <Button Text="Toggle Orientation"
+            Command="{Binding ToggleOrientationCommand}" />
+        </FlexLayout>
+
+
+    </Grid>
+
+
+</ContentPage>
