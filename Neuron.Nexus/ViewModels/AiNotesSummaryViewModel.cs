@@ -1,69 +1,63 @@
-﻿using CommunityToolkit.Mvvm.Input;
-using Markdig;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+using CommunityToolkit.Mvvm.Input;
+using CommunityToolkit.Mvvm.Messaging;
+using Neuron.Nexus.Models;
+using Neuron.Nexus.Pages;
+using Newtonsoft.Json;
 
 namespace Neuron.Nexus.ViewModels
 {
     [QueryProperty(nameof(SpokenText), "spokenText")]
     public partial class AiNotesSummaryViewModel : BaseViewModel
     {
+        string spokenText;
         public string SpokenText
         {
+            get => spokenText;
             set
             {
-                RawMarkdownText = Newtonsoft.Json.JsonConvert.DeserializeObject<string>(Uri.UnescapeDataString(value));
+                if (spokenText != value)
+                {
+                    spokenText = value;
+                    OnPropertyChanged();
+
+                    RawMarkdownText = Newtonsoft.Json.JsonConvert.DeserializeObject<string>(Uri.UnescapeDataString(value));
+                }
             }
         }
 
-        private string _rawMarkdownText;
+        string rawMarkdownText;
         public string RawMarkdownText
         {
-            get => _rawMarkdownText;
+            get => rawMarkdownText;
             set
             {
-                SetProperty(ref _rawMarkdownText, value);
-                UpdateMarkdownPreview();
+                if (rawMarkdownText != value)
+                {
+                    rawMarkdownText = value;
+                    OnPropertyChanged();
+                }
             }
         }
-
-        private string _markdownPreview;
-        public string MarkdownPreview
-        {
-            get => _markdownPreview;
-            set => SetProperty(ref _markdownPreview, value);
-        }
-
-        private bool _isHorizontal = true;
-        public bool IsHorizontal
-        {
-            get => _isHorizontal;
-            set => SetProperty(ref _isHorizontal, value);
-        }
-        public bool IsVertical => !IsHorizontal;
 
         public AiNotesSummaryViewModel() { }
 
         [RelayCommand]
-        private void ToggleOrientation()
+        private void ShowPreview()
         {
-            IsHorizontal = !IsHorizontal;
-            OnPropertyChanged(nameof(IsVertical));
+            MainThread.BeginInvokeOnMainThread(() =>
+            {
+                var markdownText = JsonConvert.SerializeObject(RawMarkdownText);
+                string encodedMarkdownText = Uri.EscapeDataString(markdownText);
+
+                WeakReferenceMessenger.Default.Send(new OpenModalMessage(encodedMarkdownText));
+            });
         }
 
         [RelayCommand]
         private void CopyToClipboard()
         {
             Clipboard.SetTextAsync(RawMarkdownText);
-        }
-
-        private void UpdateMarkdownPreview()
-        {
-            var pipeline = new MarkdownPipelineBuilder().UseAdvancedExtensions().Build();
-            MarkdownPreview = Markdown.ToHtml(RawMarkdownText ?? string.Empty, pipeline);
         }
     }
 }

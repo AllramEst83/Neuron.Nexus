@@ -1,23 +1,15 @@
-﻿using Android.Accounts;
+﻿
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
-using CommunityToolkit.Mvvm.Messaging;
 using Microsoft.CognitiveServices.Speech;
 using Microsoft.CognitiveServices.Speech.Audio;
-using Microsoft.CognitiveServices.Speech.Translation;
 using Microsoft.Extensions.Options;
 using Neuron.Nexus.Managers;
 using Neuron.Nexus.Models;
 using Neuron.Nexus.Pages;
 using Neuron.Nexus.Services;
 using Newtonsoft.Json;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace Neuron.Nexus.ViewModels
 {

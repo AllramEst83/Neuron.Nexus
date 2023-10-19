@@ -125,6 +125,9 @@
 		<MauiXaml Update="Pages\SpeakPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
+		<MauiXaml Update="Pages\SummaryPreviewPage.xaml">
+		  <Generator>MSBuild:Compile</Generator>
+		</MauiXaml>
 		<MauiXaml Update="Pages\TutorialPage.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>

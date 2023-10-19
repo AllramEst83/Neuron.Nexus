@@ -16,6 +16,7 @@ public partial class AppShell : Shell
         Routing.RegisterRoute(nameof(SelectCulturePage), typeof(SelectCulturePage));
         Routing.RegisterRoute(nameof(AiNotesPage), typeof(AiNotesPage));
         Routing.RegisterRoute(nameof(AiNotesSummaryPage), typeof(AiNotesSummaryPage));
+        Routing.RegisterRoute(nameof(SummaryPreviewPage), typeof(SummaryPreviewPage));
 
         AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
         TaskScheduler.UnobservedTaskException += TaskSchedulerOnUnobservedTaskException;

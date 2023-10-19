@@ -1,4 +1,7 @@
+using CommunityToolkit.Mvvm.Messaging;
+using Neuron.Nexus.Models;
 using Neuron.Nexus.ViewModels;
+using Newtonsoft.Json;
 using System.ComponentModel;
 
 namespace Neuron.Nexus.Pages;
@@ -12,38 +15,28 @@ public partial class AiNotesSummaryPage : ContentPage
         InitializeComponent();
         viewModel = new AiNotesSummaryViewModel();
         BindingContext = viewModel;
-        viewModel.PropertyChanged += ViewModel_PropertyChanged;
+
+        RegisterEvents();
     }
 
-    private void ViewModel_PropertyChanged(object sender, PropertyChangedEventArgs e)
+    void RegisterEvents()
     {
-        if (e.PropertyName == nameof(viewModel.IsHorizontal))
+        WeakReferenceMessenger.Default.Register<OpenModalMessage>(this, async (r, m) =>
         {
-            UpdateLayoutOrientation();
-        }
+            MainThread.BeginInvokeOnMainThread(async () =>
+            {
+                await Navigation.PushModalAsync(new SummaryPreviewPage(m.MarkdownText));
+            });
+        });
     }
 
-    private void UpdateLayoutOrientation()
+    void UnregisterEvents()
     {
-        var grid = (Grid)Content;
-        var splitView = (Grid)grid.Children[0];
-
-        splitView.ColumnDefinitions.Clear();
-        splitView.RowDefinitions.Clear();
-
-        if (viewModel.IsHorizontal)
-        {
-            splitView.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-            splitView.ColumnDefinitions.Add(new ColumnDefinition { Width = new GridLength(1, GridUnitType.Star) });
-        }
-        else
-        {
-            splitView.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
-            splitView.RowDefinitions.Add(new RowDefinition { Height = new GridLength(1, GridUnitType.Star) });
-        }
-
-        //RawEditor.SetBinding(Editor.TextProperty, new Binding("RawMarkdownText", source: viewModel));
+        WeakReferenceMessenger.Default.Unregister<OpenModalMessage>(this);
     }
 
-
+    void onDisappearing(object sender, EventArgs e)
+    {
+        UnregisterEvents();
+    }
 }

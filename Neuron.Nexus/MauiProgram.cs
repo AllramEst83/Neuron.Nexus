@@ -78,6 +78,7 @@ configFileName = "Neuron.Nexus.appsettings.json";
           .AddSingleton<SelectCulturePage>()
           .AddSingleton<AiNotesPage>()
           .AddSingleton<AiNotesSummaryPage>()
+          .AddSingleton<SummaryPreviewPage>()
 
             //ViewModels
            .AddSingleton<MainPageViewModel>()
@@ -88,7 +89,9 @@ configFileName = "Neuron.Nexus.appsettings.json";
            .AddSingleton<TutorialPageViewModel>()
            .AddSingleton<SelectCulturePageViewModel>()
            .AddSingleton<AiNotesViewModel>()
-           .AddSingleton<AiNotesSummaryViewModel>();
+           .AddSingleton<AiNotesSummaryViewModel>()
+           .AddSingleton<SummaryPreviewViewModel>();
+
 #if DEBUG
         builder.Logging.AddDebug();
 #endif
