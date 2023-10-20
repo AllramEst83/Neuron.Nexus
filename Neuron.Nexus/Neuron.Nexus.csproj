@@ -70,7 +70,6 @@
 		<MauiImage Include="Resources\Icons\tap.png" />
     <MauiImage Include="Resources\Icons\notes.png" />
 
-
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />
 

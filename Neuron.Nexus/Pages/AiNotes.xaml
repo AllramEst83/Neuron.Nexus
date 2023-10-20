@@ -10,28 +10,61 @@
     <ContentPage.Resources>
         <ResourceDictionary>
             <converters:InverseBoolConverter x:Key="InverseBoolConverter" />
+
+            <Style x:Key="ResetButtonStyle" TargetType="Button">
+                <Setter Property="FontFamily" Value="OpenSansRegular"/>
+                <Setter Property="FontSize" Value="11"/>
+                <Setter Property="Padding" Value="5"/>
+                <Setter Property="Margin" Value="10" />
+                <Setter Property="MinimumHeightRequest" Value="50"/>
+                <Setter Property="MinimumWidthRequest" Value="50"/>
+                <Setter Property="Background" Value="{StaticResource Gray300Brush}" />
+                <Setter Property="TextColor" Value="{StaticResource Black}" />
+                <Setter Property="CornerRadius" Value="20"/>
+                <Setter Property="Shadow">
+                    <Setter.Value>
+                        <Shadow Brush="{StaticResource TertiaryBrush}" Offset="10,10" Radius="40" Opacity="0.80"/>
+                    </Setter.Value>
+                </Setter>
+
+                <Setter Property="VisualStateManager.VisualStateGroups">
+                    <VisualStateGroupList>
+                        <VisualStateGroup x:Name="CommonStates">
+                            <VisualState x:Name="Normal" />
+                            <VisualState x:Name="Disabled"/>
+                        </VisualStateGroup>
+                    </VisualStateGroupList>
+                </Setter>
+            </Style>
+
         </ResourceDictionary>
 
     </ContentPage.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="*" />
             <RowDefinition Height="Auto" />
         </Grid.RowDefinitions>
 
+        <!-- Animation View -->
         <skia:SKLottieView
+        Grid.Row="0"
+        Grid.RowSpan="2"
         IsAnimationEnabled="{Binding AnimationIsActive}"
         IsVisible="{Binding AnimationIsActive}"
         Source="lottieanimation.json"
-        SemanticProperties.Description="Test test"
         RepeatCount="-1"
         RepeatMode="Restart"
         HeightRequest="350"
         WidthRequest="350"
-        HorizontalOptions="Center" />
+        HorizontalOptions="Center"
+        VerticalOptions="Center" />
 
+        <!-- Start Button -->
         <Button
-        Grid.RowSpan="2" 
+        Grid.Row="0"
+        Grid.RowSpan="2"
         Style="{StaticResource DefaultButtonStyle}"
         Text="{Binding ButtonText}"
         Command="{Binding ToggleTranscriptionCommand}"
@@ -42,7 +75,9 @@
         HeightRequest="160"
         CornerRadius="80"/>
 
+        <!-- Activity Indicator -->
         <ActivityIndicator 
+        Grid.Row="0"
         Grid.RowSpan="2"
         WidthRequest="310"
         HeightRequest="310"
@@ -51,15 +86,28 @@
         HorizontalOptions="Center"
         VerticalOptions="Center" />
 
+        <!-- Token Counter -->
         <Label
-            Text="{Binding TokenCounterDisplay}"
-            Grid.Column="1"
-            HorizontalOptions="Center"
-            VerticalOptions="Start"
-            Padding="10"
-            BackgroundColor="{StaticResource Secondary}"
-            TextColor="Black"/>
-    </Grid>
+        Grid.Row="0"
+        Grid.Column="1"
+        Text="{Binding TokenCounterDisplay}"
+        HorizontalOptions="Center"
+        VerticalOptions="Start"
+        Padding="10"
+        BackgroundColor="{StaticResource Secondary}"
+        TextColor="Black"/>
 
+        <!-- Reset Button -->
+        <Button
+        Grid.Row="1"
+        Style="{StaticResource ResetButtonStyle}"
+        VerticalOptions="End"
+        HorizontalOptions="End"
+        Command="{Binding ResetCommand}"
+        Text="Reset"
+        WidthRequest="50"
+        HeightRequest="50">
+        </Button>
+    </Grid>
 
 </ContentPage>

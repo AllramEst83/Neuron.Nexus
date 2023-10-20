@@ -398,5 +398,19 @@ namespace Neuron.Nexus.ViewModels
 
             return config;
         }
+
+        [RelayCommand]
+        public async Task Reset()
+        {
+            IsBusy = true;
+            AnimationIsActive = false;
+
+            await Stop();
+            DisposeOfResources();
+
+            Initiate();
+            ButtonText = LocalizationResourceManager.Instance["Start"] as string;
+            IsBusy = false;
+        }
     }
 }
