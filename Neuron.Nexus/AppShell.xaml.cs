@@ -1,21 +1,18 @@
 ﻿using Neuron.Nexus.Pages;
-using System.Windows.Input;
 
 namespace Neuron.Nexus;
 
 public partial class AppShell : Shell
 {
     public AppShell()
-	{
-		InitializeComponent();
+    {
+        InitializeComponent();
 
         // Register the routes for other pages
         //Routing.RegisterRoute(nameof(SelectLanguagePage), typeof(SelectLanguagePage));
         //Routing.RegisterRoute(nameof(SettingsPage), typeof(SettingsPage));
         Routing.RegisterRoute(nameof(SpeakPage), typeof(SpeakPage));
         Routing.RegisterRoute(nameof(SelectCulturePage), typeof(SelectCulturePage));
-        Routing.RegisterRoute(nameof(AiNotesPage), typeof(AiNotesPage));
-        Routing.RegisterRoute(nameof(AiNotesSummaryPage), typeof(AiNotesSummaryPage));
 
         AppDomain.CurrentDomain.UnhandledException += CurrentDomainOnUnhandledException;
         TaskScheduler.UnobservedTaskException += TaskSchedulerOnUnobservedTaskException;

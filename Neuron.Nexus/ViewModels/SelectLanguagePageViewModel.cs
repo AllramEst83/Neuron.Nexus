@@ -62,7 +62,8 @@ namespace Neuron.Nexus.ViewModels
                 string languageTwoToBeSent = JsonConvert.SerializeObject(SelectedLanguageTwo);
 
                 await Shell.Current.GoToAsync($"{nameof(SpeakPage)}?languageOneToBeSent={Uri.EscapeDataString(languageOneToBeSent)}&languageTwoToBeSent={Uri.EscapeDataString(languageTwoToBeSent)}");
-            }else
+            }
+            else
             {
                 await Toast.Make("The app needs microphone permission to work properly.", CommunityToolkit.Maui.Core.ToastDuration.Long).Show(CancellationToken.None);
             }

@@ -56,7 +56,7 @@
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
 
-		<!--Mic Icon-->
+		<!--Icon-->
 		<MauiImage Include="Resources\Icons\microphone.png" />
 		<MauiImage Include="Resources\Icons\stop.png" />
 		<MauiImage Include="Resources\Icons\speaker.png" />
@@ -69,7 +69,6 @@
 		<MauiImage Include="Resources\Icons\swedenflag.png" />
 		<MauiImage Include="Resources\Icons\tap.png" />
     <MauiImage Include="Resources\Icons\notes.png" />
-
 
 		<!-- Custom Fonts -->
 		<MauiFont Include="Resources\Fonts\*" />
@@ -105,12 +104,6 @@
 
 	<ItemGroup>
 		<MauiXaml Update="Pages\AboutPage.xaml">
-		  <Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Pages\AiNotes.xaml">
-		  <Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Pages\AiNotesSummaryPage.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Pages\SelectCulturePage.xaml">

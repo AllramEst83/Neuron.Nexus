@@ -1,5 +1,5 @@
-﻿using Microsoft.CognitiveServices.Speech.Audio;
-using Microsoft.CognitiveServices.Speech;
+﻿using Microsoft.CognitiveServices.Speech;
+using Microsoft.CognitiveServices.Speech.Audio;
 using Microsoft.Extensions.Options;
 using Neuron.Nexus.Models;
 
@@ -35,6 +35,6 @@ namespace Neuron.Nexus.Services
             }
 
             return result.AudioData;
-        }        
+        }
     }
 }

@@ -1,11 +1,5 @@
 ﻿using Neuron.Nexus.Models;
 using Neuron.Nexus.Repositories;
-using Neuron.Nexus.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Neuron.Nexus.Services
 {
@@ -17,7 +11,7 @@ namespace Neuron.Nexus.Services
     {
         public LanguageService(ILanguageRepository languageRepository)
         {
-           _languageRepository = languageRepository;
+            _languageRepository = languageRepository;
         }
 
         public ILanguageRepository _languageRepository { get; }

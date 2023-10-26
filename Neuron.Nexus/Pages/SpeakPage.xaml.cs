@@ -1,8 +1,6 @@
-﻿using Neuron.Nexus.ViewModels;
-using CommunityToolkit.Mvvm.Messaging;
+﻿using CommunityToolkit.Mvvm.Messaging;
 using Neuron.Nexus.Models;
-using CommunityToolkit.Maui.Alerts;
-using System.Windows.Input;
+using Neuron.Nexus.ViewModels;
 
 namespace Neuron.Nexus.Pages;
 

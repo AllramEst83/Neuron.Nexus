@@ -9,7 +9,7 @@ namespace Neuron.Nexus.Converters
         {
             if (value is UserMessage userMessage)
             {
-                
+
                 switch (userMessage.User)
                 {
                     case 1:

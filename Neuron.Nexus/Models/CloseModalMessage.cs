@@ -1,6 +1,6 @@
 ﻿namespace Neuron.Nexus.Models
 {
-    public class DisposeStartMessage
+    public class CloseModalMessage
     {
     }
 }
