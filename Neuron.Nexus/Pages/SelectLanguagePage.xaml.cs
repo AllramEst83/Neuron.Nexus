@@ -34,7 +34,7 @@ public partial class SelectLanguagePage : ContentPage
         WeakReferenceMessenger.Default.Send(new InitializeStartMessage());
 
         SubscribeToEvents();
- 
+
         var cancellactionTokenSource = new CancellationTokenSource();
         var cancellationToken = cancellactionTokenSource.Token;
 

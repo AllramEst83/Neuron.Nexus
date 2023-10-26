@@ -56,7 +56,7 @@
 		<!-- Images -->
 		<MauiImage Include="Resources\Images\*" />
 
-		<!--Mic Icon-->
+		<!--Icon-->
 		<MauiImage Include="Resources\Icons\microphone.png" />
 		<MauiImage Include="Resources\Icons\stop.png" />
 		<MauiImage Include="Resources\Icons\speaker.png" />
@@ -106,12 +106,6 @@
 		<MauiXaml Update="Pages\AboutPage.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
-		<MauiXaml Update="Pages\AiNotes.xaml">
-		  <Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Pages\AiNotesSummaryPage.xaml">
-		  <Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
 		<MauiXaml Update="Pages\SelectCulturePage.xaml">
 		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
@@ -123,9 +117,6 @@
 		</MauiXaml>
 		<MauiXaml Update="Pages\SpeakPage.xaml">
 			<Generator>MSBuild:Compile</Generator>
-		</MauiXaml>
-		<MauiXaml Update="Pages\SummaryPreviewPage.xaml">
-		  <Generator>MSBuild:Compile</Generator>
 		</MauiXaml>
 		<MauiXaml Update="Pages\TutorialPage.xaml">
 		  <Generator>MSBuild:Compile</Generator>

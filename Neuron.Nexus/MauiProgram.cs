@@ -57,8 +57,6 @@ configFileName = "Neuron.Nexus.appsettings.json";
             .AddSingleton<ILanguageService, LanguageService>()
             .AddSingleton<IConnectivityService, ConnectivityService>()
             .AddSingleton<IUserPersmissionsService, UserPersmissionsService>()
-            .AddSingleton<IChatGptService, ChatGptService>()
-            .AddSingleton<ITranscriptionManager, TranscriptionManager>()
 #if ANDROID
             .AddSingleton<IAndroidAudioPlayerService, AndroidAudioPlayerService>()
 #endif
@@ -68,7 +66,7 @@ configFileName = "Neuron.Nexus.appsettings.json";
 #if IOS
            .AddTransient<IOSAudioRecorderService, IOSAudioRecorderService>()
 #endif
-            //Pages
+          //Pages
           .AddSingleton<MainPage>()
           .AddSingleton<SpeakPage>()
           .AddSingleton<SelectLanguagePage>()
@@ -76,21 +74,15 @@ configFileName = "Neuron.Nexus.appsettings.json";
           .AddSingleton<AboutPage>()
           .AddSingleton<TutorialPage>()
           .AddSingleton<SelectCulturePage>()
-          .AddSingleton<AiNotesPage>()
-          .AddSingleton<AiNotesSummaryPage>()
-          .AddSingleton<SummaryPreviewPage>()
 
-            //ViewModels
+           //ViewModels
            .AddSingleton<MainPageViewModel>()
            .AddSingleton<SpeakPageViewModel>()
            .AddSingleton<SelectLanguagePageViewModel>()
            .AddSingleton<SettingsPageViewModel>()
            .AddSingleton<AboutPageViewModel>()
            .AddSingleton<TutorialPageViewModel>()
-           .AddSingleton<SelectCulturePageViewModel>()
-           .AddSingleton<AiNotesViewModel>()
-           .AddSingleton<AiNotesSummaryViewModel>()
-           .AddSingleton<SummaryPreviewViewModel>();
+           .AddSingleton<SelectCulturePageViewModel>();
 
 #if DEBUG
         builder.Logging.AddDebug();

@@ -188,11 +188,7 @@
             </VisualStateGroupList>
         </Setter>
     </Style>
-    
-    <Style TargetType="{x:Type local:MarkdownWebView}">
-        <Setter Property="BackgroundColor" Value="{StaticResource SecondaryAccent}" />
-    </Style>
-    
+
     <Style TargetType="Entry">
         <Setter Property="TextColor" Value="{AppThemeBinding Light={StaticResource Black}, Dark={StaticResource White}}" />
         <Setter Property="BackgroundColor" Value="Transparent" />

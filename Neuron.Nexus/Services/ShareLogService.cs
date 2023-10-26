@@ -1,9 +1,5 @@
-﻿
-using CommunityToolkit.Maui.Alerts;
-using CommunityToolkit.Maui.Core;
-using Microsoft.Extensions.Options;
+﻿using Microsoft.Extensions.Options;
 using Neuron.Nexus.Models;
-using Font = Microsoft.Maui.Font;
 
 namespace Neuron.Nexus.Services
 {

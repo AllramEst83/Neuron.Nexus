@@ -1,7 +1,5 @@
 ﻿using CommunityToolkit.Mvvm.Input;
 using Neuron.Nexus.Pages;
-using Neuron.Nexus.Services;
-using System.Windows.Input;
 
 namespace Neuron.Nexus.ViewModels;
 

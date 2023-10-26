@@ -3,7 +3,6 @@ using CommunityToolkit.Mvvm.Messaging;
 using Neuron.Nexus.Managers;
 using Neuron.Nexus.Models;
 using Neuron.Nexus.Pages;
-using Neuron.Nexus.Resources.Languages;
 using System.Globalization;
 
 namespace Neuron.Nexus
@@ -24,7 +23,7 @@ namespace Neuron.Nexus
             MainPage = new AppShell();
 
             SetApplangugaes();
-            
+
             SubscribeToEvents();
         }
 

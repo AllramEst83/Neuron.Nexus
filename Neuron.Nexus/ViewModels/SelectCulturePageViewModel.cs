@@ -1,7 +1,6 @@
 ﻿
 using CommunityToolkit.Maui.Alerts;
 using CommunityToolkit.Maui.Core;
-using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using Neuron.Nexus.Managers;
 using Neuron.Nexus.Models;
@@ -70,7 +69,7 @@ namespace Neuron.Nexus.ViewModels
 
             Preferences.Set("currentCulture", cultureCode);
 
-            await Toast.Make(AppResources.AppLanguagesSet,ToastDuration.Long).Show();
+            await Toast.Make(AppResources.AppLanguagesSet, ToastDuration.Long).Show();
         }
     }
 }
