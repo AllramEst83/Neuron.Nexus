@@ -54,12 +54,13 @@ public partial class SpeakPageViewModel : BaseViewModel
     string recognitionTextTwo = "";
     [ObservableProperty]
     string uIStatustext;
-    private ObservableCollection<UserMessage> _userMessages;
-    public ObservableCollection<UserMessage> UserMessages
-    {
-        get => _userMessages;
-        set => SetProperty(ref _userMessages, value);
-    }
+
+    [ObservableProperty]
+    private UserMessage tempUserMessage;
+
+    [ObservableProperty]
+    private ObservableCollection<UserMessage> userMessages;
+
 #if ANDROID
     public readonly IAndroidAudioRecordService androidAudioRecordService;
     private readonly IAndroidAudioPlayerService androidAudioPlayerService;
@@ -311,6 +312,9 @@ public partial class SpeakPageViewModel : BaseViewModel
 
         (var audioConfig, _pushStreamOne) = ConfigureAudioStream();
 
+        //speechConfig.SetProperty(PropertyId.SpeechServiceConnection_LanguageIdMode, "Continuous"); //AttStart (AtStart)
+        //var autoDetectSourceLanguageConfig = AutoDetectSourceLanguageConfig.FromLanguages(new string[] { LanguageOne.FullLanguageCode, LanguageTwo.FullLanguageCode });
+
         _translationRecognizerOne = new TranslationRecognizer(speechConfig, audioConfig);
 
         RegisterRecognizers(_translationRecognizerOne, LanguageTwo.ShortLanguageCode, LanguageOne.FullLanguageCode, LanguageTwo.FullLanguageCode, 1);
@@ -364,6 +368,54 @@ public partial class SpeakPageViewModel : BaseViewModel
             UpdateUIStatustext("Thinking...");
         };
 
+        //TEST
+        translationRecognizer.Recognizing += (sender, args) =>
+        {
+            switch (args.Result.Reason)
+            {
+                case ResultReason.TranslatingSpeech:
+                    // Check if there are any translations in the result
+                    if (args.Result.Translations.Count > 0)
+                    {
+                        var translatedMessage = args.Result.Translations[translatedLanguageKey].Trim();
+                        var spokenText = args.Result.Text.Trim();
+
+                        if (!string.IsNullOrEmpty(spokenText) && !string.IsNullOrEmpty(translatedMessage))
+                        {
+                            if (TempUserMessage == null)
+                            {
+                                TempUserMessage = new UserMessage
+                                {
+                                    User = user,
+                                    SpokenLanguage = spokenWordLanguageKey,
+                                    TranslatedLanguage = fullLanguageCode
+                                };
+
+                                UserMessages.Add(TempUserMessage);
+                            }
+
+                            TempUserMessage.SpokenText = spokenText;
+                            TempUserMessage.ChatMessage = translatedMessage;
+
+                            AddNewMessageAndScrollCollectionView(translatedMessage);
+                            UpdateUIStatustext("Translating...");
+                        }
+                    }
+                    else
+                    {
+                        // Log if there are no translations available
+                        Console.WriteLine("No translations available.");
+                    }
+                    break;
+
+                default:
+                    var message = $"{args.Result.Reason} - {args.Result.Text}";
+                    Console.WriteLine(message);
+                    break;
+            }
+        };
+        //TEST
+
         translationRecognizer.Recognized += (sender, args) =>
         {
             switch (args.Result.Reason)
@@ -377,17 +429,13 @@ public partial class SpeakPageViewModel : BaseViewModel
 
                         if (!string.IsNullOrEmpty(spokenText) && !string.IsNullOrEmpty(translatedMessage))
                         {
-                            UserMessages.Add(new UserMessage()
-                            {
-                                User = user,
-                                ChatMessage = translatedMessage,
-                                SpokenText = spokenText,
-                                SpokenLanguage = spokenWordLanguageKey,
-                                TranslatedLanguage = fullLanguageCode
-                            });
+                            TempUserMessage.SpokenText = spokenText;
+                            TempUserMessage.ChatMessage = translatedMessage;
 
                             AddNewMessageAndScrollCollectionView(translatedMessage);
                             UpdateUIStatustext("Listening for speeach...");
+
+                            TempUserMessage = null;
                         }
                     }
 
