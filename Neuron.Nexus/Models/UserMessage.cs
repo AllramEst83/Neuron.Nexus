@@ -1,11 +1,15 @@
-﻿namespace Neuron.Nexus.Models
+﻿using CommunityToolkit.Mvvm.ComponentModel;
+
+namespace Neuron.Nexus.Models
 {
-    public class UserMessage
+    public partial class UserMessage : ObservableObject
     {
-        public string ChatMessage { get; set; }
+        [ObservableProperty]
+        public string chatMessage;
         public int User { get; set; }
         public string TranslatedLanguage { get; set; }
-        public string SpokenText { get; set; }
+        [ObservableProperty]
+        public string spokenText;
         public string SpokenLanguage { get; set; }
     }
 }
